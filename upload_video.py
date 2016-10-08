@@ -85,9 +85,19 @@ def get_authenticated_service(args):
 
 
 def initialize_upload(youtube, options):
-    tags = None
-    if options.keywords:
-        tags = options.keywords.split(",")
+    tags = [
+        "Bhakti Sudhir Goswami(Person)",
+        "Bhakti(Religious Practice)",
+        "Religion(TV Genre)",
+        "Talking",
+        "Yoga",
+        "Meditation",
+        "Guru",
+        "India",
+        "Temple",
+        "Bhakti Yoga",
+        "SCSM",
+        "Hare Krishna"]
 
     body = dict(
         snippet=dict(
@@ -174,8 +184,6 @@ if __name__ == '__main__':
     oauth2client.tools.argparser.add_argument("--title", help="Video title", default="Test Title")
     oauth2client.tools.argparser.add_argument("--description", help="Video description",
                                               default="Test Description")
-    oauth2client.tools.argparser.add_argument("--keywords", help="Video keywords, comma separated",
-                                              default="")
     args = oauth2client.tools.argparser.parse_args()
 
     if not os.path.exists(args.file):
