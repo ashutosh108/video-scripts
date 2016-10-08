@@ -68,8 +68,6 @@ https://developers.google.com/api-client-library/python/guide/aaa_client_secrets
 """ % os.path.abspath(os.path.join(os.path.dirname(__file__),
                                    CLIENT_SECRETS_FILE))
 
-VALID_PRIVACY_STATUSES = ("public", "private", "unlisted")
-
 
 def get_authenticated_service(args):
     flow = oauth2client.client.flow_from_clientsecrets(CLIENT_SECRETS_FILE,
@@ -96,10 +94,16 @@ def initialize_upload(youtube, options):
             title=options.title,
             description=options.description,
             tags=tags,
-            categoryId=options.category
+            categoryId=27,
+            defaultLanguage="en",
+            defaultAudioLanguage="en"
         ),
         status=dict(
-            privacyStatus=options.privacyStatus
+            privacyStatus="unlisted",
+            publicStatsViewable=False
+        ),
+        recordingDetails=dict(
+            recordingDate="2016-10-08T12:45:00.000Z"
         )
     )
 
@@ -170,13 +174,8 @@ if __name__ == '__main__':
     oauth2client.tools.argparser.add_argument("--title", help="Video title", default="Test Title")
     oauth2client.tools.argparser.add_argument("--description", help="Video description",
                                               default="Test Description")
-    oauth2client.tools.argparser.add_argument("--category", default="22",
-                                              help="Numeric video category. " +
-                                                   "See https://developers.google.com/youtube/v3/docs/videoCategories/list")
     oauth2client.tools.argparser.add_argument("--keywords", help="Video keywords, comma separated",
                                               default="")
-    oauth2client.tools.argparser.add_argument("--privacyStatus", choices=VALID_PRIVACY_STATUSES,
-                                              default=VALID_PRIVACY_STATUSES[0], help="Video privacy status.")
     args = oauth2client.tools.argparser.parse_args()
 
     if not os.path.exists(args.file):
