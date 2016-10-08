@@ -69,7 +69,7 @@ https://developers.google.com/api-client-library/python/guide/aaa_client_secrets
                                    CLIENT_SECRETS_FILE))
 
 
-def get_authenticated_service(args):
+def get_authenticated_service():
     flow = oauth2client.client.flow_from_clientsecrets(CLIENT_SECRETS_FILE,
                                                        scope=YOUTUBE_UPLOAD_SCOPE,
                                                        message=MISSING_CLIENT_SECRETS_MESSAGE)
@@ -78,13 +78,13 @@ def get_authenticated_service(args):
     credentials = storage.get()
 
     if credentials is None or credentials.invalid:
-        credentials = oauth2client.tools.run_flow(flow, storage, args)
+        credentials = oauth2client.tools.run_flow(flow, storage)
 
     return googleapiclient.discovery.build(YOUTUBE_API_SERVICE_NAME, YOUTUBE_API_VERSION,
                                            http=credentials.authorize(httplib2.Http()))
 
 
-def initialize_upload(youtube, options):
+def initialize_upload(youtube, filename):
     tags = [
         "Bhakti Sudhir Goswami(Person)",
         "Bhakti(Religious Practice)",
@@ -130,20 +130,20 @@ def initialize_upload(youtube, options):
         # practice, but if you're using Python older than 2.6 or if you're
         # running on App Engine, you should set the chunksize to something like
         # 1024 * 1024 (1 megabyte).
-        media_body=googleapiclient.http.MediaFileUpload(options.file, chunksize=1024*1024, resumable=True)
+        media_body=googleapiclient.http.MediaFileUpload(filename, chunksize=1024*1024, resumable=True)
     )
 
-    resumable_upload(insert_request)
+    resumable_upload(insert_request, filename)
 
 
 # This method implements an exponential backoff strategy to resume a
 # failed upload.
-def resumable_upload(insert_request):
+def resumable_upload(insert_request, filename):
     response = None
     error = None
     retry = 0
     print("Uploading file...")
-    bar = progressbar.ProgressBar(max_value=os.path.getsize(args.file))
+    bar = progressbar.ProgressBar(max_value=os.path.getsize(filename))
     bar.start()
     while response is None:
         try:
@@ -184,8 +184,8 @@ if __name__ == '__main__':
     if not os.path.exists(args.file):
         exit("Please specify a valid file using the --file= parameter.")
 
-    youtube = get_authenticated_service(args)
+    youtube = get_authenticated_service()
     try:
-        initialize_upload(youtube, args)
+        initialize_upload(youtube, args.file)
     except googleapiclient.errors.HttpError as e:
         print("An HTTP error %d occurred:\n%s" % (e.resp.status, e.content))
