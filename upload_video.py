@@ -5,6 +5,7 @@ import httplib2
 import os
 import random
 import sys
+import progressbar
 import time
 
 import googleapiclient.discovery  # build
@@ -117,7 +118,7 @@ def initialize_upload(youtube, options):
         # practice, but if you're using Python older than 2.6 or if you're
         # running on App Engine, you should set the chunksize to something like
         # 1024 * 1024 (1 megabyte).
-        media_body=googleapiclient.http.MediaFileUpload(options.file, chunksize=-1, resumable=True)
+        media_body=googleapiclient.http.MediaFileUpload(options.file, chunksize=1024*1024, resumable=True)
     )
 
     resumable_upload(insert_request)
@@ -129,12 +130,17 @@ def resumable_upload(insert_request):
     response = None
     error = None
     retry = 0
+    print("Uploading file...")
+    bar = progressbar.ProgressBar(max_value=os.path.getsize(args.file))
+    bar.start()
     while response is None:
         try:
-            print("Uploading file...")
             status, response = insert_request.next_chunk()
+            if status:
+                bar.update(status.resumable_progress)
             if response is not None:
                 if 'id' in response:
+                    bar.finish()
                     print("Video id '%s' was successfully uploaded." % response['id'])
                 else:
                     exit("The upload failed with an unexpected response: %s" % response)
