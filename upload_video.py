@@ -101,8 +101,6 @@ def initialize_upload(youtube, options):
 
     body = dict(
         snippet=dict(
-            title=options.title,
-            description=options.description,
             tags=tags,
             categoryId=27,
             defaultLanguage="en",
@@ -181,9 +179,6 @@ def resumable_upload(insert_request):
 
 if __name__ == '__main__':
     oauth2client.tools.argparser.add_argument("--file", required=True, help="Video file to upload")
-    oauth2client.tools.argparser.add_argument("--title", help="Video title", default="Test Title")
-    oauth2client.tools.argparser.add_argument("--description", help="Video description",
-                                              default="Test Description")
     args = oauth2client.tools.argparser.parse_args()
 
     if not os.path.exists(args.file):
