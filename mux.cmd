@@ -54,7 +54,7 @@ D:\video\GoswamiMj-videos\ffmpeg-hi8-heaac.exe ^
     -metadata album="Гупта Говардхан 2016" ^
     %ss_arg% ^
     "%~dp1temp\%~n1_rus_mono.mp4"
-
+python C:\Users\ashutosh\Dropbox\Reference\S\scripts\upload_video.py --file "%~dp1temp\%~n1_rus_mono.mp4"
 pause
 rem    -map 1:a ^
 rem    -codec:a mp3 -b:a 128k ^
