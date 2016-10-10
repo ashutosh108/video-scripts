@@ -98,13 +98,18 @@ def initialize_upload(youtube, filename):
         "Bhakti Yoga",
         "SCSM",
         "Hare Krishna"]
+    title=os.path.basename(filename)
+    lang="en"
+    if title.find('_rus') != -1:
+        lang="ru"
 
     body = dict(
         snippet=dict(
+            title=title,
             tags=tags,
             categoryId=27,
-            defaultLanguage="en",
-            defaultAudioLanguage="en"
+            defaultLanguage=lang,
+            defaultAudioLanguage=lang
         ),
         status=dict(
             privacyStatus="unlisted",
