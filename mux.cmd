@@ -12,6 +12,9 @@ goto :EXIT
 :MAIN
 IF z%1z==zz GOTO USAGE_EXIT
 
+call C:\Users\ashutosh\Envs\scripts\Scripts\activate.bat
+echo on
+
 set ss_arg=
 set /p offset=<"%~dpn1_offset.txt"
 if [%offset%] == [] GOTO SKIP_SS
@@ -27,27 +30,25 @@ rem ffmpeg ^
 rem     -map 0:a ^
 rem     -c:a:1 copy -metadata:s:a:1 language=eng ^
 
-start D:\video\GoswamiMj-videos\ffmpeg-hi8-heaac.exe ^
-    -y ^
-    -i %1 -i "%~dp1temp\%~n1_rus_mixdown.wav" ^
-    -map 0:v ^
-    -c:v copy ^
-    -map 1:a ^
-    -c:a:0 libfdk_aac -b:a 384k -metadata:s:a:0 language=rus ^
-    -movflags +faststart ^
-    -metadata artist="Бхакти Судхир Госвами" ^
-    -metadata title="%title%" ^
-    -metadata album="Гупта Говардхан 2016" ^
-    %ss_arg% ^
-    "%~dp1temp\%~n1_rus_stereo.mp4"
+start call C:\Users\ashutosh\Dropbox\Reference\S\scripts\mux_rus_stereo.cmd %1
 
 D:\video\GoswamiMj-videos\ffmpeg-hi8-heaac.exe ^
     -y ^
-    -i %1 -i "%~dp1temp\%~n1_rus_mixdown.wav" ^
+    -i "%~dp1temp\%~n1_rus_mixdown.wav" ^
+    -c:a libfdk_aac -ac 1 -b:a 128k -metadata:s:a:0 language=rus ^
+    -movflags +faststart ^
+    -metadata artist="Бхакти Судхир Госвами" ^
+    -metadata title="%title% (моно)" ^
+    -metadata album="Гупта Говардхан 2016" ^
+    %ss_arg% ^
+    "%~dp1temp\%~n1_rus_mono.m4a"
+
+ffmpeg ^
+    -y ^
+    -i %1 -i "%~dp1temp\%~n1_rus_mono.m4a" ^
     -map 0:v ^
-    -c:v copy ^
     -map 1:a ^
-    -c:a:0 libfdk_aac -ac 1 -b:a 128k -metadata:s:a:0 language=rus ^
+    -c copy ^
     -movflags +faststart ^
     -metadata artist="Бхакти Судхир Госвами" ^
     -metadata title="%title% (моно)" ^
