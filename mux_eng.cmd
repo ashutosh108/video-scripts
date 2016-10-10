@@ -10,6 +10,8 @@ goto :EXIT
 :MAIN
 IF z%1z==zz GOTO USAGE_EXIT
 
+call C:\Users\ashutosh\Envs\scripts\Scripts\activate.bat
+
 set ss_arg=
 set /p offset=<"%~dpn1_offset.txt"
 if [%offset%] == [] GOTO SKIP_SS
