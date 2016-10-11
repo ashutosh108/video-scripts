@@ -135,7 +135,7 @@ def initialize_upload(youtube, filename):
         # practice, but if you're using Python older than 2.6 or if you're
         # running on App Engine, you should set the chunksize to something like
         # 1024 * 1024 (1 megabyte).
-        media_body=googleapiclient.http.MediaFileUpload(filename, chunksize=1024*1024, resumable=True)
+        media_body=googleapiclient.http.MediaFileUpload(filename, chunksize=10*1024*1024, resumable=True)
     )
 
     resumable_upload(insert_request, filename)
