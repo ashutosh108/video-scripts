@@ -40,7 +40,6 @@ D:\video\GoswamiMj-videos\ffmpeg-hi8-heaac.exe ^
     -metadata artist="Бхакти Судхир Госвами" ^
     -metadata title="%title% (моно)" ^
     -metadata album="Гупта Говардхан 2016" ^
-    %ss_arg% ^
     "%~dp1temp\%~n1_rus_mono.m4a"
 
 ffmpeg ^
