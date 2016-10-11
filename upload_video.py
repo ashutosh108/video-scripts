@@ -86,52 +86,10 @@ def get_authenticated_service():
 
 
 def initialize_upload(youtube, filename):
-    tags = [
-        "Bhakti Sudhir Goswami(Person)",
-        "Bhakti(Religious Practice)",
-        "Religion(TV Genre)",
-        "Talking",
-        "Yoga",
-        "Meditation",
-        "Guru",
-        "India",
-        "Temple",
-        "Bhakti Yoga",
-        "SCSM",
-        "Hare Krishna"]
-    base_filename = os.path.basename(filename)
-    match = re.match('^(\d\d\d\d)-?(\d\d)-?(\d\d)[^0-9]', base_filename)
-    if match is not None:
-        year, month, day = match.groups()
-        recording_date = year + '-' + month + '-' + day
-    else:
-        recording_date = None
-    title=base_filename
-    lang="en"
-    if title.find('_rus') != -1:
-        lang="ru"
-
-    body = dict(
-        snippet=dict(
-            title=title,
-            tags=tags,
-            categoryId=27,
-            defaultLanguage=lang,
-            defaultAudioLanguage=lang
-        ),
-        status=dict(
-            privacyStatus="unlisted",
-            publicStatsViewable=False
-        )
-    )
-    if recording_date is not None:
-        body['recordingDetails'] = dict(
-             recordingDate=recording_date + 'T12:45:00.000Z'
-        )
-
+    body = compose_upload_body(filename)
     # Call the API's videos.insert method to create and upload the video.
     insert_request = youtube.videos().insert(
-        part=",".join(list(body.keys())),
+        part=','.join(body.keys()),
         body=body,
         # The chunksize parameter specifies the size of each chunk of data, in
         # bytes, that will be uploaded at a time. Set a higher value for
@@ -148,6 +106,51 @@ def initialize_upload(youtube, filename):
     )
 
     resumable_upload(insert_request, filename)
+
+
+def compose_upload_body(filename):
+    tags = [
+        'Bhakti Sudhir Goswami(Person)',
+        'Bhakti(Religious Practice)',
+        'Religion(TV Genre)',
+        'Talking',
+        'Yoga',
+        'Meditation',
+        'Guru',
+        'India',
+        'Temple',
+        'Bhakti Yoga',
+        'SCSM',
+        'Hare Krishna']
+    base_filename = os.path.basename(filename)
+    match = re.match('^(\d\d\d\d)-?(\d\d)-?(\d\d)[^0-9]', base_filename)
+    if match is not None:
+        year, month, day = match.groups()
+        recording_date = year + '-' + month + '-' + day
+    else:
+        recording_date = None
+    title = base_filename
+    lang = 'en'
+    if title.find('_rus') != -1:
+        lang = 'ru'
+    body = dict(
+        snippet=dict(
+            title=title,
+            tags=tags,
+            categoryId=27,
+            defaultLanguage=lang,
+            defaultAudioLanguage=lang
+        ),
+        status=dict(
+            privacyStatus="unlisted",
+            publicStatsViewable=False
+        )
+    )
+    if recording_date is not None:
+        body['recordingDetails'] = dict(
+            recordingDate=recording_date + 'T12:45:00.000Z'
+        )
+    return body
 
 
 # This method implements an exponential backoff strategy to resume a
