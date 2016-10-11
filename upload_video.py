@@ -130,9 +130,7 @@ def compose_upload_body(filename):
     else:
         recording_date = None
     title = base_filename
-    lang = 'en'
-    if title.find('_rus') != -1:
-        lang = 'ru'
+    lang = 'ru' if ('_rus' in title) else 'en'
     body = dict(
         snippet=dict(
             title=title,
