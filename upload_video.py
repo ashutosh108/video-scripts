@@ -7,6 +7,7 @@ import random
 import sys
 import progressbar
 import time
+import re
 
 import googleapiclient.discovery  # build
 import googleapiclient.errors  # HTTPError
@@ -98,7 +99,14 @@ def initialize_upload(youtube, filename):
         "Bhakti Yoga",
         "SCSM",
         "Hare Krishna"]
-    title=os.path.basename(filename)
+    base_filename = os.path.basename(filename)
+    match = re.match('^(\d\d\d\d)-?(\d\d)-?(\d\d)[^0-9]', base_filename)
+    if match is not None:
+        year, month, day = match.groups()
+        recording_date = year + '-' + month + '-' + day
+    else:
+        recording_date = None
+    title=base_filename
     lang="en"
     if title.find('_rus') != -1:
         lang="ru"
@@ -114,11 +122,12 @@ def initialize_upload(youtube, filename):
         status=dict(
             privacyStatus="unlisted",
             publicStatsViewable=False
-        ),
-        recordingDetails=dict(
-            recordingDate="2016-10-08T12:45:00.000Z"
         )
     )
+    if recording_date is not None:
+        body['recordingDetails'] = dict(
+             recordingDate=recording_date + 'T12:45:00.000Z'
+        )
 
     # Call the API's videos.insert method to create and upload the video.
     insert_request = youtube.videos().insert(
