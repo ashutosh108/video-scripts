@@ -1,48 +1,44 @@
 from unittest import TestCase
 
-import demux
-
-from demux import get_ss_arg_for_file
-from demux import get_title_for_file
-from demux import get_artist_eng
+import meta
 
 import os
 
 
-class test_demux(TestCase):
+class test_meta(TestCase):
     def test_get_ss_arg_for_file_nonexisting(self):
-        self.assertEqual(get_ss_arg_for_file('qwe'), None)
+        self.assertEqual(meta.get_ss_arg_for_file('qwe'), None)
 
     def test_get_ss_arg_for_file_existing(self):
         dir = os.path.dirname(__file__)
         filename = os.path.join(dir, 'files', '2016-10-07 goswamimj.mp4')
-        self.assertEqual(get_ss_arg_for_file(filename), '1:15')
+        self.assertEqual(meta.get_ss_arg_for_file(filename), '1:15')
 
     def test_get_title_for_file(self):
         dir = os.path.dirname(__file__)
         filename = os.path.join(dir, 'files', '2016-10-07 goswamimj.mp4')
-        self.assertEqual('2016-10-07', get_title_for_file(filename))
+        self.assertEqual('2016-10-07', meta.get_title_for_file(filename))
 
 
     def test_get_artist_eng(self):
         dir = os.path.dirname(__file__)
         filename = os.path.join(dir, 'files', '2016-10-07 goswamimj.mp4')
-        self.assertEqual('Bhakti Sudhir Goswami', get_artist_eng(filename))
+        self.assertEqual('Bhakti Sudhir Goswami', meta.get_artist_eng(filename))
 
     def test_get_artist_eng_multiple(self):
         dir = os.path.dirname(__file__)
         filename = os.path.join(dir, 'files', '2016-10-07 janardanmj_goswamimj.mp4')
-        self.assertEqual('Bhakti Pavan Janardan, Bhakti Sudhir Goswami', get_artist_eng(filename))
+        self.assertEqual('Bhakti Pavan Janardan, Bhakti Sudhir Goswami', meta.get_artist_eng(filename))
 
     def test_get_artist_eng_ranjan(self):
         dir = os.path.dirname(__file__)
         filename = os.path.join(dir, 'files', '2016-10-07 brmadhusudan.mp4')
-        self.assertEqual('Bhakti Rañjan Madhusudan', get_artist_eng(filename))
+        self.assertEqual('Bhakti Rañjan Madhusudan', meta.get_artist_eng(filename))
 
     def test_get_year_month_day(self):
         dir = os.path.dirname(__file__)
         filename = os.path.join(dir, 'files', '2016-10-07 brmadhusudan.mp4')
-        [year, month, day] = demux.get_year_month_day(filename)
+        [year, month, day] = meta.get_year_month_day(filename)
         self.assertEqual('2016', year)
         self.assertEqual('10', month)
         self.assertEqual('07', day)
