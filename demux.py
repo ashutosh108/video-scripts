@@ -1,6 +1,5 @@
 import sys
 import os
-import re
 
 def usage_and_exit():
     print("""demux: extract (demux) english AAC audio from Goswami Maharaj's video into separate m4a file
@@ -34,21 +33,30 @@ def get_title_for_file(filename):
 
 
 def demux_file(filename: str) -> None:
-    ss_arg = get_ss_arg_for_file(filename)
+    skip_time = get_ss_arg_for_file(filename)
+    ss_arg = ('-ss ' + skip_time) if skip_time  else ''
     title = get_title_for_file(filename)
-    # ffmpeg ^
-    #     -y ^
-    #     -i %1 ^
-    #     -map 0:a -c:a copy -movflags +faststart %ss_arg% ^
-    #     -metadata artist="Bhakti Sudhir Goswami" ^
-    #     -metadata title="%title%" ^
-    #     -metadata album="Gupta Govardhan 2016" ^
-    #     "%~dp1temp\%~n1_eng.m4a" ^
-    #     -map 0:a -c:a copy -movflags +faststart          "%~dp1temp\%~n1.m4a"
-    # pause
-    #
-    # :EXIT
-    return
+
+    name_wo_ext = os.path.splitext(filename)[0]
+    eng_m4a = name_wo_ext + '_eng.m4a'
+    plain_m4a = name_wo_ext + '.m4a'
+    cmd = 'ffmpeg ^\
+        -y ^\
+        -i "%s" ^\
+        -map 0:a -c:a copy -movflags +faststart ^\
+        %s ^\
+        -metadata artist="Bhakti Sudhir Goswami" ^\
+        -metadata title="%s" ^\
+        -metadata album="Gupta Govardhan 2016" ^\
+        "%s" ^\
+        -map 0:a -c:a copy -movflags +faststart ^\
+        "%s"' % (filename, ss_arg, title, eng_m4a, plain_m4a)
+    print(cmd)
+    p = os.popen(cmd, 'r')
+    while 1:
+        line = p.readline()
+        if not line: break
+        print(line)
 
 def main():
     try:
