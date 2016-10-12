@@ -61,11 +61,20 @@ def get_artist_eng(filename):
     else:
         return 'Unknown'
 
+
+def get_year_month_day(filename):
+    basename = os.path.basename(filename)
+    match = re.match('^(\d\d\d\d)-?(\d\d)-?(\d\d)', basename)
+    if match:
+        return match.groups()
+    return [None, None, None]
+
+
 def demux_file(filename: str) -> None:
     skip_time = get_ss_arg_for_file(filename)
-    ss_arg = ('-ss ' + skip_time) if skip_time  else ''
     title = get_title_for_file(filename)
     artist = get_artist_eng(filename)
+    [year, month, day] = get_year_month_day(filename)
 
     dirname = os.path.dirname(filename)
     basename = os.path.basename(filename)
@@ -73,19 +82,22 @@ def demux_file(filename: str) -> None:
     eng_m4a = os.path.join(dirname, 'temp', basename_wo_ext + '_eng.m4a')
     plain_m4a = os.path.join(dirname, 'temp', basename_wo_ext + '.m4a')
     cmd = ['ffmpeg',
-        '-y',
-        '-i', filename]
+           '-y',
+           '-i', filename,
+           '-metadata', 'artist=' + artist,
+           '-metadata', 'title=' + title,
+           '-metadata', 'album=Gupta Govardhan 2016',
+           '-metadata', 'genre=Speech']
+    if year:
+        cmd += ['-metadata', 'date=' + year + '-' + month + '-' + day]
     if skip_time:
         cmd += ['-ss', skip_time]
     cmd += [
-        '-metadata', 'artist=' + artist,
-        '-metadata', 'title=' + title,
-        '-metadata', 'album=Gupta Govardhan 2016',
-        '-metadata', 'genre=Speech',
-        '-map', '0:a', '-c:a', 'copy', '-movflags', '+faststart',
+        '-c', 'copy', '-movflags', '+faststart',
         eng_m4a,
-        '-map', '0:a', '-c:a', 'copy', '-movflags', '+faststart',
+        '-c', 'copy', '-movflags', '+faststart',
         plain_m4a]
+    print(repr(cmd))
     p = subprocess.Popen(cmd, stdout=subprocess.PIPE).stdout
     while 1:
         line = p.readline()

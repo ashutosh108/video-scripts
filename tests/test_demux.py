@@ -1,5 +1,7 @@
 from unittest import TestCase
 
+import demux
+
 from demux import get_ss_arg_for_file
 from demux import get_title_for_file
 from demux import get_artist_eng
@@ -36,3 +38,11 @@ class test_demux(TestCase):
         dir = os.path.dirname(__file__)
         filename = os.path.join(dir, 'files', '2016-10-07 brmadhusudan.mp4')
         self.assertEqual('Bhakti Rañjan Madhusudan', get_artist_eng(filename))
+
+    def test_get_year_month_day(self):
+        dir = os.path.dirname(__file__)
+        filename = os.path.join(dir, 'files', '2016-10-07 brmadhusudan.mp4')
+        [year, month, day] = demux.get_year_month_day(filename)
+        self.assertEqual('2016', year)
+        self.assertEqual('10', month)
+        self.assertEqual('07', day)
