@@ -72,19 +72,21 @@ def demux_file(filename: str) -> None:
     basename_wo_ext = os.path.splitext(basename)[0]
     eng_m4a = os.path.join(dirname, 'temp', basename_wo_ext + '_eng.m4a')
     plain_m4a = os.path.join(dirname, 'temp', basename_wo_ext + '.m4a')
-    cmd = 'ffmpeg ^\
-        -y ^\
-        -i "%s" ^\
-        -map 0:a -c:a copy -movflags +faststart ^\
-        %s ^\
-        -metadata artist="%s" ^\
-        -metadata title="%s" ^\
-        -metadata album="Gupta Govardhan 2016" ^\
-        -metadata genre=Speech ^\
-        "%s" ^\
-        -map 0:a -c:a copy -movflags +faststart ^\
-        "%s"' % (filename, ss_arg, artist, title, eng_m4a, plain_m4a)
-    p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE).stdout
+    cmd = ['ffmpeg',
+        '-y',
+        '-i', filename]
+    if skip_time:
+        cmd += ['-ss', skip_time]
+    cmd += [
+        '-metadata', 'artist=' + artist,
+        '-metadata', 'title=' + title,
+        '-metadata', 'album=Gupta Govardhan 2016',
+        '-metadata', 'genre=Speech',
+        '-map', '0:a', '-c:a', 'copy', '-movflags', '+faststart',
+        eng_m4a,
+        '-map', '0:a', '-c:a', 'copy', '-movflags', '+faststart',
+        plain_m4a]
+    p = subprocess.Popen(cmd, stdout=subprocess.PIPE).stdout
     while 1:
         line = p.readline()
         if not line: break
