@@ -42,3 +42,9 @@ class test_meta(TestCase):
         self.assertEqual('2016', year)
         self.assertEqual('10', month)
         self.assertEqual('07', day)
+
+    def test_get_title_eng(self):
+        dir = os.path.dirname(__file__)
+        filename = os.path.join(dir, 'files', '2016-10-07 goswamimj.mp4')
+        title_eng = meta.get_title_eng(filename)
+        self.assertEqual('Have faith in Guru-Vaishnava, not in yourself', title_eng)

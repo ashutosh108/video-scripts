@@ -1,5 +1,21 @@
 import os
 import re
+import yaml
+
+_yaml_data = {}
+
+
+def yaml_data(filename):
+    global _yaml_data
+    if filename not in _yaml_data:
+        try:
+            yaml_filename = os.path.splitext(filename)[0] + '.yml'
+            with open(yaml_filename, 'r', encoding='UTF-8') as f:
+                _yaml_data[filename] = yaml.load(f)
+        except IndexError as e:
+            _yaml_data[filename] = dict()
+    print(repr(_yaml_data))
+    return _yaml_data[filename]
 
 
 def get_ss_arg_for_file(filename: str) -> str:
@@ -24,6 +40,14 @@ def get_title_for_file(filename):
     basename_wo_ext = os.path.splitext(basename)[0]
     title = basename_wo_ext.replace(' goswamimj', '')
     return title
+
+
+def get_title_eng(filename):
+    y = yaml_data(filename)
+    try:
+        return y['title_eng']
+    except KeyError:
+        return os.path.basename(os.path.splitext(filename)[0])
 
 
 def artist_real_name(artist):
@@ -64,7 +88,7 @@ def get_year_month_day(filename):
 
 
 def ffmpeg_meta_args(filename):
-    title = get_title_for_file(filename)
+    title = get_title_eng(filename)
     artist = get_artist_eng(filename)
     [year, month, day] = get_year_month_day(filename)
     args = [
