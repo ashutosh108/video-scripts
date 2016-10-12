@@ -14,9 +14,6 @@ usage: demux "yyyy-mm-dd goswamimj.mp4"
 
 def demux_file(filename: str) -> None:
     skip_time = meta.get_ss_arg_for_file(filename)
-    title = meta.get_title_for_file(filename)
-    artist = meta.get_artist_eng(filename)
-    [year, month, day] = meta.get_year_month_day(filename)
 
     dirname = os.path.dirname(filename)
     basename = os.path.basename(filename)
@@ -25,14 +22,8 @@ def demux_file(filename: str) -> None:
     plain_m4a = os.path.join(dirname, 'temp', basename_wo_ext + '.m4a')
     cmd = ['ffmpeg',
            '-y',
-           '-i', filename,
-           '-metadata', 'artist=' + artist,
-           '-metadata', 'title=' + title,
-           '-metadata', 'album=Gupta Govardhan 2016',
-           '-metadata', 'genre=Speech']
-    if year:
-        cmd += ['-metadata', 'date=' + year + '-' + month + '-' + day]
-        cmd += ['-metadata', 'comment=' + year + '-' + month + '-' + day]
+           '-i', filename]
+    cmd += meta.ffmpeg_meta_args(filename)
     if skip_time:
         cmd += ['-ss', skip_time]
     cmd += [
@@ -46,6 +37,7 @@ def demux_file(filename: str) -> None:
         line = p.readline()
         if not line: break
         print(line)
+
 
 def main():
     try:

@@ -34,10 +34,11 @@ def artist_real_name(artist):
         bpjanardan='Bhakti Pavan Janardan',
         avadhutmj='Bhakti Bimal Avadhut',
         bbavadhut='Bhakti Bimal Avadhut',
-        madhusudanmj = 'Bhakti Rañjan Madhusudan',
-        brmadhusudan = 'Bhakti Rañjan Madhusudan'
+        madhusudanmj='Bhakti Rañjan Madhusudan',
+        brmadhusudan='Bhakti Rañjan Madhusudan'
     )
-    if artist in known_artists: return known_artists[artist]
+    if artist in known_artists:
+        return known_artists[artist]
     return artist
 
 
@@ -60,3 +61,18 @@ def get_year_month_day(filename):
     if match:
         return match.groups()
     return [None, None, None]
+
+
+def ffmpeg_meta_args(filename):
+    title = get_title_for_file(filename)
+    artist = get_artist_eng(filename)
+    [year, month, day] = get_year_month_day(filename)
+    args = [
+       '-metadata', 'artist=' + artist,
+       '-metadata', 'title=' + title,
+       '-metadata', 'album=Gupta Govardhan 2016',
+       '-metadata', 'genre=Speech']
+    if year:
+        args += ['-metadata', 'date=' + year + '-' + month + '-' + day]
+        args += ['-metadata', 'comment=' + year + '-' + month + '-' + day]
+    return args
