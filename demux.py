@@ -37,9 +37,11 @@ def demux_file(filename: str) -> None:
     ss_arg = ('-ss ' + skip_time) if skip_time  else ''
     title = get_title_for_file(filename)
 
-    name_wo_ext = os.path.splitext(filename)[0]
-    eng_m4a = name_wo_ext + '_eng.m4a'
-    plain_m4a = name_wo_ext + '.m4a'
+    dirname = os.path.dirname(filename)
+    basename = os.path.basename(filename)
+    basename_wo_ext = os.path.splitext(basename)[0]
+    eng_m4a = os.path.join(dirname, 'temp', basename_wo_ext + '_eng.m4a')
+    plain_m4a = os.path.join(dirname, 'temp', basename_wo_ext + '.m4a')
     cmd = 'ffmpeg ^\
         -y ^\
         -i "%s" ^\
