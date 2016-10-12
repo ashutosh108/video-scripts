@@ -80,6 +80,7 @@ def demux_file(filename: str) -> None:
         -metadata artist="%s" ^\
         -metadata title="%s" ^\
         -metadata album="Gupta Govardhan 2016" ^\
+        -metadata genre=Speech ^\
         "%s" ^\
         -map 0:a -c:a copy -movflags +faststart ^\
         "%s"' % (filename, ss_arg, artist, title, eng_m4a, plain_m4a)
