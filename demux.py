@@ -1,5 +1,6 @@
 import sys
 import os
+import re
 
 def usage_and_exit():
     print("""demux: extract (demux) english AAC audio from Goswami Maharaj's video into separate m4a file
@@ -32,10 +33,38 @@ def get_title_for_file(filename):
     return title
 
 
+def artist_real_name(artist):
+    known_artists = dict(
+        goswamimj='Bhakti Sudhir Goswami',
+        bsgoswami='Bhakti Sudhir Goswami',
+        janardanmj='Bhakti Pavan Janardan',
+        bpjanardan='Bhakti Pavan Janardan',
+        avadhutmj='Bhakti Bimal Avadhut',
+        bbavadhut='Bhakti Bimal Avadhut',
+        madhusudanmj = 'Bhakti Rañjan Madhusudan',
+        brmadhusudan = 'Bhakti Rañjan Madhusudan'
+    )
+    if artist in known_artists: return known_artists[artist]
+    return artist
+
+
+def get_artist_eng(filename):
+    basename = os.path.basename(filename)
+    match = re.match('^(\d\d\d\d)-?(\d\d)-?(\d\d)\s+(.*)\.', basename)
+    if match is not None:
+        artists_str = match.group(4)
+        artists = []
+        for artist in artists_str.split('_'):
+            artists.append(artist_real_name(artist))
+        return ', '.join(artists)
+    else:
+        return 'Unknown'
+
 def demux_file(filename: str) -> None:
     skip_time = get_ss_arg_for_file(filename)
     ss_arg = ('-ss ' + skip_time) if skip_time  else ''
     title = get_title_for_file(filename)
+    artist = get_artist_eng(filename)
 
     dirname = os.path.dirname(filename)
     basename = os.path.basename(filename)
@@ -47,12 +76,12 @@ def demux_file(filename: str) -> None:
         -i "%s" ^\
         -map 0:a -c:a copy -movflags +faststart ^\
         %s ^\
-        -metadata artist="Bhakti Sudhir Goswami" ^\
+        -metadata artist="%s" ^\
         -metadata title="%s" ^\
         -metadata album="Gupta Govardhan 2016" ^\
         "%s" ^\
         -map 0:a -c:a copy -movflags +faststart ^\
-        "%s"' % (filename, ss_arg, title, eng_m4a, plain_m4a)
+        "%s"' % (filename, ss_arg, artist, title, eng_m4a, plain_m4a)
     print(cmd)
     p = os.popen(cmd, 'r')
     while 1:
