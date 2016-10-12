@@ -1,6 +1,6 @@
 import sys
 import os
-
+import re
 
 def usage_and_exit():
     print("""demux: extract (demux) english AAC audio from Goswami Maharaj's video into separate m4a file
@@ -25,18 +25,17 @@ def get_ss_arg_for_file(filename: str) -> str:
     except FileNotFoundError:
         return None
 
+
+def get_title_for_file(filename):
+    basename = os.path.basename(filename)
+    basename_wo_ext = os.path.splitext(basename)[0]
+    title = basename_wo_ext.replace(' goswamimj', '')
+    return title
+
+
 def demux_file(filename: str) -> None:
     ss_arg = get_ss_arg_for_file(filename)
-    print(repr(ss_arg))
-    # set ss_arg=
-    # set /p offset=<"%~dpn1_offset.txt"
-    # if [%offset%] == [] GOTO SKIP_SS
-    # set ss_arg=-ss %offset%
-    # :SKIP_SS
-    #
-    # set title_pre=%~n1
-    # set title=%title_pre: goswamimj=%
-    #
+    title = get_title_for_file(filename)
     # ffmpeg ^
     #     -y ^
     #     -i %1 ^
