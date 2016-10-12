@@ -1,6 +1,7 @@
 import sys
 import os
 import re
+import subprocess
 
 def usage_and_exit():
     print("""demux: extract (demux) english AAC audio from Goswami Maharaj's video into separate m4a file
@@ -82,8 +83,7 @@ def demux_file(filename: str) -> None:
         "%s" ^\
         -map 0:a -c:a copy -movflags +faststart ^\
         "%s"' % (filename, ss_arg, artist, title, eng_m4a, plain_m4a)
-    print(cmd)
-    p = os.popen(cmd, 'r')
+    p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE).stdout
     while 1:
         line = p.readline()
         if not line: break

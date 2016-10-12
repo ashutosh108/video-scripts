@@ -31,3 +31,8 @@ class test_demux(TestCase):
         dir = os.path.dirname(__file__)
         filename = os.path.join(dir, 'files', '2016-10-07 janardanmj_goswamimj.mp4')
         self.assertEqual('Bhakti Pavan Janardan, Bhakti Sudhir Goswami', get_artist_eng(filename))
+
+    def test_get_artist_eng_ranjan(self):
+        dir = os.path.dirname(__file__)
+        filename = os.path.join(dir, 'files', '2016-10-07 brmadhusudan.mp4')
+        self.assertEqual('Bhakti Rañjan Madhusudan', get_artist_eng(filename))
