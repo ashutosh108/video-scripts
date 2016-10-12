@@ -90,6 +90,7 @@ def demux_file(filename: str) -> None:
            '-metadata', 'genre=Speech']
     if year:
         cmd += ['-metadata', 'date=' + year + '-' + month + '-' + day]
+        cmd += ['-metadata', 'comment=' + year + '-' + month + '-' + day]
     if skip_time:
         cmd += ['-ss', skip_time]
     cmd += [
