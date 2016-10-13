@@ -3,7 +3,6 @@ import os
 import subprocess
 
 import meta
-import upload_video
 
 def usage_and_exit():
     print("""mux eng/rus audio files into a Goswami Maharaj's video

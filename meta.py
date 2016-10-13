@@ -55,6 +55,14 @@ def get_title_eng(filename):
         return os.path.basename(os.path.splitext(filename)[0])
 
 
+def get_title_rus(filename):
+    y = yaml_data(filename)
+    try:
+        return y['title_rus']
+    except KeyError:
+        return os.path.basename(os.path.splitext(filename)[0])
+
+
 def artist_real_name(artist):
     known_artists = dict(
         goswamimj='Bhakti Sudhir Goswami',
@@ -65,6 +73,22 @@ def artist_real_name(artist):
         bbavadhut='Bhakti Bimal Avadhut',
         madhusudanmj='Bhakti Rañjan Madhusudan',
         brmadhusudan='Bhakti Rañjan Madhusudan'
+    )
+    if artist in known_artists:
+        return known_artists[artist]
+    return artist
+
+
+def artist_real_name_rus(artist):
+    known_artists = dict(
+        goswamimj='Бхакти Судхир Госвами',
+        bsgoswami='Бхакти Судхир Госвами',
+        janardanmj='Бхакти Паван Джанардан',
+        bpjanardan='Бхакти Паван Джанардан',
+        avadhutmj='Бхакти Бимал Авадхут',
+        bbavadhut='Бхакти Бимал Авадхут',
+        madhusudanmj='Бхакти Ранджан Мадхусудан',
+        brmadhusudan='Бхакти Ранджан Мадхусудан'
     )
     if artist in known_artists:
         return known_artists[artist]
@@ -84,6 +108,19 @@ def get_artist_eng(filename):
         return 'Unknown'
 
 
+def get_artist_rus(filename):
+    basename = os.path.basename(filename)
+    match = re.match('^(\d\d\d\d)-?(\d\d)-?(\d\d)\s+(.*)\.', basename)
+    if match is not None:
+        artists_str = match.group(4)
+        artists = []
+        for artist in artists_str.split('_'):
+            artists.append(artist_real_name_rus(artist))
+        return ', '.join(artists)
+    else:
+        return 'Автор неизвестен'
+
+
 def get_year_month_day(filename):
     basename = os.path.basename(filename)
     match = re.match('^(\d\d\d\d)-?(\d\d)-?(\d\d)', basename)
@@ -100,6 +137,21 @@ def ffmpeg_meta_args(filename):
        '-metadata', 'artist=' + artist,
        '-metadata', 'title=' + title,
        '-metadata', 'album=Gupta Govardhan 2016',
+       '-metadata', 'genre=Speech']
+    if year:
+        args += ['-metadata', 'date=' + year + '-' + month + '-' + day]
+        args += ['-metadata', 'comment=' + year + '-' + month + '-' + day]
+    return args
+
+
+def ffmpeg_meta_args_rus_mono(filename):
+    title = get_title_rus(filename) + ' (моно)'
+    artist = get_artist_rus(filename)
+    [year, month, day] = get_year_month_day(filename)
+    args = [
+       '-metadata', 'artist=' + artist,
+       '-metadata', 'title=' + title,
+       '-metadata', 'album=Гупта Говардхан 2016',
        '-metadata', 'genre=Speech']
     if year:
         args += ['-metadata', 'date=' + year + '-' + month + '-' + day]
