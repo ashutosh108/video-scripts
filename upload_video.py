@@ -75,7 +75,7 @@ def get_authenticated_service():
                                                        scope=YOUTUBE_UPLOAD_SCOPE,
                                                        message=MISSING_CLIENT_SECRETS_MESSAGE)
 
-    storage = oauth2client.file.Storage("%s-oauth2.json" % sys.argv[0])
+    storage = oauth2client.file.Storage("%s-oauth2.json" % __file__)
     credentials = storage.get()
 
     if credentials is None or credentials.invalid:
@@ -192,15 +192,20 @@ def resumable_upload(insert_request, filename):
             time.sleep(sleep_seconds)
 
 
-if __name__ == '__main__':
-    oauth2client.tools.argparser.add_argument("--file", required=True, help="Video file to upload")
-    args = oauth2client.tools.argparser.parse_args()
-
-    if not os.path.exists(args.file):
-        exit("Please specify a valid file using the --file= parameter.")
-
+def upload(filename):
     youtube = get_authenticated_service()
     try:
-        initialize_upload(youtube, args.file)
+        initialize_upload(youtube, filename)
     except googleapiclient.errors.HttpError as e:
         print("An HTTP error %d occurred:\n%s" % (e.resp.status, e.content))
+
+
+def main():
+    oauth2client.tools.argparser.add_argument("--file", required=True, help="Video file to upload")
+    args = oauth2client.tools.argparser.parse_args()
+    if not os.path.exists(args.file):
+        exit("Please specify a valid file using the --file= parameter.")
+    upload(args.file)
+
+if __name__ == '__main__':
+    main()
