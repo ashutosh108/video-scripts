@@ -4,6 +4,7 @@ import subprocess
 
 import meta
 
+
 def usage_and_exit():
     print("""mux eng/rus audio files into a Goswami Maharaj's video
 usage: mux "yyyy-mm-dd goswamimj.mp4"
