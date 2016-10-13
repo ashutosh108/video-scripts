@@ -13,27 +13,17 @@ usage: demux "yyyy-mm-dd goswamimj.mp4"
 
 
 def demux_file(filename: str) -> None:
-    dirname = os.path.dirname(filename)
-    basename = os.path.basename(filename)
-    basename_wo_ext = os.path.splitext(basename)[0]
-    eng_m4a = os.path.join(dirname, 'temp', basename_wo_ext + '_eng.m4a')
-    plain_m4a = os.path.join(dirname, 'temp', basename_wo_ext + '.m4a')
     cmd = ['ffmpeg',
            '-y',
            '-i', filename]
     cmd += meta.ffmpeg_meta_args(filename)
     cmd += meta.get_ss_args(filename)
-    cmd += [
-        '-c', 'copy', '-movflags', '+faststart',
-        eng_m4a,
-        '-c', 'copy', '-movflags', '+faststart',
-        plain_m4a]
+    cmd += ['-c:a', 'copy', '-vn',
+            meta.get_work_filename(filename, '_eng.m4a'),
+            '-c:a', 'copy', '-vn',
+            meta.get_work_filename(filename, '.m4a')]
     print(repr(cmd))
-    p = subprocess.Popen(cmd, stdout=subprocess.PIPE).stdout
-    while 1:
-        line = p.readline()
-        if not line: break
-        print(line)
+    subprocess.run(cmd, check=True)
 
 
 def main():

@@ -180,3 +180,10 @@ def ffmpeg_meta_args_rus_stereo(filename):
         args += ['-metadata', 'date=' + year + '-' + month + '-' + day]
         args += ['-metadata', 'comment=' + year + '-' + month + '-' + day]
     return args
+
+
+def get_work_filename(filename, add):
+    dirname = os.path.dirname(filename)
+    basename = os.path.basename(filename)
+    basename_wo_ext = os.path.splitext(basename)[0]
+    return os.path.join(dirname, 'temp', basename_wo_ext + add)
