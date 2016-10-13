@@ -17,7 +17,7 @@ def yaml_data(filename):
     return _yaml_data[filename]
 
 
-def get_ss_arg_for_file(filename: str) -> str:
+def get_skip_time(filename: str) -> str:
     """
     get proper argument for -ss min:sec part of the ffmpeg command line
     e.g. '2:51' if that's what's written in filename_offset.txt

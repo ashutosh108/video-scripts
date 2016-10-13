@@ -13,7 +13,7 @@ usage: demux "yyyy-mm-dd goswamimj.mp4"
 
 
 def demux_file(filename: str) -> None:
-    skip_time = meta.get_ss_arg_for_file(filename)
+    skip_time = meta.get_skip_time(filename)
 
     dirname = os.path.dirname(filename)
     basename = os.path.basename(filename)

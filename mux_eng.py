@@ -12,7 +12,7 @@ usage: mux "yyyy-mm-dd goswamimj.mp4"
     exit()
 
 def mux_eng(filename):
-    skip_time = meta.get_ss_arg_for_file(filename)
+    skip_time = meta.get_skip_time(filename)
     if skip_time:
         ss_args = ['-ss', skip_time]
     else:
