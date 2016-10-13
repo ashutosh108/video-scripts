@@ -14,7 +14,6 @@ def yaml_data(filename):
                 _yaml_data[filename] = yaml.load(f)
         except IndexError as e:
             _yaml_data[filename] = dict()
-    print(repr(_yaml_data))
     return _yaml_data[filename]
 
 
@@ -26,13 +25,14 @@ def get_ss_arg_for_file(filename: str) -> str:
     :param filename:
     :return: string or None
     """
-    try:
-        name_wo_ext = os.path.splitext(filename)[0]
-        offset_filename = '%s_offset.txt' % name_wo_ext
-        with open(offset_filename) as f:
-            return f.readline().rstrip()
-    except FileNotFoundError:
-        return None
+    name_wo_ext = os.path.splitext(filename)[0]
+    for offset_filename in ['%s_offset.txt' % name_wo_ext, '%s offset.txt' % name_wo_ext]:
+        try:
+            with open(offset_filename) as f:
+                return f.readline().rstrip()
+        except FileNotFoundError:
+            pass
+    return None
 
 
 def get_title_for_file(filename):
