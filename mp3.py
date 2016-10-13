@@ -21,7 +21,7 @@ def mp3(filename):
     cmd += meta.get_ss_args(filename)
     cmd += meta.ffmpeg_meta_args_rus_stereo(filename)
     cmd += [meta.get_work_filename(filename, '_rus_stereo.mp3')]
-    subprocess.run(cmd, check=True)
+    p_rus_stereo = subprocess.Popen(cmd)
 
     cmd = ['ffmpeg', '-y',
            '-i', rus_mixdown_wav,
@@ -31,7 +31,7 @@ def mp3(filename):
     cmd += meta.get_ss_args(filename)
     cmd += meta.ffmpeg_meta_args_rus_mono(filename)
     cmd += [meta.get_work_filename(filename, '_rus_mono.mp3')]
-    subprocess.run(cmd, check=True)
+    p_rus_mono = subprocess.Popen(cmd)
 
     cmd = ['ffmpeg', '-y',
            '-i', meta.get_work_filename(filename, '.m4a'),
@@ -40,7 +40,11 @@ def mp3(filename):
     cmd += meta.get_ss_args(filename)
     cmd += meta.ffmpeg_meta_args(filename)
     cmd += [meta.get_work_filename(filename, '_eng.mp3')]
-    subprocess.run(cmd, check=True)
+    p_eng = subprocess.Popen(cmd)
+
+    p_rus_stereo.communicate()
+    p_rus_mono.communicate()
+    p_eng.communicate()
 
 def main():
     try:
