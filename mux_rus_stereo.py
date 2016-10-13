@@ -4,14 +4,13 @@ import subprocess
 
 import meta
 
+
 def usage_and_exit():
-    print("""echo mux eng/rus audio files into a Goswami Maharaj's video
-echo usage: mux "yyyy-mm-dd goswamimj.mp4"
-echo (or drag and drop the file onto me)""")
+    print("""mux_rus_stereo: mux video with russian stereo mix and upload it to youtube""")
     exit()
 
 
-def mux(filename):
+def mux_rus_stereo(filename):
     skip_time = meta.get_skip_time(filename)
     if skip_time:
         ss_args = ['-ss', skip_time]
@@ -21,37 +20,27 @@ def mux(filename):
     dirname = os.path.dirname(filename)
     basename = os.path.basename(filename)
     basename_wo_ext = os.path.splitext(basename)[0]
-    rus_mono_m4a = os.path.join(dirname, 'temp', basename_wo_ext + '_rus_mono.m4a')
-    rus_mono_mp4 = os.path.join(dirname, 'temp', basename_wo_ext + '_rus_mono.mp4')
+    rus_stereo_mp4 = os.path.join(dirname, 'temp', basename_wo_ext + '_rus_stereo.mp4')
     rus_mixdown_wav = os.path.join(dirname, 'temp', basename_wo_ext + '_rus_mixdown.wav')
-    subprocess.run(
-        'start C:\\Users\\ashutosh\\Dropbox\\Reference\\S\\scripts\\mux_rus_stereo.cmd "%s"' % filename,
-        shell=True, check=True)
-
     cmd = ['D:\\video\\GoswamiMj-videos\\ffmpeg-hi8-heaac.exe', '-y',
+           '-i', filename,
            '-i', rus_mixdown_wav,
-           '-c:a', 'libfdk_aac', '-ac', '1', '-b:a', '128k',
+           '-map', '0:v',
+           '-c:v', 'copy',
+           '-map', '1:a',
+           '-c:a:0', 'libfdk_aac',
+           '-b:a', '384k',
            '-metadata:s:a:0', 'language=rus',
            '-movflags', '+faststart']
-    cmd += meta.ffmpeg_meta_args_rus_mono(filename)
-    cmd += [rus_mono_m4a]
-    subprocess.run(cmd, check=True)
-
-    cmd = ['ffmpeg', '-y',
-           '-i', filename,
-           '-i', rus_mono_m4a,
-           '-map', '0:v',
-           '-map', '1:a',
-           '-c', 'copy',
-           '-movflags', '+faststart']
-    cmd += meta.ffmpeg_meta_args_rus_mono(filename)
+    cmd += meta.ffmpeg_meta_args_rus_stereo(filename)
     cmd += ss_args
-    cmd += [rus_mono_mp4]
+    cmd += [rus_stereo_mp4]
     subprocess.run(cmd, check=True)
 
     cmd = ['python', 'C:\\Users\\ashutosh\\Dropbox\\Reference\\S\scripts\\upload_video.py',
-           '--file', rus_mono_mp4]
+           '--file', rus_stereo_mp4]
     subprocess.run(cmd, check=True)
+pass
 
 
 def main():
@@ -61,7 +50,7 @@ def main():
             print('file "%s" not found' % filename)
             print('')
             usage_and_exit()
-        mux(filename)
+        mux_rus_stereo(filename)
     except IndexError:
         usage_and_exit()
 

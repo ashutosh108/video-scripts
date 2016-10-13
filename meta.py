@@ -157,3 +157,18 @@ def ffmpeg_meta_args_rus_mono(filename):
         args += ['-metadata', 'date=' + year + '-' + month + '-' + day]
         args += ['-metadata', 'comment=' + year + '-' + month + '-' + day]
     return args
+
+
+def ffmpeg_meta_args_rus_stereo(filename):
+    title = get_title_rus(filename)
+    artist = get_artist_rus(filename)
+    [year, month, day] = get_year_month_day(filename)
+    args = [
+       '-metadata', 'artist=' + artist,
+       '-metadata', 'title=' + title,
+       '-metadata', 'album=Гупта Говардхан 2016',
+       '-metadata', 'genre=Speech']
+    if year:
+        args += ['-metadata', 'date=' + year + '-' + month + '-' + day]
+        args += ['-metadata', 'comment=' + year + '-' + month + '-' + day]
+    return args
