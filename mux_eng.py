@@ -3,6 +3,7 @@ import os
 import subprocess
 
 import meta
+import upload_video
 
 
 def usage_and_exit():
@@ -22,9 +23,11 @@ def mux_eng(filename):
     cmd += [eng_mp4]
     subprocess.run(cmd, check=True)
 
-    cmd = ['python', 'C:\\Users\\ashutosh\\Dropbox\\Reference\\S\scripts\\upload_video.py',
-           '--file', eng_mp4]
-    subprocess.run(cmd, check=True)
+    title = meta.get_youtube_title_eng(filename)
+
+    description = meta.get_youtube_description_eng(filename)
+
+    upload_video.upload(eng_mp4, title=title, description=description)
 
 
 def main():

@@ -2,6 +2,7 @@ import os
 import re
 import yaml
 import datetime
+import string
 
 _yaml_data = {}
 
@@ -187,3 +188,41 @@ def get_work_filename(filename, add):
     basename = os.path.basename(filename)
     basename_wo_ext = os.path.splitext(basename)[0]
     return os.path.join(dirname, 'temp', basename_wo_ext + add)
+
+
+def get_youtube_title_eng(filename):
+    title = get_title_eng(filename)
+    if title[-1] not in string.punctuation:
+        title += '.'
+    artist = get_artist_eng(filename)
+    return title + ' ' + artist
+
+
+def get_description_eng(filename):
+    try:
+        return yaml_data(filename)['descr_eng']
+    except KeyError:
+        return ''
+
+
+def srila_maharaj_eng(name):
+    return 'Srila ' + name + ' Maharaj'
+
+
+def get_author_with_title_eng(filename):
+    authors = get_artist_eng(filename).split(', ')
+    return ', '.join(map(srila_maharaj_eng, authors))
+
+
+def get_youtube_description_eng(filename):
+    year, month, day = get_year_month_day(filename)
+    dt_obj = datetime.date(int(year), int(month), int(day))
+    author_with_title = get_author_with_title_eng(filename)
+    date = '{dt:%B} {dt.day}, {dt:%Y}'.format(dt=dt_obj)
+    yt_descr = get_description_eng(filename) + '\n'
+    yt_descr += author_with_title + '\n'  # e.g. Srila Bhakti Rañjan Madhusudan Maharaj
+    yt_descr += date + '\n'  # e.g. October 11, 2016
+    yt_descr += 'Theistic Media Studios, Gupta Govardhan Ashram.\n'
+    yt_descr += 'Downloaded from TMS_TV livestream.com/accounts/2645002\n\n'
+    yt_descr += 'На русском: (ссылка скоро будет)'
+    return yt_descr

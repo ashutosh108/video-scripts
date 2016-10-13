@@ -4,7 +4,6 @@ import http.client
 import httplib2
 import os
 import random
-import sys
 import progressbar
 import time
 import re
@@ -85,8 +84,8 @@ def get_authenticated_service():
                                            http=credentials.authorize(httplib2.Http()))
 
 
-def initialize_upload(youtube, filename):
-    body = compose_upload_body(filename)
+def initialize_upload(youtube, filename, kwargs):
+    body = compose_upload_body(filename, kwargs)
     # Call the API's videos.insert method to create and upload the video.
     insert_request = youtube.videos().insert(
         part=','.join(body.keys()),
@@ -108,9 +107,9 @@ def initialize_upload(youtube, filename):
     resumable_upload(insert_request, filename)
 
 
-def compose_upload_body(filename):
+def compose_upload_body(filename, kwargs):
     tags = [
-        'Bhakti Sudhir Goswami(Person)',
+        'Bhakti Sudhir Goswami (Person)',
         'Bhakti(Religious Practice)',
         'Religion(TV Genre)',
         'Talking',
@@ -129,11 +128,13 @@ def compose_upload_body(filename):
         recording_date = year + '-' + month + '-' + day
     else:
         recording_date = None
-    title = base_filename
-    lang = 'ru' if ('_rus' in title) else 'en'
+    title = kwargs['title'] if 'title' in kwargs else base_filename
+    lang = kwargs['lang'] if 'lang' in kwargs else ('ru' if ('_rus' in title) else 'en')
+    description = kwargs['description'] if 'description' in kwargs else ''
     body = dict(
         snippet=dict(
             title=title,
+            description=description,
             tags=tags,
             categoryId=27,
             defaultLanguage=lang,
@@ -192,10 +193,10 @@ def resumable_upload(insert_request, filename):
             time.sleep(sleep_seconds)
 
 
-def upload(filename):
+def upload(filename, **kwargs):
     youtube = get_authenticated_service()
     try:
-        initialize_upload(youtube, filename)
+        initialize_upload(youtube, filename, kwargs)
     except googleapiclient.errors.HttpError as e:
         print("An HTTP error %d occurred:\n%s" % (e.resp.status, e.content))
 

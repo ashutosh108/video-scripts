@@ -61,3 +61,19 @@ class test_meta(TestCase):
         filename = os.path.join(dir, 'files', '2016-10-12 brmadhusudan.mp4')
         skip_time = meta.get_skip_time(filename)
         self.assertEqual('0:07:56', skip_time)
+
+    def test_get_youtube_description_eng(self):
+        dir = os.path.dirname(__file__)
+        filename = os.path.join(dir, 'files', '2016-10-12 brmadhusudan.mp4')
+        expected = """- The story of Chiangmai ashram
+- Good fortune of those who have facilities for practicing devotional life
+- How Srila Govinda Maharaj appreciated Thai culture
+- The original purpose of the building of Chiangmai ashram: sanskrit school
+
+Srila Bhakti Rañjan Madhusudan Maharaj
+October 12, 2016
+Theistic Media Studios, Gupta Govardhan Ashram.
+Downloaded from TMS_TV livestream.com/accounts/2645002
+
+На русском: (ссылка скоро будет)"""
+        self.assertEqual(expected, meta.get_youtube_description_eng(filename))
