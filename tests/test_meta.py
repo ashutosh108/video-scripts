@@ -48,3 +48,16 @@ class test_meta(TestCase):
         filename = os.path.join(dir, 'files', '2016-10-07 goswamimj.mp4')
         title_eng = meta.get_title_eng(filename)
         self.assertEqual('Have faith in Guru-Vaishnava, not in yourself', title_eng)
+
+    def test_get_skip_time(self):
+        dir = os.path.dirname(__file__)
+        filename = os.path.join(dir, 'files', '2016-10-07 goswamimj.mp4')
+        skip_time = meta.get_skip_time(filename)
+        self.assertEqual('1:15', skip_time)
+
+
+    def test_get_skip_time_from_yml(self):
+        dir = os.path.dirname(__file__)
+        filename = os.path.join(dir, 'files', '2016-10-12 brmadhusudan.mp4')
+        skip_time = meta.get_skip_time(filename)
+        self.assertEqual('0:07:56', skip_time)
