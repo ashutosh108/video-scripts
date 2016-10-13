@@ -1,6 +1,7 @@
 import os
 import re
 import yaml
+import datetime
 
 _yaml_data = {}
 
@@ -12,7 +13,7 @@ def yaml_data(filename):
             yaml_filename = os.path.splitext(filename)[0] + '.yml'
             with open(yaml_filename, 'r', encoding='UTF-8') as f:
                 _yaml_data[filename] = yaml.load(f)
-        except IndexError as e:
+        except (IndexError, FileNotFoundError) as e:
             _yaml_data[filename] = dict()
     return _yaml_data[filename]
 
@@ -32,7 +33,11 @@ def get_skip_time(filename: str) -> str:
                 return f.readline().rstrip()
         except FileNotFoundError:
             pass
-    return None
+    y = yaml_data(filename)
+    try:
+        return str(datetime.timedelta(seconds=y['skip']))
+    except KeyError:
+        return None
 
 
 def get_title_for_file(filename):
