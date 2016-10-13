@@ -40,6 +40,14 @@ def get_skip_time(filename: str) -> str:
         return None
 
 
+def get_ss_args(filename):
+    skip_time = get_skip_time(filename)
+    if skip_time:
+        return ['-ss', skip_time]
+    else:
+        return []
+
+
 def get_title_for_file(filename):
     basename = os.path.basename(filename)
     basename_wo_ext = os.path.splitext(basename)[0]

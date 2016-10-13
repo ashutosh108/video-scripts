@@ -11,12 +11,6 @@ def usage_and_exit():
 
 
 def mux_rus_stereo(filename):
-    skip_time = meta.get_skip_time(filename)
-    if skip_time:
-        ss_args = ['-ss', skip_time]
-    else:
-        ss_args = []
-
     dirname = os.path.dirname(filename)
     basename = os.path.basename(filename)
     basename_wo_ext = os.path.splitext(basename)[0]
@@ -33,7 +27,7 @@ def mux_rus_stereo(filename):
            '-metadata:s:a:0', 'language=rus',
            '-movflags', '+faststart']
     cmd += meta.ffmpeg_meta_args_rus_stereo(filename)
-    cmd += ss_args
+    cmd += meta.get_ss_args(filename)
     cmd += [rus_stereo_mp4]
     subprocess.run(cmd, check=True)
 

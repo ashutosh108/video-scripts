@@ -13,8 +13,6 @@ usage: demux "yyyy-mm-dd goswamimj.mp4"
 
 
 def demux_file(filename: str) -> None:
-    skip_time = meta.get_skip_time(filename)
-
     dirname = os.path.dirname(filename)
     basename = os.path.basename(filename)
     basename_wo_ext = os.path.splitext(basename)[0]
@@ -24,8 +22,7 @@ def demux_file(filename: str) -> None:
            '-y',
            '-i', filename]
     cmd += meta.ffmpeg_meta_args(filename)
-    if skip_time:
-        cmd += ['-ss', skip_time]
+    cmd += meta.get_ss_args(filename)
     cmd += [
         '-c', 'copy', '-movflags', '+faststart',
         eng_m4a,
