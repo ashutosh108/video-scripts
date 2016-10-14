@@ -16,10 +16,10 @@ def mux(filename):
         'start C:\\Users\\ashutosh\\Dropbox\\Reference\\S\\scripts\\mux_rus_stereo.cmd "%s"' % filename,
         shell=True, check=True)
 
-    rus_mono_m4a = meta.get_work_filename(filename, '_rus_mono.m4a')
-    rus_mono_mp4 = meta.get_work_filename(filename, '_rus_mono.mp4')
+    rus_mono_m4a = meta.get_work_filename(filename, ' rus_mono.m4a')
+    rus_mono_mp4 = meta.get_work_filename(filename, ' rus_mono.mp4')
     cmd = ['D:\\video\\GoswamiMj-videos\\ffmpeg-hi8-heaac.exe', '-y',
-           '-i', meta.get_work_filename(filename, '_rus_mixdown.wav'),
+           '-i', meta.get_work_filename(filename, ' rus_mixdown.wav'),
            '-c:a', 'libfdk_aac', '-ac', '1', '-b:a', '128k',
            '-metadata:s:a:0', 'language=rus']
     cmd += meta.ffmpeg_meta_args_rus_mono(filename)

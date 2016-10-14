@@ -13,7 +13,7 @@ usage: mux "yyyy-mm-dd goswamimj.mp4"
     exit()
 
 def mux_eng(filename):
-    eng_mp4 = meta.get_work_filename(filename, '_eng.mp4')
+    eng_mp4 = meta.get_work_filename(filename, ' eng.mp4')
     cmd = ['ffmpeg', '-y',
            '-i', filename,
            '-c', 'copy',

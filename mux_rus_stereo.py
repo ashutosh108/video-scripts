@@ -11,10 +11,10 @@ def usage_and_exit():
 
 
 def mux_rus_stereo(filename):
-    rus_stereo_mp4 = meta.get_work_filename(filename, '_rus_stereo.mp4')
+    rus_stereo_mp4 = meta.get_work_filename(filename, ' rus_stereo.mp4')
     cmd = ['D:\\video\\GoswamiMj-videos\\ffmpeg-hi8-heaac.exe', '-y',
            '-i', filename,
-           '-i', meta.get_work_filename(filename, '_rus_mixdown.wav'),
+           '-i', meta.get_work_filename(filename, ' rus_mixdown.wav'),
            '-map', '0:v',
            '-c:v', 'copy',
            '-map', '1:a',

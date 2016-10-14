@@ -19,7 +19,7 @@ def demux_file(filename: str) -> None:
     cmd += meta.ffmpeg_meta_args(filename)
     cmd += meta.get_ss_args(filename)
     cmd += ['-c:a', 'copy', '-vn',
-            meta.get_work_filename(filename, '_eng.m4a'),
+            meta.get_work_filename(filename, ' eng.m4a'),
             '-c:a', 'copy', '-vn',
             meta.get_work_filename(filename, '.m4a')]
     print(repr(cmd))

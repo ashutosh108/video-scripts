@@ -1,4 +1,5 @@
 from unittest import TestCase
+import unittest
 
 import meta
 
@@ -54,7 +55,6 @@ class test_meta(TestCase):
         filename = os.path.join(dir, 'files', '2016-10-07 goswamimj.mp4')
         skip_time = meta.get_skip_time(filename)
         self.assertEqual('1:15', skip_time)
-
 
     def test_get_skip_time_from_yml(self):
         dir = os.path.dirname(__file__)

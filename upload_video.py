@@ -150,6 +150,7 @@ def compose_upload_body(filename, kwargs):
         body['recordingDetails'] = dict(
             recordingDate=recording_date + 'T12:45:00.000Z'
         )
+    print(repr(body))
     return body
 
 
