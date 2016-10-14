@@ -110,8 +110,8 @@ def initialize_upload(youtube, filename, kwargs):
 def compose_upload_body(filename, kwargs):
     tags = [
         'Bhakti Sudhir Goswami (Person)',
-        'Bhakti(Religious Practice)',
-        'Religion(TV Genre)',
+        'Bhakti (Religious Practice)',
+        'Religion (TV Genre)',
         'Talking',
         'Yoga',
         'Meditation',
