@@ -104,7 +104,8 @@ def initialize_upload(youtube, filename, kwargs):
         media_body=googleapiclient.http.MediaFileUpload(filename, chunksize=10*1024*1024, resumable=True)
     )
 
-    resumable_upload(insert_request, filename)
+    video_id = resumable_upload(insert_request, filename)
+    return video_id
 
 
 def compose_upload_body(filename, kwargs):
@@ -170,8 +171,9 @@ def resumable_upload(insert_request, filename):
                 if 'id' in response:
                     bar.finish()
                     print("Video id '%s' was successfully uploaded." % response['id'])
+                    return response['id']
                 else:
-                    exit("The upload failed with an unexpected response: %s" % response)
+                    raise Exception("The upload failed with an unexpected response: %s" % response)
         except googleapiclient.errors.HttpError as e:
             if e.resp.status in RETRIABLE_STATUS_CODES:
                 error = "A retriable HTTP error %d occurred:\n%s" % (e.resp.status,
@@ -185,7 +187,7 @@ def resumable_upload(insert_request, filename):
             print(error)
             retry += 1
             if retry > MAX_RETRIES:
-                exit("No longer attempting to retry.")
+                raise Exception("No longer attempting to retry.")
 
             max_sleep = 2 ** retry
             sleep_seconds = random.random() * max_sleep
@@ -195,10 +197,7 @@ def resumable_upload(insert_request, filename):
 
 def upload(filename, **kwargs):
     youtube = get_authenticated_service()
-    try:
-        initialize_upload(youtube, filename, kwargs)
-    except googleapiclient.errors.HttpError as e:
-        print("An HTTP error %d occurred:\n%s" % (e.resp.status, e.content))
+    return initialize_upload(youtube, filename, kwargs)
 
 
 def main():
