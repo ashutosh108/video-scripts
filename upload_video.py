@@ -84,8 +84,7 @@ def _get_authenticated_service():
                                            http=credentials.authorize(httplib2.Http()))
 
 
-def _initialize_upload(youtube, filename, kwargs):
-    body = _compose_upload_body(filename, kwargs)
+def _initialize_upload(youtube, filename, body):
     # Call the API's videos.insert method to create and upload the video.
     insert_request = youtube.videos().insert(
         part=','.join(body.keys()),
@@ -108,7 +107,7 @@ def _initialize_upload(youtube, filename, kwargs):
     return video_id
 
 
-def _compose_upload_body(filename, kwargs):
+def _compose_upload_body(filename, title=None, lang=None, description=None):
     tags = [
         'Bhakti Sudhir Goswami (Person)',
         'Bhakti (Religious Practice)',
@@ -123,24 +122,25 @@ def _compose_upload_body(filename, kwargs):
         'SCSM',
         'Hare Krishna']
     base_filename = os.path.basename(filename)
-    title = kwargs.get('title', base_filename)
-    default_lang = 'ru' if ('_rus' in title) else 'en'
-    lang = kwargs.get('lang', default_lang)
-    description = kwargs.get('description', '')
+    if title is None:
+        title = base_filename
+    if lang is None:
+        lang = 'ru' if ('_rus' in base_filename) else 'en'
     body = dict(
         snippet=dict(
             title=title,
-            description=description,
             tags=tags,
             categoryId=27,
             defaultLanguage=lang,
             defaultAudioLanguage=lang
         ),
         status=dict(
-            privacyStatus="unlisted",
+            privacyStatus='unlisted',
             publicStatsViewable=False
         )
     )
+    if description:
+        body['snippet']['description'] = description
 
     match = re.match('^(\d\d\d\d)-?(\d\d)-?(\d\d)[^0-9]', base_filename)
     if match is not None:
@@ -151,7 +151,6 @@ def _compose_upload_body(filename, kwargs):
     if recording_date is not None:
         body['recordingDetails'] = dict(recordingDate=recording_date)
 
-    print(repr(body))
     return body
 
 
@@ -197,9 +196,10 @@ def _resumable_upload(insert_request, filename):
             time.sleep(sleep_seconds)
 
 
-def upload(filename, **kwargs):
+def upload(filename, title=None, lang=None, description=None):
     youtube = _get_authenticated_service()
-    return _initialize_upload(youtube, filename, kwargs)
+    body = _compose_upload_body(filename, title, lang, description)
+    return _initialize_upload(youtube, filename, body)
 
 
 def _main():
