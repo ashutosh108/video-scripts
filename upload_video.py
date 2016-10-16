@@ -69,7 +69,7 @@ https://developers.google.com/api-client-library/python/guide/aaa_client_secrets
                                    CLIENT_SECRETS_FILE))
 
 
-def get_authenticated_service():
+def _get_authenticated_service():
     flow = oauth2client.client.flow_from_clientsecrets(CLIENT_SECRETS_FILE,
                                                        scope=YOUTUBE_UPLOAD_SCOPE,
                                                        message=MISSING_CLIENT_SECRETS_MESSAGE)
@@ -84,8 +84,8 @@ def get_authenticated_service():
                                            http=credentials.authorize(httplib2.Http()))
 
 
-def initialize_upload(youtube, filename, kwargs):
-    body = compose_upload_body(filename, kwargs)
+def _initialize_upload(youtube, filename, kwargs):
+    body = _compose_upload_body(filename, kwargs)
     # Call the API's videos.insert method to create and upload the video.
     insert_request = youtube.videos().insert(
         part=','.join(body.keys()),
@@ -104,11 +104,11 @@ def initialize_upload(youtube, filename, kwargs):
         media_body=googleapiclient.http.MediaFileUpload(filename, chunksize=10*1024*1024, resumable=True)
     )
 
-    video_id = resumable_upload(insert_request, filename)
+    video_id = _resumable_upload(insert_request, filename)
     return video_id
 
 
-def compose_upload_body(filename, kwargs):
+def _compose_upload_body(filename, kwargs):
     tags = [
         'Bhakti Sudhir Goswami (Person)',
         'Bhakti (Religious Practice)',
@@ -123,15 +123,10 @@ def compose_upload_body(filename, kwargs):
         'SCSM',
         'Hare Krishna']
     base_filename = os.path.basename(filename)
-    match = re.match('^(\d\d\d\d)-?(\d\d)-?(\d\d)[^0-9]', base_filename)
-    if match is not None:
-        year, month, day = match.groups()
-        recording_date = year + '-' + month + '-' + day
-    else:
-        recording_date = None
-    title = kwargs['title'] if 'title' in kwargs else base_filename
-    lang = kwargs['lang'] if 'lang' in kwargs else ('ru' if ('_rus' in title) else 'en')
-    description = kwargs['description'] if 'description' in kwargs else ''
+    title = kwargs.get('title', base_filename)
+    default_lang = 'ru' if ('_rus' in title) else 'en'
+    lang = kwargs.get('lang', default_lang)
+    description = kwargs.get('description', '')
     body = dict(
         snippet=dict(
             title=title,
@@ -146,17 +141,23 @@ def compose_upload_body(filename, kwargs):
             publicStatsViewable=False
         )
     )
+
+    match = re.match('^(\d\d\d\d)-?(\d\d)-?(\d\d)[^0-9]', base_filename)
+    if match is not None:
+        year, month, day = match.groups()
+        recording_date = year + '-' + month + '-' + day + 'T12:45:00.000Z'
+    else:
+        recording_date = None
     if recording_date is not None:
-        body['recordingDetails'] = dict(
-            recordingDate=recording_date + 'T12:45:00.000Z'
-        )
+        body['recordingDetails'] = dict(recordingDate=recording_date)
+
     print(repr(body))
     return body
 
 
 # This method implements an exponential backoff strategy to resume a
 # failed upload.
-def resumable_upload(insert_request, filename):
+def _resumable_upload(insert_request, filename):
     response = None
     error = None
     retry = 0
@@ -197,11 +198,11 @@ def resumable_upload(insert_request, filename):
 
 
 def upload(filename, **kwargs):
-    youtube = get_authenticated_service()
-    return initialize_upload(youtube, filename, kwargs)
+    youtube = _get_authenticated_service()
+    return _initialize_upload(youtube, filename, kwargs)
 
 
-def main():
+def _main():
     oauth2client.tools.argparser.add_argument("--file", required=True, help="Video file to upload")
     args = oauth2client.tools.argparser.parse_args()
     if not os.path.exists(args.file):
@@ -209,4 +210,4 @@ def main():
     upload(args.file)
 
 if __name__ == '__main__':
-    main()
+    _main()
