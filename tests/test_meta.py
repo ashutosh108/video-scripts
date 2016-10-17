@@ -15,6 +15,13 @@ class test_meta(TestCase):
         filename = os.path.join(dir, 'files', '2016-10-07 goswamimj.mp4')
         self.assertEqual(meta._get_skip_time(filename), '1:15')
 
+    # pyyaml somehow automatically leaves 0:07 as '0:07', but converts 1:07 to int 67 (seconds).
+    # We have to deal with either.
+    def test_get_ss_args_for_zero_minutes(self):
+        dir = os.path.dirname(__file__)
+        filename = os.path.join(dir, 'files', '2016-10-17 avadhutmj.mp4')
+        self.assertEqual(meta._get_skip_time(filename), '0:07')
+
     def test_get_artist_eng(self):
         dir = os.path.dirname(__file__)
         filename = os.path.join(dir, 'files', '2016-10-07 goswamimj.mp4')

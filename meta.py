@@ -3,6 +3,7 @@ import re
 import yaml
 import datetime
 import string
+import numbers
 
 _yaml_data_cache = {}
 
@@ -36,7 +37,10 @@ def _get_skip_time(filename: str) -> str:
             pass
     y = _yaml_data(filename)
     try:
-        return str(datetime.timedelta(seconds=y['skip']))
+        skip = y['skip']
+        if isinstance(skip, numbers.Number):
+            skip = str(datetime.timedelta(seconds=y['skip']))
+        return skip
     except KeyError:
         return None
 
