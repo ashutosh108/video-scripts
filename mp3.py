@@ -33,18 +33,8 @@ def mp3(filename):
     cmd += [meta.get_work_filename(filename, ' rus_mono.mp3')]
     p_rus_mono = subprocess.Popen(cmd)
 
-    cmd = ['ffmpeg', '-y',
-           '-i', meta.get_work_filename(filename, '.m4a'),
-           '-ac', '1',
-           '-codec:a', 'mp3', '-b:a', '96k']
-    cmd += meta.get_ss_args(filename)
-    cmd += meta.ffmpeg_meta_args(filename)
-    cmd += [meta.get_work_filename(filename, ' eng.mp3')]
-    p_eng = subprocess.Popen(cmd)
-
     p_rus_stereo.communicate()
     p_rus_mono.communicate()
-    p_eng.communicate()
 
 def main():
     try:

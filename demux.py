@@ -12,28 +12,23 @@ usage: demux "yyyy-mm-dd goswamimj.mp4"
     exit()
 
 
-def demux_file(filename: str) -> None:
+def demux_file(orig_mp4_filename: str) -> None:
     cmd = ['ffmpeg',
            '-y',
-           '-i', filename]
-    cmd += meta.ffmpeg_meta_args(filename)
-    cmd += meta.get_ss_args(filename)
-    cmd += ['-c:a', 'copy', '-vn',
-            meta.get_work_filename(filename, ' eng.m4a'),
-            '-c:a', 'copy', '-vn',
-            meta.get_work_filename(filename, '.m4a')]
-    print(repr(cmd))
+           '-i', orig_mp4_filename,
+           '-c:a', 'copy', '-vn',
+           meta.get_work_filename(orig_mp4_filename, '.m4a')]
     subprocess.run(cmd, check=True)
 
 
 def main():
     try:
-        filename = sys.argv[1]
-        if not os.path.isfile(filename):
-            print('file "%s" not found' % filename)
+        orig_mp4_filename = sys.argv[1]
+        if not os.path.isfile(orig_mp4_filename):
+            print('file "%s" not found' % orig_mp4_filename)
             print('')
             usage_and_exit()
-        demux_file(filename)
+        demux_file(orig_mp4_filename)
     except IndexError:
         usage_and_exit()
 
