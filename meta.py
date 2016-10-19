@@ -15,7 +15,7 @@ def _yaml_data(filename):
             yaml_filename = os.path.splitext(filename)[0] + '.yml'
             with open(yaml_filename, 'r', encoding='UTF-8') as f:
                 _yaml_data_cache[filename] = yaml.load(f)
-        except (IndexError, FileNotFoundError) as e:
+        except (IndexError, FileNotFoundError):
             _yaml_data_cache[filename] = dict()
     return _yaml_data_cache[filename]
 
@@ -135,7 +135,7 @@ def _get_year_month_day(filename):
     return [None, None, None]
 
 
-def ffmpeg_meta_args(filename):
+def ffmpeg_meta_args_eng(filename):
     title = _get_title_eng(filename)
     artist = _get_artist_eng(filename)
     [year, month, day] = _get_year_month_day(filename)
@@ -181,10 +181,10 @@ def ffmpeg_meta_args_rus_stereo(filename):
 
 
 def get_work_filename(filename, add):
-    dirname = os.path.dirname(filename)
+    dir_name = os.path.dirname(filename)
     basename = os.path.basename(filename)
     basename_wo_ext = os.path.splitext(basename)[0]
-    return os.path.join(dirname, 'temp', basename_wo_ext + add)
+    return os.path.join(dir_name, 'temp', basename_wo_ext + add)
 
 
 def get_youtube_title_eng(filename):
