@@ -54,6 +54,13 @@ def get_ss_args(filename):
         return []
 
 
+def get_lang(filename):
+    try:
+        return _yaml_data(filename)['lang']
+    except KeyError:
+        return 'en'
+
+
 def _get_title_en(filename):
     y = _yaml_data(filename)
     try:
@@ -142,6 +149,13 @@ def _get_year_month_day(filename):
     return [None, None, None]
 
 
+def ffmpeg_meta_args(filename, lang):
+    if lang == 'ru':
+        return ffmpeg_meta_args_ru_stereo(filename)
+    else:
+        return ffmpeg_meta_args_en(filename)
+
+
 def ffmpeg_meta_args_en(filename):
     title = _get_title_en(filename)
     artist = _get_artist_en(filename)
@@ -192,6 +206,13 @@ def get_work_filename(filename, add):
     basename = os.path.basename(filename)
     basename_wo_ext = os.path.splitext(basename)[0]
     return os.path.join(dir_name, 'temp', basename_wo_ext + add)
+
+
+def get_youtube_title(filename, lang):
+    if lang == 'ru':
+        return get_youtube_title_ru_stereo(filename)
+    else:
+        return get_youtube_title_en(filename)
 
 
 def get_youtube_title_en(filename):
@@ -251,6 +272,13 @@ def _get_author_with_title_en(filename):
     return ', '.join(map(_srila_maharaj_en, authors))
 
 
+def get_youtube_description(filename, lang):
+    if lang == 'ru':
+        return get_youtube_description_ru_orig(filename)
+    else:
+        return get_youtube_description_en(filename)
+
+
 def get_youtube_description_en(filename):
     year, month, day = _get_year_month_day(filename)
     dt_obj = datetime.date(int(year), int(month), int(day))
@@ -272,6 +300,19 @@ def _srila_maharaj_ru(name):
 def _get_author_with_title_ru(filename):
     authors = _get_artist_ru(filename).split(', ')
     return ', '.join(map(_srila_maharaj_ru, authors))
+
+
+def get_youtube_description_ru_orig(filename):
+    year, month, day = _get_year_month_day(filename)
+    dt_obj = datetime.date(int(year), int(month), int(day))
+    author_with_title = _get_author_with_title_ru(filename)
+    date = babel.dates.format_datetime(dt_obj, 'dd MMMM YYYY', locale='ru_RU')
+    yt_descr = _get_description_ru(filename) + '\n'
+    yt_descr += author_with_title + '\n'  # e.g. Srila Bhakti Rañjan Madhusudan Maharaj
+    yt_descr += date + '\n'  # e.g. October 11, 2016
+    yt_descr += 'Студия "Теистик Медиа", Ашрам на Гупта Говардхане.\n'
+    yt_descr += 'Загружено с TMS_TV livestream.com/accounts/2645002\n\n'
+    return yt_descr
 
 
 def get_youtube_description_ru_stereo(filename):

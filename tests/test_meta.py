@@ -127,6 +127,16 @@ English original: (link pending)
 
     @staticmethod
     def get_test_filename(base_filename):
-        dir = os.path.dirname(__file__)
-        filename = os.path.join(dir, 'files', base_filename)
+        directory = os.path.dirname(__file__)
+        filename = os.path.join(directory, 'files', base_filename)
         return filename
+
+    def test_get_lang(self):
+        filename = self.get_test_filename('2016-10-17 avadhutmj.mp4')
+        expected = 'ru'
+        self.assertEqual(expected, meta.get_lang(filename))
+
+    def test_get_lang_en_default(self):
+        filename = self.get_test_filename('2016-10-12 brmadhusudan.mp4')
+        expected = 'en'
+        self.assertEqual(expected, meta.get_lang(filename))
