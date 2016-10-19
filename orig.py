@@ -21,16 +21,15 @@ def orig(orig_mp4_filename):
     # IO-bound tasks on the single drive, so running them in parallel
     # doesn't make much sense.
     _cut_orig_m4a(orig_mp4_filename)
-    cut_mp4_filename = meta.get_work_filename(orig_mp4_filename, ' eng.mp4')
-    _cut_orig_mp4(orig_mp4_filename, cut_mp4_filename)
+    cut_video_filename = meta.get_work_filename(orig_mp4_filename, ' eng.mkv')
+    _cut_orig_mp4(orig_mp4_filename, cut_video_filename)
 
     # And now we run two long-running tasks (uploading to youtube
     # and encoding mp3) in parallel
 
-    # _upload_orig_mp4(orig_mp4_filename, cut_mp4_filename)
-    p_upload_orig_mp4 = multiprocessing.Process(target=_upload_orig_mp4, args=(orig_mp4_filename, cut_mp4_filename))
+    p_upload_orig_mp4 = multiprocessing.Process(target=_upload_orig_mp4, args=(orig_mp4_filename, cut_video_filename))
     p_upload_orig_mp4.start()
-    # _encode_orig_mp3(orig_mp4_filename)
+
     p_encode_orig_mp3 = multiprocessing.Process(target=_encode_orig_mp3, args=(orig_mp4_filename,))
     p_encode_orig_mp3.start()
 
@@ -41,24 +40,23 @@ def orig(orig_mp4_filename):
 def _cut_orig_mp4(orig_mp4_filename, cut_mp4_filename):
     cmd = ['ffmpeg', '-y',
            '-i', orig_mp4_filename,
-           '-c', 'copy',
-           '-movflags', '+faststart']
-    cmd += meta.ffmpeg_meta_args_eng(orig_mp4_filename)
+           '-c', 'copy']
+    cmd += meta.ffmpeg_meta_args_en(orig_mp4_filename)
     cmd += meta.get_ss_args(orig_mp4_filename)
     cmd += [cut_mp4_filename]
     subprocess.run(cmd, check=True)
 
 
-def _upload_orig_mp4(orig_mp4_filename, cut_mp4_filename):
-    title = meta.get_youtube_title_eng(orig_mp4_filename)
-    description = meta.get_youtube_description_eng(orig_mp4_filename)
-    upload_video.upload(cut_mp4_filename, title=title, description=description)
+def _upload_orig_mp4(orig_mp4_filename, cut_video_filename):
+    title = meta.get_youtube_title_en(orig_mp4_filename)
+    description = meta.get_youtube_description_en(orig_mp4_filename)
+    upload_video.upload(cut_video_filename, title=title, description=description)
 
 
 def _cut_orig_m4a(orig_mp4_filename):
     cmd = ['ffmpeg', '-y',
            '-i', orig_mp4_filename]
-    cmd += meta.ffmpeg_meta_args_eng(orig_mp4_filename)
+    cmd += meta.ffmpeg_meta_args_en(orig_mp4_filename)
     cmd += meta.get_ss_args(orig_mp4_filename)
     cmd += ['-c:a', 'copy', '-vn',
             meta.get_work_filename(orig_mp4_filename, ' eng.m4a')]
@@ -71,7 +69,7 @@ def _encode_orig_mp3(orig_mp4_filename):
            '-ac', '1',
            '-codec:a', 'mp3', '-b:a', '96k']
     cmd += meta.get_ss_args(orig_mp4_filename)
-    cmd += meta.ffmpeg_meta_args_eng(orig_mp4_filename)
+    cmd += meta.ffmpeg_meta_args_en(orig_mp4_filename)
     cmd += [meta.get_work_filename(orig_mp4_filename, ' eng.mp3')]
     subprocess.run(cmd, check=True)
 

@@ -54,23 +54,29 @@ def get_ss_args(filename):
         return []
 
 
-def _get_title_eng(filename):
+def _get_title_en(filename):
     y = _yaml_data(filename)
     try:
-        return y['title_eng']
+        return y['title_en']
     except KeyError:
-        return os.path.basename(os.path.splitext(filename)[0])
+        try:
+            return y['title_eng']
+        except KeyError:
+            return os.path.basename(os.path.splitext(filename)[0])
 
 
-def _get_title_rus(filename):
+def _get_title_ru(filename):
     y = _yaml_data(filename)
     try:
-        return y['title_rus']
+        return y['title_ru']
     except KeyError:
-        return os.path.basename(os.path.splitext(filename)[0])
+        try:
+            return y['title_rus']
+        except KeyError:
+            return os.path.basename(os.path.splitext(filename)[0])
 
 
-def _artist_real_name(artist):
+def _artist_real_name_en(artist):
     known_artists = dict(
         goswamimj='Bhakti Sudhir Goswami',
         bsgoswami='Bhakti Sudhir Goswami',
@@ -86,7 +92,7 @@ def _artist_real_name(artist):
     return artist
 
 
-def _artist_real_name_rus(artist):
+def _artist_real_name_ru(artist):
     known_artists = dict(
         goswamimj='Бхакти Судхир Госвами',
         bsgoswami='Бхакти Судхир Госвами',
@@ -102,27 +108,27 @@ def _artist_real_name_rus(artist):
     return artist
 
 
-def _get_artist_eng(filename):
+def _get_artist_en(filename):
     basename = os.path.basename(filename)
     match = re.match('^(\d\d\d\d)-?(\d\d)-?(\d\d)\s+(.*)\.', basename)
     if match is not None:
         artists_str = match.group(4)
         artists = []
         for artist in artists_str.split('_'):
-            artists.append(_artist_real_name(artist))
+            artists.append(_artist_real_name_en(artist))
         return ', '.join(artists)
     else:
         return 'Unknown'
 
 
-def _get_artist_rus(filename):
+def _get_artist_ru(filename):
     basename = os.path.basename(filename)
     match = re.match('^(\d\d\d\d)-?(\d\d)-?(\d\d)\s+(.*)\.', basename)
     if match is not None:
         artists_str = match.group(4)
         artists = []
         for artist in artists_str.split('_'):
-            artists.append(_artist_real_name_rus(artist))
+            artists.append(_artist_real_name_ru(artist))
         return ', '.join(artists)
     else:
         return 'Автор неизвестен'
@@ -136,9 +142,9 @@ def _get_year_month_day(filename):
     return [None, None, None]
 
 
-def ffmpeg_meta_args_eng(filename):
-    title = _get_title_eng(filename)
-    artist = _get_artist_eng(filename)
+def ffmpeg_meta_args_en(filename):
+    title = _get_title_en(filename)
+    artist = _get_artist_en(filename)
     [year, month, day] = _get_year_month_day(filename)
     args = [
        '-metadata', 'artist=' + artist,
@@ -151,9 +157,9 @@ def ffmpeg_meta_args_eng(filename):
     return args
 
 
-def ffmpeg_meta_args_rus_mono(filename):
-    title = _get_title_rus(filename) + ' (моно)'
-    artist = _get_artist_rus(filename)
+def ffmpeg_meta_args_ru_mono(filename):
+    title = _get_title_ru(filename) + ' (моно)'
+    artist = _get_artist_ru(filename)
     [year, month, day] = _get_year_month_day(filename)
     args = [
        '-metadata', 'artist=' + artist,
@@ -166,9 +172,9 @@ def ffmpeg_meta_args_rus_mono(filename):
     return args
 
 
-def ffmpeg_meta_args_rus_stereo(filename):
-    title = _get_title_rus(filename)
-    artist = _get_artist_rus(filename)
+def ffmpeg_meta_args_ru_stereo(filename):
+    title = _get_title_ru(filename)
+    artist = _get_artist_ru(filename)
     [year, month, day] = _get_year_month_day(filename)
     args = [
        '-metadata', 'artist=' + artist,
@@ -188,63 +194,69 @@ def get_work_filename(filename, add):
     return os.path.join(dir_name, 'temp', basename_wo_ext + add)
 
 
-def get_youtube_title_eng(filename):
-    title = _get_title_eng(filename)
+def get_youtube_title_en(filename):
+    title = _get_title_en(filename)
     if title[-1] not in string.punctuation:
         title += '.'
-    artist = _get_artist_eng(filename)
+    artist = _get_artist_en(filename)
     return title + ' ' + artist
 
 
-def get_youtube_title_rus_stereo(filename):
-    title = _get_title_rus(filename)
+def get_youtube_title_ru_stereo(filename):
+    title = _get_title_ru(filename)
     if title[-1] not in string.punctuation:
         title += '.'
-    artist = _get_artist_rus(filename)
+    artist = _get_artist_ru(filename)
     return title + ' ' + artist
 
 
-def get_youtube_title_rus_mono(filename):
-    title = _get_title_rus(filename)
+def get_youtube_title_ru_mono(filename):
+    title = _get_title_ru(filename)
     title_without_dot = title
     dot = '.'
     if title[-1] in string.punctuation and title[-1] != '.':
         dot = ''
     if title[-1] == '.':
         title_without_dot = title_without_dot[:-1]
-    artist = _get_artist_rus(filename)
+    artist = _get_artist_ru(filename)
     return title_without_dot + ' (моно)' + dot + ' ' + artist
 
 
-def _get_description_eng(filename):
+def _get_description_en(filename):
     try:
-        return _yaml_data(filename)['descr_eng']
+        return _yaml_data(filename)['descr_en']
     except KeyError:
-        return ''
+        try:
+            return _yaml_data(filename)['descr_eng']
+        except KeyError:
+            return ''
 
 
-def _get_description_rus(filename):
+def _get_description_ru(filename):
     try:
-        return _yaml_data(filename)['descr_rus']
+        return _yaml_data(filename)['descr_ru']
     except KeyError:
-        return ''
+        try:
+            return _yaml_data(filename)['descr_rus']
+        except KeyError:
+            return ''
 
 
-def _srila_maharaj_eng(name):
+def _srila_maharaj_en(name):
     return 'Srila ' + name + ' Maharaj'
 
 
-def _get_author_with_title_eng(filename):
-    authors = _get_artist_eng(filename).split(', ')
-    return ', '.join(map(_srila_maharaj_eng, authors))
+def _get_author_with_title_en(filename):
+    authors = _get_artist_en(filename).split(', ')
+    return ', '.join(map(_srila_maharaj_en, authors))
 
 
-def get_youtube_description_eng(filename):
+def get_youtube_description_en(filename):
     year, month, day = _get_year_month_day(filename)
     dt_obj = datetime.date(int(year), int(month), int(day))
-    author_with_title = _get_author_with_title_eng(filename)
+    author_with_title = _get_author_with_title_en(filename)
     date = '{dt:%B} {dt.day}, {dt:%Y}'.format(dt=dt_obj)
-    yt_descr = _get_description_eng(filename) + '\n'
+    yt_descr = _get_description_en(filename) + '\n'
     yt_descr += author_with_title + '\n'  # e.g. Srila Bhakti Rañjan Madhusudan Maharaj
     yt_descr += date + '\n'  # e.g. October 11, 2016
     yt_descr += 'Theistic Media Studios, Gupta Govardhan Ashram.\n'
@@ -253,21 +265,21 @@ def get_youtube_description_eng(filename):
     return yt_descr
 
 
-def _srila_maharaj_rus(name):
+def _srila_maharaj_ru(name):
     return 'Шрила ' + name + ' Махарадж'
 
 
-def _get_author_with_title_rus(filename):
-    authors = _get_artist_rus(filename).split(', ')
-    return ', '.join(map(_srila_maharaj_rus, authors))
+def _get_author_with_title_ru(filename):
+    authors = _get_artist_ru(filename).split(', ')
+    return ', '.join(map(_srila_maharaj_ru, authors))
 
 
-def get_youtube_description_rus_stereo(filename):
+def get_youtube_description_ru_stereo(filename):
     year, month, day = _get_year_month_day(filename)
     dt_obj = datetime.date(int(year), int(month), int(day))
-    author_with_title = _get_author_with_title_rus(filename)
+    author_with_title = _get_author_with_title_ru(filename)
     date = babel.dates.format_datetime(dt_obj, 'dd MMMM YYYY', locale='ru_RU')
-    yt_descr = _get_description_rus(filename) + '\n'
+    yt_descr = _get_description_ru(filename) + '\n'
     yt_descr += author_with_title + '\n'  # e.g. Srila Bhakti Rañjan Madhusudan Maharaj
     yt_descr += date + '\n'  # e.g. October 11, 2016
     yt_descr += 'Студия "Теистик Медиа", Ашрам на Гупта Говардхане.\n'
@@ -277,12 +289,12 @@ def get_youtube_description_rus_stereo(filename):
     return yt_descr
 
 
-def get_youtube_description_rus_mono(filename):
+def get_youtube_description_ru_mono(filename):
     year, month, day = _get_year_month_day(filename)
     dt_obj = datetime.date(int(year), int(month), int(day))
-    author_with_title = _get_author_with_title_rus(filename)
+    author_with_title = _get_author_with_title_ru(filename)
     date = babel.dates.format_datetime(dt_obj, 'dd MMMM YYYY', locale='ru_RU')
-    yt_descr = _get_description_rus(filename) + '\n'
+    yt_descr = _get_description_ru(filename) + '\n'
     yt_descr += author_with_title + '\n'  # e.g. Srila Bhakti Rañjan Madhusudan Maharaj
     yt_descr += date + '\n'  # e.g. October 11, 2016
     yt_descr += 'Студия "Теистик Медиа", Ашрам на Гупта Говардхане.\n'

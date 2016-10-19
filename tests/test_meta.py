@@ -21,15 +21,15 @@ class test_meta(TestCase):
 
     def test_get_artist_eng(self):
         filename = self.get_test_filename('2016-10-07 goswamimj.mp4')
-        self.assertEqual('Bhakti Sudhir Goswami', meta._get_artist_eng(filename))
+        self.assertEqual('Bhakti Sudhir Goswami', meta._get_artist_en(filename))
 
     def test_get_artist_eng_multiple(self):
         filename = self.get_test_filename('2016-10-07 janardanmj_goswamimj.mp4')
-        self.assertEqual('Bhakti Pavan Janardan, Bhakti Sudhir Goswami', meta._get_artist_eng(filename))
+        self.assertEqual('Bhakti Pavan Janardan, Bhakti Sudhir Goswami', meta._get_artist_en(filename))
 
     def test_get_artist_eng_ranjan(self):
         filename = self.get_test_filename('2016-10-07 brmadhusudan.mp4')
-        self.assertEqual('Bhakti Rañjan Madhusudan', meta._get_artist_eng(filename))
+        self.assertEqual('Bhakti Rañjan Madhusudan', meta._get_artist_en(filename))
 
     def test_get_year_month_day(self):
         filename = self.get_test_filename('2016-10-07 brmadhusudan.mp4')
@@ -40,7 +40,7 @@ class test_meta(TestCase):
 
     def test_get_title_eng(self):
         filename = self.get_test_filename('2016-10-07 goswamimj.mp4')
-        title_eng = meta._get_title_eng(filename)
+        title_eng = meta._get_title_en(filename)
         self.assertEqual('Have faith in Guru-Vaishnava, not in yourself', title_eng)
 
     def test_get_skip_time(self):
@@ -66,32 +66,32 @@ Theistic Media Studios, Gupta Govardhan Ashram.
 Downloaded from TMS_TV livestream.com/accounts/2645002
 
 На русском: (ссылка скоро будет)"""
-        self.assertEqual(expected, meta.get_youtube_description_eng(filename))
+        self.assertEqual(expected, meta.get_youtube_description_en(filename))
 
     def test_get_youtube_title_rus_stereo(self):
         filename = self.get_test_filename('2016-10-12 brmadhusudan.mp4')
         expected = 'Удача Чиангмайского ашрама. Бхакти Ранджан Мадхусудан'
-        self.assertEqual(expected, meta.get_youtube_title_rus_stereo(filename))
+        self.assertEqual(expected, meta.get_youtube_title_ru_stereo(filename))
 
     def test_get_youtube_title_rus_mono(self):
         filename = self.get_test_filename('2016-10-12 brmadhusudan.mp4')
         expected = 'Удача Чиангмайского ашрама (моно). Бхакти Ранджан Мадхусудан'
-        self.assertEqual(expected, meta.get_youtube_title_rus_mono(filename))
+        self.assertEqual(expected, meta.get_youtube_title_ru_mono(filename))
 
     def test_get_youtube_title_rus_mono_dot(self):
         filename = self.get_test_filename('2016-01-01 goswamimj.mp4')
         expected = 'Проверка точки (моно). Бхакти Судхир Госвами'
-        self.assertEqual(expected, meta.get_youtube_title_rus_mono(filename))
+        self.assertEqual(expected, meta.get_youtube_title_ru_mono(filename))
 
     def test_get_youtube_title_rus_stereo_question_mark(self):
         filename = self.get_test_filename('2016-10-05 goswamimj.mp4')
         expected = 'Настроение или сердце? Бхакти Судхир Госвами'
-        self.assertEqual(expected, meta.get_youtube_title_rus_stereo(filename))
+        self.assertEqual(expected, meta.get_youtube_title_ru_stereo(filename))
 
     def test_get_youtube_title_rus_mono_question_mark(self):
         filename = self.get_test_filename('2016-10-05 goswamimj.mp4')
         expected = 'Настроение или сердце? (моно) Бхакти Судхир Госвами'
-        self.assertEqual(expected, meta.get_youtube_title_rus_mono(filename))
+        self.assertEqual(expected, meta.get_youtube_title_ru_mono(filename))
 
     def test_get_youtube_descr_rus_stereo(self):
         filename = self.get_test_filename('2016-10-12 brmadhusudan.mp4')
@@ -107,7 +107,7 @@ Downloaded from TMS_TV livestream.com/accounts/2645002
 
 English original: (link pending)
 Моно перевод: (link pending)"""
-        self.assertEqual(expected, meta.get_youtube_description_rus_stereo(filename))
+        self.assertEqual(expected, meta.get_youtube_description_ru_stereo(filename))
 
     def test_get_youtube_descr_rus_mono(self):
         filename = self.get_test_filename('2016-10-12 brmadhusudan.mp4')
@@ -123,7 +123,7 @@ English original: (link pending)
 
 English original: (link pending)
 Стерео перевод: (link pending)"""
-        self.assertEqual(expected, meta.get_youtube_description_rus_mono(filename))
+        self.assertEqual(expected, meta.get_youtube_description_ru_mono(filename))
 
     @staticmethod
     def get_test_filename(base_filename):

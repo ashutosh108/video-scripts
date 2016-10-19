@@ -42,13 +42,13 @@ def _create_and_upload_rus_stereo_mp4(orig_mp4_filename):
            '-b:a', '384k',
            '-metadata:s:a:0', 'language=rus',
            '-movflags', '+faststart']
-    cmd += meta.ffmpeg_meta_args_rus_stereo(orig_mp4_filename)
+    cmd += meta.ffmpeg_meta_args_ru_stereo(orig_mp4_filename)
     cmd += meta.get_ss_args(orig_mp4_filename)
     cmd += [rus_stereo_mp4_filename]
     subprocess.run(cmd, check=True)
 
-    title = meta.get_youtube_title_rus_stereo(orig_mp4_filename)
-    description = meta.get_youtube_description_rus_stereo(orig_mp4_filename)
+    title = meta.get_youtube_title_ru_stereo(orig_mp4_filename)
+    description = meta.get_youtube_description_ru_stereo(orig_mp4_filename)
     upload_video.upload(rus_stereo_mp4_filename, title=title, description=description)
 
 
@@ -58,7 +58,7 @@ def _create_and_upload_rus_mono_mp4(orig_mp4_filename):
            '-i', meta.get_work_filename(orig_mp4_filename, ' rus_mixdown.wav'),
            '-c:a', 'libfdk_aac', '-ac', '1', '-b:a', '128k',
            '-metadata:s:a:0', 'language=rus']
-    cmd += meta.ffmpeg_meta_args_rus_mono(orig_mp4_filename)
+    cmd += meta.ffmpeg_meta_args_ru_mono(orig_mp4_filename)
     cmd += [rus_mono_m4a]
     subprocess.run(cmd, check=True)
 
@@ -70,13 +70,13 @@ def _create_and_upload_rus_mono_mp4(orig_mp4_filename):
            '-map', '1:a',
            '-c', 'copy',
            '-movflags', '+faststart']
-    cmd += meta.ffmpeg_meta_args_rus_mono(orig_mp4_filename)
+    cmd += meta.ffmpeg_meta_args_ru_mono(orig_mp4_filename)
     cmd += meta.get_ss_args(orig_mp4_filename)
     cmd += [rus_mono_mp4_filename]
     subprocess.run(cmd, check=True)
 
-    title = meta.get_youtube_title_rus_mono(orig_mp4_filename)
-    description = meta.get_youtube_description_rus_mono(orig_mp4_filename)
+    title = meta.get_youtube_title_ru_mono(orig_mp4_filename)
+    description = meta.get_youtube_description_ru_mono(orig_mp4_filename)
     upload_video.upload(rus_mono_mp4_filename, title=title, description=description)
 
 
@@ -87,7 +87,7 @@ def _create_mp3_rus_mono(filename):
            '-ac', '1',
            '-b:a', '96k']
     cmd += meta.get_ss_args(filename)
-    cmd += meta.ffmpeg_meta_args_rus_mono(filename)
+    cmd += meta.ffmpeg_meta_args_ru_mono(filename)
     cmd += [meta.get_work_filename(filename, ' rus_mono.mp3')]
     subprocess.run(cmd, check=True)
 
@@ -98,7 +98,7 @@ def _create_mp3_rus_stereo(filename):
            '-codec:a', 'mp3',
            '-b:a', '128k']
     cmd += meta.get_ss_args(filename)
-    cmd += meta.ffmpeg_meta_args_rus_stereo(filename)
+    cmd += meta.ffmpeg_meta_args_ru_stereo(filename)
     cmd += [meta.get_work_filename(filename, ' rus_stereo.mp3')]
     subprocess.run(cmd, check=True)
 
