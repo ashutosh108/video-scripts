@@ -1,8 +1,11 @@
 import sys
 import os
 import subprocess
+import multiprocessing
 
 import meta
+import upload_video
+
 
 def usage_and_exit():
     print("""echo mux eng/rus audio files into a Goswami Maharaj's video
@@ -12,22 +15,45 @@ echo (or drag and drop the file onto me)""")
 
 
 def create_and_upload_rus_files(orig_mp4_filename):
-    _create_and_upload_rus_stereo_mp4(orig_mp4_filename)
-    _create_and_upload_rus_mono_mp4(orig_mp4_filename)
-    _create_mp3_rus_mono_and_stereo(orig_mp4_filename)
+    p1 = multiprocessing.Process(target=_create_and_upload_rus_mono_mp4, args=(orig_mp4_filename,))
+    p1.start()
+    p2 = multiprocessing.Process(target=_create_and_upload_rus_stereo_mp4, args=(orig_mp4_filename,))
+    p2.start()
+    p3 = multiprocessing.Process(target=_create_mp3_rus_mono, args=(orig_mp4_filename,))
+    p3.start()
+    p4 = multiprocessing.Process(target=_create_mp3_rus_stereo, args=(orig_mp4_filename,))
+    p4.start()
+
+    p1.join()
+    p2.join()
+    p3.join()
+    p4.join()
 
 
 def _create_and_upload_rus_stereo_mp4(orig_mp4_filename):
-    print('stereo start')
-    subprocess.run(
-        'start C:\\Users\\ashutosh\\Dropbox\\Reference\\S\\scripts\\mux_rus_stereo.cmd "%s"' % orig_mp4_filename,
-        shell=True, check=True)
-    print('stereo finish')
+    rus_stereo_mp4_filename = meta.get_work_filename(orig_mp4_filename, ' rus_stereo.mp4')
+    cmd = ['D:\\video\\GoswamiMj-videos\\ffmpeg-hi8-heaac.exe', '-y',
+           '-i', orig_mp4_filename,
+           '-i', meta.get_work_filename(orig_mp4_filename, ' rus_mixdown.wav'),
+           '-map', '0:v',
+           '-c:v', 'copy',
+           '-map', '1:a',
+           '-c:a:0', 'libfdk_aac',
+           '-b:a', '384k',
+           '-metadata:s:a:0', 'language=rus',
+           '-movflags', '+faststart']
+    cmd += meta.ffmpeg_meta_args_rus_stereo(orig_mp4_filename)
+    cmd += meta.get_ss_args(orig_mp4_filename)
+    cmd += [rus_stereo_mp4_filename]
+    subprocess.run(cmd, check=True)
+
+    title = meta.get_youtube_title_rus_stereo(orig_mp4_filename)
+    description = meta.get_youtube_description_rus_stereo(orig_mp4_filename)
+    upload_video.upload(rus_stereo_mp4_filename, title=title, description=description)
 
 
 def _create_and_upload_rus_mono_mp4(orig_mp4_filename):
     rus_mono_m4a = meta.get_work_filename(orig_mp4_filename, ' rus_mono.m4a')
-    rus_mono_mp4 = meta.get_work_filename(orig_mp4_filename, ' rus_mono.mp4')
     cmd = ['D:\\video\\GoswamiMj-videos\\ffmpeg-hi8-heaac.exe', '-y',
            '-i', meta.get_work_filename(orig_mp4_filename, ' rus_mixdown.wav'),
            '-c:a', 'libfdk_aac', '-ac', '1', '-b:a', '128k',
@@ -36,6 +62,7 @@ def _create_and_upload_rus_mono_mp4(orig_mp4_filename):
     cmd += [rus_mono_m4a]
     subprocess.run(cmd, check=True)
 
+    rus_mono_mp4_filename = meta.get_work_filename(orig_mp4_filename, ' rus_mono.mp4')
     cmd = ['ffmpeg', '-y',
            '-i', orig_mp4_filename,
            '-i', rus_mono_m4a,
@@ -45,38 +72,35 @@ def _create_and_upload_rus_mono_mp4(orig_mp4_filename):
            '-movflags', '+faststart']
     cmd += meta.ffmpeg_meta_args_rus_mono(orig_mp4_filename)
     cmd += meta.get_ss_args(orig_mp4_filename)
-    cmd += [rus_mono_mp4]
+    cmd += [rus_mono_mp4_filename]
     subprocess.run(cmd, check=True)
 
-    cmd = ['python', 'C:\\Users\\ashutosh\\Dropbox\\Reference\\S\scripts\\upload_video.py',
-           '--file', rus_mono_mp4]
-    subprocess.run(cmd, check=True)
+    title = meta.get_youtube_title_rus_mono(orig_mp4_filename)
+    description = meta.get_youtube_description_rus_mono(orig_mp4_filename)
+    upload_video.upload(rus_mono_mp4_filename, title=title, description=description)
 
 
-def _create_mp3_rus_mono_and_stereo(filename):
-    rus_mixdown_wav = meta.get_work_filename(filename, ' rus_mixdown.wav')
-
+def _create_mp3_rus_mono(filename):
     cmd = ['ffmpeg', '-y',
-           '-i', rus_mixdown_wav,
-           '-codec:a', 'mp3',
-           '-b:a', '128k']
-    cmd += meta.get_ss_args(filename)
-    cmd += meta.ffmpeg_meta_args_rus_stereo(filename)
-    cmd += [meta.get_work_filename(filename, ' rus_stereo.mp3')]
-    p_rus_stereo = subprocess.Popen(cmd)
-
-    cmd = ['ffmpeg', '-y',
-           '-i', rus_mixdown_wav,
+           '-i', (meta.get_work_filename(filename, ' rus_mixdown.wav')),
            '-codec:a', 'mp3',
            '-ac', '1',
            '-b:a', '96k']
     cmd += meta.get_ss_args(filename)
     cmd += meta.ffmpeg_meta_args_rus_mono(filename)
     cmd += [meta.get_work_filename(filename, ' rus_mono.mp3')]
-    p_rus_mono = subprocess.Popen(cmd)
+    subprocess.run(cmd, check=True)
 
-    p_rus_stereo.communicate()
-    p_rus_mono.communicate()
+
+def _create_mp3_rus_stereo(filename):
+    cmd = ['ffmpeg', '-y',
+           '-i', (meta.get_work_filename(filename, ' rus_mixdown.wav')),
+           '-codec:a', 'mp3',
+           '-b:a', '128k']
+    cmd += meta.get_ss_args(filename)
+    cmd += meta.ffmpeg_meta_args_rus_stereo(filename)
+    cmd += [meta.get_work_filename(filename, ' rus_stereo.mp3')]
+    subprocess.run(cmd, check=True)
 
 def main():
     try:

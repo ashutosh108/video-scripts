@@ -4,6 +4,7 @@ import yaml
 import datetime
 import string
 import numbers
+import babel.dates
 
 _yaml_data_cache = {}
 
@@ -195,9 +196,36 @@ def get_youtube_title_eng(filename):
     return title + ' ' + artist
 
 
+def get_youtube_title_rus_stereo(filename):
+    title = _get_title_rus(filename)
+    if title[-1] not in string.punctuation:
+        title += '.'
+    artist = _get_artist_rus(filename)
+    return title + ' ' + artist
+
+
+def get_youtube_title_rus_mono(filename):
+    title = _get_title_rus(filename)
+    title_without_dot = title
+    dot = '.'
+    if title[-1] in string.punctuation and title[-1] != '.':
+        dot = ''
+    if title[-1] == '.':
+        title_without_dot = title_without_dot[:-1]
+    artist = _get_artist_rus(filename)
+    return title_without_dot + ' (моно)' + dot + ' ' + artist
+
+
 def _get_description_eng(filename):
     try:
         return _yaml_data(filename)['descr_eng']
+    except KeyError:
+        return ''
+
+
+def _get_description_rus(filename):
+    try:
+        return _yaml_data(filename)['descr_rus']
     except KeyError:
         return ''
 
@@ -222,4 +250,43 @@ def get_youtube_description_eng(filename):
     yt_descr += 'Theistic Media Studios, Gupta Govardhan Ashram.\n'
     yt_descr += 'Downloaded from TMS_TV livestream.com/accounts/2645002\n\n'
     yt_descr += 'На русском: (ссылка скоро будет)'
+    return yt_descr
+
+
+def _srila_maharaj_rus(name):
+    return 'Шрила ' + name + ' Махарадж'
+
+
+def _get_author_with_title_rus(filename):
+    authors = _get_artist_rus(filename).split(', ')
+    return ', '.join(map(_srila_maharaj_rus, authors))
+
+
+def get_youtube_description_rus_stereo(filename):
+    year, month, day = _get_year_month_day(filename)
+    dt_obj = datetime.date(int(year), int(month), int(day))
+    author_with_title = _get_author_with_title_rus(filename)
+    date = babel.dates.format_datetime(dt_obj, 'dd MMMM YYYY', locale='ru_RU')
+    yt_descr = _get_description_rus(filename) + '\n'
+    yt_descr += author_with_title + '\n'  # e.g. Srila Bhakti Rañjan Madhusudan Maharaj
+    yt_descr += date + '\n'  # e.g. October 11, 2016
+    yt_descr += 'Студия "Теистик Медиа", Ашрам на Гупта Говардхане.\n'
+    yt_descr += 'Загружено с TMS_TV livestream.com/accounts/2645002\n\n'
+    yt_descr += 'English original: (link pending)\n'
+    yt_descr += 'Моно перевод: (link pending)'
+    return yt_descr
+
+
+def get_youtube_description_rus_mono(filename):
+    year, month, day = _get_year_month_day(filename)
+    dt_obj = datetime.date(int(year), int(month), int(day))
+    author_with_title = _get_author_with_title_rus(filename)
+    date = babel.dates.format_datetime(dt_obj, 'dd MMMM YYYY', locale='ru_RU')
+    yt_descr = _get_description_rus(filename) + '\n'
+    yt_descr += author_with_title + '\n'  # e.g. Srila Bhakti Rañjan Madhusudan Maharaj
+    yt_descr += date + '\n'  # e.g. October 11, 2016
+    yt_descr += 'Студия "Теистик Медиа", Ашрам на Гупта Говардхане.\n'
+    yt_descr += 'Загружено с TMS_TV livestream.com/accounts/2645002\n\n'
+    yt_descr += 'English original: (link pending)\n'
+    yt_descr += 'Стерео перевод: (link pending)'
     return yt_descr

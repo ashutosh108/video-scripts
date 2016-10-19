@@ -1,3 +1,4 @@
+Babel==2.3.4
 filelock==2.0.6
 google-api-python-client==1.5.3
 httplib2==0.9.2
