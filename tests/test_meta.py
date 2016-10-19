@@ -19,15 +19,15 @@ class test_meta(TestCase):
         filename = self.get_test_filename('2016-10-17 avadhutmj.mp4')
         self.assertEqual(meta._get_skip_time(filename), '0:07')
 
-    def test_get_artist_eng(self):
+    def test_get_artist_en(self):
         filename = self.get_test_filename('2016-10-07 goswamimj.mp4')
         self.assertEqual('Bhakti Sudhir Goswami', meta._get_artist_en(filename))
 
-    def test_get_artist_eng_multiple(self):
+    def test_get_artist_en_multiple(self):
         filename = self.get_test_filename('2016-10-07 janardanmj_goswamimj.mp4')
         self.assertEqual('Bhakti Pavan Janardan, Bhakti Sudhir Goswami', meta._get_artist_en(filename))
 
-    def test_get_artist_eng_ranjan(self):
+    def test_get_artist_en_ranjan(self):
         filename = self.get_test_filename('2016-10-07 brmadhusudan.mp4')
         self.assertEqual('Bhakti Rañjan Madhusudan', meta._get_artist_en(filename))
 
@@ -38,10 +38,10 @@ class test_meta(TestCase):
         self.assertEqual('10', month)
         self.assertEqual('07', day)
 
-    def test_get_title_eng(self):
+    def test_get_title_en(self):
         filename = self.get_test_filename('2016-10-07 goswamimj.mp4')
-        title_eng = meta._get_title_en(filename)
-        self.assertEqual('Have faith in Guru-Vaishnava, not in yourself', title_eng)
+        title_en = meta._get_title_en(filename)
+        self.assertEqual('Have faith in Guru-Vaishnava, not in yourself', title_en)
 
     def test_get_skip_time(self):
         filename = self.get_test_filename('2016-10-07 goswamimj.mp4')
@@ -53,7 +53,7 @@ class test_meta(TestCase):
         skip_time = meta._get_skip_time(filename)
         self.assertEqual('0:07:56', skip_time)
 
-    def test_get_youtube_description_eng(self):
+    def test_get_youtube_description_en(self):
         filename = self.get_test_filename('2016-10-12 brmadhusudan.mp4')
         expected = """- The story of Chiangmai ashram
 - Good fortune of those who have facilities for practicing devotional life
@@ -68,32 +68,32 @@ Downloaded from TMS_TV livestream.com/accounts/2645002
 На русском: (ссылка скоро будет)"""
         self.assertEqual(expected, meta.get_youtube_description_en(filename))
 
-    def test_get_youtube_title_rus_stereo(self):
+    def test_get_youtube_title_ru_stereo(self):
         filename = self.get_test_filename('2016-10-12 brmadhusudan.mp4')
         expected = 'Удача Чиангмайского ашрама. Бхакти Ранджан Мадхусудан'
         self.assertEqual(expected, meta.get_youtube_title_ru_stereo(filename))
 
-    def test_get_youtube_title_rus_mono(self):
+    def test_get_youtube_title_ru_mono(self):
         filename = self.get_test_filename('2016-10-12 brmadhusudan.mp4')
         expected = 'Удача Чиангмайского ашрама (моно). Бхакти Ранджан Мадхусудан'
         self.assertEqual(expected, meta.get_youtube_title_ru_mono(filename))
 
-    def test_get_youtube_title_rus_mono_dot(self):
+    def test_get_youtube_title_ru_mono_dot(self):
         filename = self.get_test_filename('2016-01-01 goswamimj.mp4')
         expected = 'Проверка точки (моно). Бхакти Судхир Госвами'
         self.assertEqual(expected, meta.get_youtube_title_ru_mono(filename))
 
-    def test_get_youtube_title_rus_stereo_question_mark(self):
+    def test_get_youtube_title_ru_stereo_question_mark(self):
         filename = self.get_test_filename('2016-10-05 goswamimj.mp4')
         expected = 'Настроение или сердце? Бхакти Судхир Госвами'
         self.assertEqual(expected, meta.get_youtube_title_ru_stereo(filename))
 
-    def test_get_youtube_title_rus_mono_question_mark(self):
+    def test_get_youtube_title_ru_mono_question_mark(self):
         filename = self.get_test_filename('2016-10-05 goswamimj.mp4')
         expected = 'Настроение или сердце? (моно) Бхакти Судхир Госвами'
         self.assertEqual(expected, meta.get_youtube_title_ru_mono(filename))
 
-    def test_get_youtube_descr_rus_stereo(self):
+    def test_get_youtube_descr_ru_stereo(self):
         filename = self.get_test_filename('2016-10-12 brmadhusudan.mp4')
         expected = """- История Чиангмайсколго ашрама
 - Удача тех, кто имеет возможность практиковать преданное служение
@@ -109,7 +109,7 @@ English original: (link pending)
 Моно перевод: (link pending)"""
         self.assertEqual(expected, meta.get_youtube_description_ru_stereo(filename))
 
-    def test_get_youtube_descr_rus_mono(self):
+    def test_get_youtube_descr_ru_mono(self):
         filename = self.get_test_filename('2016-10-12 brmadhusudan.mp4')
         expected = """- История Чиангмайсколго ашрама
 - Удача тех, кто имеет возможность практиковать преданное служение

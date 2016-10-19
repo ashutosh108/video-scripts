@@ -125,7 +125,7 @@ def _compose_upload_body(filename, title=None, lang=None, description=None):
     if title is None:
         title = base_filename
     if lang is None:
-        lang = 'ru' if ('_rus' in base_filename) else 'en'
+        lang = 'ru' if ((' ru.' in base_filename) or ('_ru.' in base_filename)) else 'en'
     body = dict(
         snippet=dict(
             title=title,

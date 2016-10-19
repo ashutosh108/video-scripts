@@ -89,22 +89,22 @@ class TestYamlUpdater(TestCase):
 
     def test_set_keeps_strings_unescaped(self):
         self.begin()
-        self.f.write('title_eng: Test title')
+        self.f.write('title_en: Test title')
         self.f.close()
         self.mark('file init completed...')
         yamlupdater.set(self.filename, 'key', 1)
         self.mark('yaml update completed...')
         self.f = open(self.filename, 'r')
-        self.assertEqual('title_eng: Test title\nkey: 1\n', self.f.read())
+        self.assertEqual('title_en: Test title\nkey: 1\n', self.f.read())
         self.end()
 
     def test_set_keeps_text_blocks_same_pipe_type(self):
         self.begin()
-        self.f.write('descr_eng: |\n    - line1\n    - line2\n')
+        self.f.write('descr_en: |\n    - line1\n    - line2\n')
         self.f.close()
         self.mark('file init completed...')
         yamlupdater.set(self.filename, 'key', 1)
         self.mark('yaml update completed...')
         self.f = open(self.filename, 'r')
-        self.assertEqual('descr_eng: |\n    - line1\n    - line2\nkey: 1\n', self.f.read())
+        self.assertEqual('descr_en: |\n    - line1\n    - line2\nkey: 1\n', self.f.read())
         self.end()

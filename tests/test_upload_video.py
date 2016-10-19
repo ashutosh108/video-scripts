@@ -17,6 +17,6 @@ class Test_upload_video(TestCase):
         self.assertNotIn('description', body['snippet'])
         self.assertNotIn('recordingDetails', body)
 
-    def test_compose_upload_body_rus_lang_from_filename(self):
-        body = upload_video._compose_upload_body(filename='2016-07-05 goswamimj_rus.mp4')
+    def test_compose_upload_body_ru_lang_from_filename(self):
+        body = upload_video._compose_upload_body(filename='2016-07-05 goswamimj ru.mp4')
         self.assertEqual('ru', body['snippet']['defaultLanguage'])

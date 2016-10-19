@@ -8,7 +8,7 @@ import upload_video
 
 
 def usage_and_exit():
-    print("""mux eng/rus audio files into a Goswami Maharaj's video
+    print("""mux en/ru audio files into a Goswami Maharaj's video
 usage: mux "yyyy-mm-dd goswamimj.mp4"
 (or drag and drop the file onto me)""")
     exit()
@@ -21,7 +21,7 @@ def orig(orig_mp4_filename):
     # IO-bound tasks on the single drive, so running them in parallel
     # doesn't make much sense.
     _cut_orig_m4a(orig_mp4_filename)
-    cut_video_filename = meta.get_work_filename(orig_mp4_filename, ' eng.mkv')
+    cut_video_filename = meta.get_work_filename(orig_mp4_filename, ' en.mkv')
     _cut_orig_mp4(orig_mp4_filename, cut_video_filename)
 
     # And now we run two long-running tasks (uploading to youtube
@@ -59,7 +59,7 @@ def _cut_orig_m4a(orig_mp4_filename):
     cmd += meta.ffmpeg_meta_args_en(orig_mp4_filename)
     cmd += meta.get_ss_args(orig_mp4_filename)
     cmd += ['-c:a', 'copy', '-vn',
-            meta.get_work_filename(orig_mp4_filename, ' eng.m4a')]
+            meta.get_work_filename(orig_mp4_filename, ' en.m4a')]
     subprocess.run(cmd, check=True)
 
 
@@ -70,7 +70,7 @@ def _encode_orig_mp3(orig_mp4_filename):
            '-codec:a', 'mp3', '-b:a', '96k']
     cmd += meta.get_ss_args(orig_mp4_filename)
     cmd += meta.ffmpeg_meta_args_en(orig_mp4_filename)
-    cmd += [meta.get_work_filename(orig_mp4_filename, ' eng.mp3')]
+    cmd += [meta.get_work_filename(orig_mp4_filename, ' en.mp3')]
     subprocess.run(cmd, check=True)
 
 
