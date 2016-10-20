@@ -153,10 +153,10 @@ def ffmpeg_meta_args(filename, lang):
     if lang == 'ru':
         return ffmpeg_meta_args_ru_stereo(filename)
     else:
-        return ffmpeg_meta_args_en(filename)
+        return _ffmpeg_meta_args_en(filename)
 
 
-def ffmpeg_meta_args_en(filename):
+def _ffmpeg_meta_args_en(filename):
     title = _get_title_en(filename)
     artist = _get_artist_en(filename)
     [year, month, day] = _get_year_month_day(filename)
@@ -274,12 +274,12 @@ def _get_author_with_title_en(filename):
 
 def get_youtube_description(filename, lang):
     if lang == 'ru':
-        return get_youtube_description_ru_orig(filename)
+        return _get_youtube_description_ru_orig(filename)
     else:
-        return get_youtube_description_en(filename)
+        return _get_youtube_description_en(filename)
 
 
-def get_youtube_description_en(filename):
+def _get_youtube_description_en(filename):
     year, month, day = _get_year_month_day(filename)
     dt_obj = datetime.date(int(year), int(month), int(day))
     author_with_title = _get_author_with_title_en(filename)
@@ -302,7 +302,7 @@ def _get_author_with_title_ru(filename):
     return ', '.join(map(_srila_maharaj_ru, authors))
 
 
-def get_youtube_description_ru_orig(filename):
+def _get_youtube_description_ru_orig(filename):
     year, month, day = _get_year_month_day(filename)
     dt_obj = datetime.date(int(year), int(month), int(day))
     author_with_title = _get_author_with_title_ru(filename)
