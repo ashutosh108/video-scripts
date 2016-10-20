@@ -107,7 +107,7 @@ def _initialize_upload(youtube, filename, body):
     return video_id
 
 
-def _compose_upload_body(filename, title=None, lang=None, description=None):
+def _compose_upload_body(filename, title=None, description=None, lang=None):
     tags = [
         'Bhakti Sudhir Goswami (Person)',
         'Bhakti (Religious Practice)',
@@ -196,9 +196,9 @@ def _resumable_upload(insert_request, filename):
             time.sleep(sleep_seconds)
 
 
-def upload(filename, title=None, lang=None, description=None):
+def upload(filename, title=None, description=None, lang=None):
     youtube = _get_authenticated_service()
-    body = _compose_upload_body(filename, title, lang, description)
+    body = _compose_upload_body(filename, title=title, description=description, lang=lang)
     return _initialize_upload(youtube, filename, body)
 
 

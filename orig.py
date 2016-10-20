@@ -51,7 +51,7 @@ def _cut_orig_mp4(orig_mp4_filename, cut_mp4_filename, lang):
 def _upload_orig_mp4(orig_mp4_filename, cut_video_filename, lang):
     title = meta.get_youtube_title(orig_mp4_filename, lang)
     description = meta.get_youtube_description(orig_mp4_filename, lang)
-    upload_video.upload(cut_video_filename, title=title, description=description)
+    upload_video.upload(cut_video_filename, title=title, description=description, lang=lang)
 
 
 def _cut_orig_m4a(orig_mp4_filename, lang):

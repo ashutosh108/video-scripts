@@ -49,7 +49,7 @@ def _create_and_upload_ru_stereo_mp4(orig_mp4_filename):
 
     title = meta.get_youtube_title_ru_stereo(orig_mp4_filename)
     description = meta.get_youtube_description_ru_stereo(orig_mp4_filename)
-    upload_video.upload(ru_stereo_mp4_filename, title=title, description=description)
+    upload_video.upload(ru_stereo_mp4_filename, title=title, description=description, lang='ru')
 
 
 def _create_and_upload_ru_mono_mp4(orig_mp4_filename):
@@ -77,7 +77,7 @@ def _create_and_upload_ru_mono_mp4(orig_mp4_filename):
 
     title = meta.get_youtube_title_ru_mono(orig_mp4_filename)
     description = meta.get_youtube_description_ru_mono(orig_mp4_filename)
-    upload_video.upload(ru_mono_mp4_filename, title=title, description=description)
+    upload_video.upload(ru_mono_mp4_filename, title=title, description=description, lang='ru')
 
 
 def _create_mp3_ru_mono(filename):
