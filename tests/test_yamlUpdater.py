@@ -6,6 +6,8 @@ import sys
 import inspect
 import time
 
+import win
+
 
 class TestYamlUpdater(TestCase):
     DEBUG = False
@@ -34,33 +36,13 @@ class TestYamlUpdater(TestCase):
     def setUp(self):
         self.begin()
         self.filename = os.path.join(os.path.dirname(__file__), 'files', 'TestYamlUpdater.yml')
-        retry_count = 0
-        while True:
-            try:
-                self.f = open(self.filename, 'w')
-                break
-            except PermissionError:
-                if retry_count == 5:
-                    raise
-                self.mark('retrying...')
-                retry_count += 1
-                time.sleep(0.1)
+        self.f = win.open(self.filename, 'w')
         self.end()
 
     def tearDown(self):
         self.begin()
         self.f.close()
-        retry_count = 0
-        while True:
-            try:
-                os.unlink(self.filename)
-            except PermissionError:
-                if retry_count == 5:
-                    raise
-                self.mark('retrying...')
-                retry_count += 1
-                time.sleep(0.1)
-            else: break
+        win.unlink(self.filename)
         self.end()
 
     def test_set(self):
