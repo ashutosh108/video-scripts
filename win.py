@@ -1,5 +1,6 @@
 import os
 import time
+import builtins
 
 
 def unlink(filename):
@@ -20,7 +21,7 @@ def open(filename, mode):
     retry_count = 0
     while True:
         try:
-            return __builtins__.open(filename, mode)
+            return builtins.open(filename, mode)
         except PermissionError:
             if retry_count == 50:
                 raise
