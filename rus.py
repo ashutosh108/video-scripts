@@ -15,9 +15,9 @@ echo (or drag and drop the file onto me)""")
 
 
 def create_and_upload_ru_files(orig_mp4_filename):
-    p1 = multiprocessing.Process(target=_create_and_upload_ru_mono_mp4, args=(orig_mp4_filename,))
+    p1 = multiprocessing.Process(target=_create_and_upload_ru_mono_video, args=(orig_mp4_filename,))
     p1.start()
-    p2 = multiprocessing.Process(target=_create_and_upload_ru_stereo_mp4, args=(orig_mp4_filename,))
+    p2 = multiprocessing.Process(target=_create_and_upload_ru_stereo_video, args=(orig_mp4_filename,))
     p2.start()
     p3 = multiprocessing.Process(target=_create_mp3_ru_mono, args=(orig_mp4_filename,))
     p3.start()
@@ -30,8 +30,8 @@ def create_and_upload_ru_files(orig_mp4_filename):
     p4.join()
 
 
-def _create_and_upload_ru_stereo_mp4(orig_mp4_filename):
-    ru_stereo_mp4_filename = meta.get_work_filename(orig_mp4_filename, ' ru_stereo.mp4')
+def _create_and_upload_ru_stereo_video(orig_mp4_filename):
+    ru_stereo_video_filename = meta.get_work_filename(orig_mp4_filename, ' ru_stereo.mkv')
     cmd = ['D:\\video\\GoswamiMj-videos\\ffmpeg-hi8-heaac.exe', '-y',
            '-i', orig_mp4_filename,
            '-i', meta.get_work_filename(orig_mp4_filename, ' ru_mixdown.wav'),
@@ -40,44 +40,42 @@ def _create_and_upload_ru_stereo_mp4(orig_mp4_filename):
            '-map', '1:a',
            '-c:a:0', 'libfdk_aac',
            '-b:a', '384k',
-           '-metadata:s:a:0', 'language=rus',
-           '-movflags', '+faststart']
+           '-metadata:s:a:0', 'language=rus']
     cmd += meta.ffmpeg_meta_args_ru_stereo(orig_mp4_filename)
     cmd += meta.get_ss_args(orig_mp4_filename)
-    cmd += [ru_stereo_mp4_filename]
+    cmd += [ru_stereo_video_filename]
     subprocess.run(cmd, check=True)
 
     title = meta.get_youtube_title_ru_stereo(orig_mp4_filename)
     description = meta.get_youtube_description_ru_stereo(orig_mp4_filename)
-    upload_video.upload(ru_stereo_mp4_filename, title=title, description=description, lang='ru')
+    upload_video.upload(ru_stereo_video_filename, title=title, description=description, lang='ru')
 
 
-def _create_and_upload_ru_mono_mp4(orig_mp4_filename):
-    ru_mono_m4a = meta.get_work_filename(orig_mp4_filename, ' ru_mono.m4a')
+def _create_and_upload_ru_mono_video(orig_mp4_filename):
+    ru_mono_m4a_filename = meta.get_work_filename(orig_mp4_filename, ' ru_mono.m4a')
     cmd = ['D:\\video\\GoswamiMj-videos\\ffmpeg-hi8-heaac.exe', '-y',
            '-i', meta.get_work_filename(orig_mp4_filename, ' ru_mixdown.wav'),
            '-c:a', 'libfdk_aac', '-ac', '1', '-b:a', '128k',
            '-metadata:s:a:0', 'language=rus']
     cmd += meta.ffmpeg_meta_args_ru_mono(orig_mp4_filename)
-    cmd += [ru_mono_m4a]
+    cmd += [ru_mono_m4a_filename]
     subprocess.run(cmd, check=True)
 
-    ru_mono_mp4_filename = meta.get_work_filename(orig_mp4_filename, ' ru_mono.mp4')
+    ru_mono_video_filename = meta.get_work_filename(orig_mp4_filename, ' ru_mono.mkv')
     cmd = ['ffmpeg', '-y',
            '-i', orig_mp4_filename,
-           '-i', ru_mono_m4a,
+           '-i', ru_mono_m4a_filename,
            '-map', '0:v',
            '-map', '1:a',
-           '-c', 'copy',
-           '-movflags', '+faststart']
+           '-c', 'copy']
     cmd += meta.ffmpeg_meta_args_ru_mono(orig_mp4_filename)
     cmd += meta.get_ss_args(orig_mp4_filename)
-    cmd += [ru_mono_mp4_filename]
+    cmd += [ru_mono_video_filename]
     subprocess.run(cmd, check=True)
 
     title = meta.get_youtube_title_ru_mono(orig_mp4_filename)
     description = meta.get_youtube_description_ru_mono(orig_mp4_filename)
-    upload_video.upload(ru_mono_mp4_filename, title=title, description=description, lang='ru')
+    upload_video.upload(ru_mono_video_filename, title=title, description=description, lang='ru')
 
 
 def _create_mp3_ru_mono(filename):
