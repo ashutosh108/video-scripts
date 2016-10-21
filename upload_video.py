@@ -84,7 +84,7 @@ def _get_authenticated_service():
                                            http=credentials.authorize(httplib2.Http()))
 
 
-def _initialize_upload(youtube, filename, body):
+def _initialize_upload(youtube, filename, body, update):
     # Call the API's videos.insert method to create and upload the video.
     insert_request = youtube.videos().insert(
         part=','.join(body.keys()),
@@ -103,7 +103,7 @@ def _initialize_upload(youtube, filename, body):
         media_body=googleapiclient.http.MediaFileUpload(filename, chunksize=2*1024*1024, resumable=True)
     )
 
-    video_id = _resumable_upload(insert_request, filename)
+    video_id = _resumable_upload(insert_request, filename, update)
     return video_id
 
 
@@ -156,21 +156,31 @@ def _compose_upload_body(filename, title=None, description=None, lang=None):
 
 # This method implements an exponential backoff strategy to resume a
 # failed upload.
-def _resumable_upload(insert_request, filename):
+def _resumable_upload(insert_request, filename, update):
     response = None
     error = None
     retry = 0
-    print("Uploading file...")
-    bar = progressbar.ProgressBar(max_value=os.path.getsize(filename))
-    bar.start()
+    file_size = os.path.getsize(filename)
+    if update is None:
+        print("Uploading file...")
+        bar = progressbar.ProgressBar(max_value=file_size)
+        bar.start()
+    else:
+        update(0, file_size)
     while response is None:
         try:
             status, response = insert_request.next_chunk()
             if status:
-                bar.update(status.resumable_progress)
+                if update:
+                    update(status.resumable_progress, file_size)
+                else:
+                    bar.update(status.resumable_progress)
             if response is not None:
                 if 'id' in response:
-                    bar.finish()
+                    if update:
+                        update(file_size, file_size)
+                    else:
+                        bar.finish()
                     print("Video id '%s' was successfully uploaded." % response['id'])
                     return response['id']
                 else:
@@ -196,10 +206,10 @@ def _resumable_upload(insert_request, filename):
             time.sleep(sleep_seconds)
 
 
-def upload(filename, title=None, description=None, lang=None):
+def upload(filename, title=None, description=None, lang=None, update=None):
     youtube = _get_authenticated_service()
     body = _compose_upload_body(filename, title=title, description=description, lang=lang)
-    return _initialize_upload(youtube, filename, body)
+    return _initialize_upload(youtube, filename, body, update=update)
 
 
 def _main():
