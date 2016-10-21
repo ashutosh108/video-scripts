@@ -17,8 +17,6 @@ usage: mux "yyyy-mm-dd goswamimj.mp4"
 
 
 def orig(orig_mp4_filename):
-    colorama.init()
-    print('\x1b[2J', end='')  # clear screen
     """Prepare all files in original language: m4a, mp4, mp3"""
     lang = meta.get_lang(orig_mp4_filename)
 
@@ -49,24 +47,33 @@ def _cut_orig_mp4(orig_mp4_filename, cut_mp4_filename, lang, line):
     cmd += meta.ffmpeg_meta_args(orig_mp4_filename, lang)
     cmd += meta.get_ss_args(orig_mp4_filename)
     cmd += [cut_mp4_filename]
-    _run_ffmpeg_at_line(cmd, line)
+    _run_ffmpeg_at_line(cmd, line, 'mkv')
 
 
 def _upload_orig_mp4(orig_mp4_filename, cut_video_filename, lang, line):
+    def run(callback):
+        title = meta.get_youtube_title(orig_mp4_filename, lang)
+        description = meta.get_youtube_description(orig_mp4_filename, lang)
+        return upload_video.upload(cut_video_filename, title=title, description=description, lang=lang, update=callback)
+    run_with_progressbar(line, run, 'upload')
+
+
+def run_with_progressbar(line, run, name):
     colorama.init()
     bar = None
 
-    def update(curr, max):
+    def callback(curr_value, max_value):
         nonlocal bar, line
         cursor_down(line)
         if bar is None:
-            bar = progressbar.ProgressBar(max_value=max)
-        bar.update(curr)
+            bar = progressbar.ProgressBar(
+                widgets=[name, ': ', progressbar.Bar(), ' ', progressbar.ETA()],
+                max_value=max_value)
+        bar.update(curr_value)
         cursor_up(line)
 
-    title = meta.get_youtube_title(orig_mp4_filename, lang)
-    description = meta.get_youtube_description(orig_mp4_filename, lang)
-    upload_video.upload(cut_video_filename, title=title, description=description, lang=lang, update=update)
+    run(callback)
+
     cursor_down(line)
     bar.finish()
     cursor_up(line + 1)
@@ -79,7 +86,7 @@ def _cut_orig_m4a(orig_mp4_filename, lang, line):
     cmd += meta.get_ss_args(orig_mp4_filename)
     cmd += ['-c:a', 'copy', '-vn',
             meta.get_work_filename(orig_mp4_filename, ' ' + lang + '.m4a')]
-    _run_ffmpeg_at_line(cmd, line)
+    _run_ffmpeg_at_line(cmd, line, 'm4a')
 
 
 def cursor_down(line):
@@ -90,25 +97,13 @@ def cursor_up(line):
     print('\x1b[%dA' % line, end='')
 
 
-def _run_ffmpeg_at_line(cmd, line):
-    bar = None
-
-    def update(curr, max):
-        nonlocal bar, line
-        cursor_down(line)
-        if bar is None:
-            bar = progressbar.ProgressBar(max_value=max)
-        bar.update(curr)
-        cursor_up(line)
-
-    ffmpegrunner.run(cmd, update)
-    cursor_down(line)
-    bar.finish()
-    cursor_up(line + 1)
+def _run_ffmpeg_at_line(cmd, line, name):
+    def run(callback):
+        ffmpegrunner.run(cmd, callback)
+    run_with_progressbar(line, run, name)
 
 
 def _encode_orig_mp3(orig_mp4_filename, lang, line):
-    colorama.init()
     cmd = ['ffmpeg', '-y',
            '-i', orig_mp4_filename,
            '-ac', '1',
@@ -116,7 +111,7 @@ def _encode_orig_mp3(orig_mp4_filename, lang, line):
     cmd += meta.get_ss_args(orig_mp4_filename)
     cmd += meta.ffmpeg_meta_args(orig_mp4_filename, lang)
     cmd += [meta.get_work_filename(orig_mp4_filename, ' ' + lang + '.mp3')]
-    _run_ffmpeg_at_line(cmd, line)
+    _run_ffmpeg_at_line(cmd, line, 'mp3')
 
 
 def main():
@@ -127,7 +122,7 @@ def main():
             print('')
             usage_and_exit()
         orig(orig_mp4_filename)
-    except IndexError:
+    except (IndexError, KeyboardInterrupt):
         usage_and_exit()
 
 if __name__ == '__main__':
