@@ -55,9 +55,8 @@ def _upload_orig_mp4(orig_mp4_filename, cut_video_filename, lang, line):
     def run(callback):
         title = meta.get_youtube_title(orig_mp4_filename, lang)
         description = meta.get_youtube_description(orig_mp4_filename, lang)
-        id = upload_video.upload(cut_video_filename, title=title, description=description, lang=lang, update=callback)
-        yaml_filename = os.path.splitext(orig_mp4_filename)[0] + '.yml'
-        yamlupdater.set(yaml_filename, 'youtube_id_orig', id)
+        youtube_id = upload_video.upload(cut_video_filename, title=title, description=description, lang=lang, update=callback)
+        meta.update_yaml(orig_mp4_filename, 'youtube_id_orig', youtube_id)
     run_with_progressbar(line, run, 'upload')
 
 

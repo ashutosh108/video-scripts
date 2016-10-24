@@ -5,6 +5,7 @@ import datetime
 import string
 import numbers
 import babel.dates
+import yamlupdater
 
 _yaml_data_cache = {}
 
@@ -343,3 +344,8 @@ def get_youtube_description_ru_mono(filename):
     yt_descr += 'English original: (link pending)\n'
     yt_descr += 'Стерео перевод: (link pending)'
     return yt_descr
+
+
+def update_yaml(orig_mp4_filename, key, value):
+    yaml_filename = os.path.splitext(orig_mp4_filename)[0] + '.yml'
+    yamlupdater.set(yaml_filename, key, value)
