@@ -7,7 +7,6 @@ import colorama
 import meta
 import upload_video
 import ffmpegrunner
-import yamlupdater
 
 
 def usage_and_exit():
@@ -31,7 +30,9 @@ def orig(orig_mp4_filename):
     # And now we run two long-running tasks (uploading to youtube
     # and encoding mp3) in parallel
 
-    p_upload_orig_mp4 = multiprocessing.Process(target=_upload_orig_mp4, args=(orig_mp4_filename, cut_video_filename, lang, 2))
+    p_upload_orig_mp4 = multiprocessing.Process(
+        target=_upload_orig_mp4,
+        args=(orig_mp4_filename, cut_video_filename, lang, 2))
     p_upload_orig_mp4.start()
 
     p_encode_orig_mp3 = multiprocessing.Process(target=_encode_orig_mp3, args=(orig_mp4_filename, lang, 3))
@@ -55,7 +56,12 @@ def _upload_orig_mp4(orig_mp4_filename, cut_video_filename, lang, line):
     def run(callback):
         title = meta.get_youtube_title(orig_mp4_filename, lang)
         description = meta.get_youtube_description(orig_mp4_filename, lang)
-        youtube_id = upload_video.upload(cut_video_filename, title=title, description=description, lang=lang, update=callback)
+        youtube_id = upload_video.upload(
+            cut_video_filename,
+            title=title,
+            description=description,
+            lang=lang,
+            update=callback)
         meta.update_yaml(orig_mp4_filename, 'youtube_id_orig', youtube_id)
     run_with_progressbar(line, run, 'upload')
 
