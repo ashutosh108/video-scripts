@@ -48,6 +48,7 @@ def _cut_orig_mp4(orig_mp4_filename, cut_mp4_filename, lang, line):
            '-c', 'copy']
     cmd += meta.ffmpeg_meta_args(orig_mp4_filename, lang)
     cmd += meta.get_ss_args(orig_mp4_filename)
+    cmd += meta.get_to_args(orig_mp4_filename)
     cmd += [cut_mp4_filename]
     _run_ffmpeg_at_line(cmd, line, 'mkv')
 
@@ -92,6 +93,7 @@ def _cut_orig_m4a(orig_mp4_filename, lang, line):
            '-i', orig_mp4_filename]
     cmd += meta.ffmpeg_meta_args(orig_mp4_filename, lang)
     cmd += meta.get_ss_args(orig_mp4_filename)
+    cmd += meta.get_to_args(orig_mp4_filename)
     cmd += ['-c:a', 'copy', '-vn',
             meta.get_work_filename(orig_mp4_filename, ' ' + lang + '.m4a')]
     _run_ffmpeg_at_line(cmd, line, 'm4a')
@@ -117,6 +119,7 @@ def _encode_orig_mp3(orig_mp4_filename, lang, line):
            '-ac', '1',
            '-codec:a', 'mp3', '-b:a', '96k']
     cmd += meta.get_ss_args(orig_mp4_filename)
+    cmd += meta.get_to_args(orig_mp4_filename)
     cmd += meta.ffmpeg_meta_args(orig_mp4_filename, lang)
     cmd += [meta.get_work_filename(orig_mp4_filename, ' ' + lang + '.mp3')]
     _run_ffmpeg_at_line(cmd, line, 'mp3')

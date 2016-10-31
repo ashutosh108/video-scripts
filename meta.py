@@ -37,20 +37,37 @@ def _get_skip_time(filename: str) -> str:
                 return f.readline().rstrip()
         except FileNotFoundError:
             pass
-    y = _yaml_data(filename)
-    try:
-        skip = y['skip']
-        if isinstance(skip, numbers.Number):
-            skip = str(datetime.timedelta(seconds=y['skip']))
-        return skip
-    except KeyError:
-        return None
+    return _yaml_get_time_length(filename, 'skip')
 
 
 def get_ss_args(filename):
     skip_time = _get_skip_time(filename)
     if skip_time:
         return ['-ss', skip_time]
+    else:
+        return []
+
+
+def _yaml_get_time_length(filename: str, key: str) -> str:
+    """
+    get proper argument for -tt min:sec part of the ffmpeg command line
+    :param filename:
+    :return: string or None
+    """
+    y = _yaml_data(filename)
+    try:
+        skip = y[key]
+        if isinstance(skip, numbers.Number):
+            skip = str(datetime.timedelta(seconds=skip))
+        return skip
+    except KeyError:
+        return None
+
+
+def get_to_args(filename):
+    cut_time = _yaml_get_time_length(filename, 'cut')
+    if cut_time:
+        return ['-to', cut_time]
     else:
         return []
 
