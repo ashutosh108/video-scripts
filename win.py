@@ -17,11 +17,11 @@ def unlink(filename):
             break
 
 
-def open(filename, mode):
+def open(filename, mode, **kwargs):
     retry_count = 0
     while True:
         try:
-            return builtins.open(filename, mode)
+            return builtins.open(filename, mode, **kwargs)
         except PermissionError:
             if retry_count == 50:
                 raise

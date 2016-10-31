@@ -36,7 +36,7 @@ class TestYamlUpdater(TestCase):
     def setUp(self):
         self.begin()
         self.filename = os.path.join(os.path.dirname(__file__), 'files', 'TestYamlUpdater.yml')
-        self.f = win.open(self.filename, 'w')
+        self.f = win.open(self.filename, 'w', encoding='utf-8')
         self.end()
 
     def tearDown(self):
@@ -90,3 +90,15 @@ class TestYamlUpdater(TestCase):
         self.f = open(self.filename, 'r')
         self.assertEqual('descr_en: |\n    - line1\n    - line2\nkey: 1\n', self.f.read())
         self.end()
+
+    def test_set_works_with_chars_outside_cp1251(self):
+        # U+2600 is \xE2\x98\x80 in utf-8
+        # and \x98 is not defined for windows-1251 encoding
+        # so it's a good char to test
+        self.f.write('key1: \u2600')
+        self.f.close()
+
+        yamlupdater.set(self.filename, 'key2', 2)
+
+        self.f = open(self.filename, 'r', encoding='utf-8')
+        self.assertEqual('key1: \u2600\nkey2: 2\n', self.f.read())

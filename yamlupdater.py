@@ -11,25 +11,26 @@ import os
 def set(filename, key, value):
     with filelock.FileLock(filename + '.lock'):
         try:
-            with open(filename, 'r') as f:
+            with open(filename, 'rb') as f:
                 lines = f.readlines()
         except FileNotFoundError:
             lines = []
         has_line = False
         new_lines = []
         for line in lines:
-            if line.startswith(key + ':'):
-                line = key + ': ' + str(value) + '\n'
+            if line.startswith(key.encode('utf-8') + b':'):
+                line = key.encode('utf-8') + b': ' + str(value).encode('utf-8') + b'\n'
                 has_line = True
             new_lines.append(line)
         if new_lines:
             # append new line at the end if it's missing
-            if new_lines[-1][-1] != '\n':
-                new_lines[-1] += '\n'
+            # we use '10' because for byte-strings [] returns int, not string
+            if new_lines[-1][-1] != 10:
+                new_lines[-1] += b'\n'
         if not has_line:
-            new_lines.append(key + ': ' + str(value) + '\n')
+            new_lines.append(key.encode('utf-8') + b': ' + str(value).encode('utf-8') + b'\n')
         with atomic_open(filename) as f:
-            f.write(''.join(new_lines))
+            f.write(b''.join(new_lines))
             f.flush()
             os.fsync(f.fileno())
 
@@ -42,7 +43,7 @@ def atomic_open(filename):
         file_dir = os.path.dirname(filename)
         prefix = os.path.basename(filename) + '.'
         fd, tmp_name = tempfile.mkstemp(prefix=prefix, dir=file_dir)
-        with os.fdopen(fd, 'w') as f:
+        with os.fdopen(fd, 'wb') as f:
             yield f
         os.replace(filename, filename_bak)
         os.replace(tmp_name, filename)
