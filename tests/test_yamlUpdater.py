@@ -4,7 +4,6 @@ import yaml
 import yamlupdater
 import sys
 import inspect
-import time
 
 import win
 
