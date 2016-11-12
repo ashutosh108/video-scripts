@@ -175,44 +175,32 @@ def ffmpeg_meta_args(filename, lang):
 
 
 def _ffmpeg_meta_args_en(filename):
-    title = _get_title_en(filename)
     artist = _get_artist_en(filename)
-    [year, month, day] = _get_year_month_day(filename)
-    args = [
-       '-metadata', 'artist=' + artist,
-       '-metadata', 'title=' + title,
-       '-metadata', 'album=Gupta Govardhan 2016',
-       '-metadata', 'genre=Speech']
-    if year:
-        args += ['-metadata', 'date=' + year + '-' + month + '-' + day]
-        args += ['-metadata', 'comment=' + year + '-' + month + '-' + day]
-    return args
+    title = _get_title_en(filename)
+    return _ffmpeg_meta_args(filename, artist, title, album='Gupta Govardhan 2016')
 
 
 def ffmpeg_meta_args_ru_mono(filename):
-    title = _get_title_ru(filename) + ' (моно)'
     artist = _get_artist_ru(filename)
-    [year, month, day] = _get_year_month_day(filename)
-    args = [
-       '-metadata', 'artist=' + artist,
-       '-metadata', 'title=' + title,
-       '-metadata', 'album=Гупта Говардхан 2016',
-       '-metadata', 'genre=Speech']
-    if year:
-        args += ['-metadata', 'date=' + year + '-' + month + '-' + day]
-        args += ['-metadata', 'comment=' + year + '-' + month + '-' + day]
-    return args
+    title = _get_title_ru(filename) + ' (моно)'
+    return _ffmpeg_meta_args(filename, artist, title, 'Гупта Говардхан 2016')
 
 
 def ffmpeg_meta_args_ru_stereo(filename):
-    title = _get_title_ru(filename)
     artist = _get_artist_ru(filename)
+    title = _get_title_ru(filename)
+    return _ffmpeg_meta_args(filename, artist, title, 'Гупта Говардхан 2016')
+
+
+def _ffmpeg_meta_args(filename, artist, title, album):
     [year, month, day] = _get_year_month_day(filename)
     args = [
-       '-metadata', 'artist=' + artist,
-       '-metadata', 'title=' + title,
-       '-metadata', 'album=Гупта Говардхан 2016',
-       '-metadata', 'genre=Speech']
+        '-id3v2_version', '3',
+        '-write_id3v1', '1',
+        '-metadata', 'artist=' + artist,
+        '-metadata', 'title=' + title,
+        '-metadata', 'album=' + album,
+        '-metadata', 'genre=Speech']
     if year:
         args += ['-metadata', 'date=' + year + '-' + month + '-' + day]
         args += ['-metadata', 'comment=' + year + '-' + month + '-' + day]
