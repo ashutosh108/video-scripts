@@ -163,7 +163,16 @@ def _resumable_upload(insert_request, filename, update):
     file_size = os.path.getsize(filename)
     if update is None:
         print("Uploading file...")
-        bar = progressbar.ProgressBar(max_value=file_size)
+        bar = progressbar.ProgressBar(
+            widgets=[
+                progressbar.FileTransferSpeed(),
+                ' ', progressbar.Percentage(),
+                ' (', progressbar.SimpleProgress(), ')',
+                ' ', progressbar.Bar(),
+                ' ', progressbar.Timer(),
+                ' ', progressbar.AdaptiveETA(),
+            ],
+            max_value=file_size)
         bar.start()
     else:
         update(0, file_size)
