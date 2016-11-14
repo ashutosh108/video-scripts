@@ -42,13 +42,15 @@ RETRIABLE_STATUS_CODES = [500, 502, 503, 504]
 #   https://developers.google.com/youtube/v3/guides/authentication
 # For more information about the client_secrets.json file format, see:
 #   https://developers.google.com/api-client-library/python/guide/aaa_client_secrets
-CLIENT_SECRETS_FILE = "client_secrets.json"
+CLIENT_SECRETS_FILE = 'client_secrets.json'
 
 # This OAuth 2.0 access scope allows an application to upload files to the
 # authenticated user's YouTube channel, but doesn't allow other types of access.
-YOUTUBE_UPLOAD_SCOPE = "https://www.googleapis.com/auth/youtube.upload"
-YOUTUBE_API_SERVICE_NAME = "youtube"
-YOUTUBE_API_VERSION = "v3"
+YOUTUBE_UPLOAD_SCOPE = 'https://www.googleapis.com/auth/youtube.upload'
+YOUTUBE_READONLY_SCOPE = 'https://www.googleapis.com/auth/youtube.readonly'
+REQUEST_SCOPES = ' '.join([YOUTUBE_UPLOAD_SCOPE, YOUTUBE_READONLY_SCOPE])
+YOUTUBE_API_SERVICE_NAME = 'youtube'
+YOUTUBE_API_VERSION = 'v3'
 
 # This variable defines a message to display if the CLIENT_SECRETS_FILE is
 # missing.
@@ -71,10 +73,10 @@ https://developers.google.com/api-client-library/python/guide/aaa_client_secrets
 
 def _get_authenticated_service():
     flow = oauth2client.client.flow_from_clientsecrets(CLIENT_SECRETS_FILE,
-                                                       scope=YOUTUBE_UPLOAD_SCOPE,
+                                                       scope=REQUEST_SCOPES,
                                                        message=MISSING_CLIENT_SECRETS_MESSAGE)
 
-    storage = oauth2client.file.Storage("%s-oauth2.json" % __file__)
+    storage = oauth2client.file.Storage('%s-oauth2.json' % __file__)
     credentials = storage.get()
 
     if credentials is None or credentials.invalid:
@@ -94,7 +96,7 @@ def _initialize_upload(youtube, filename, body, update):
         # reliable connections as fewer chunks lead to faster uploads. Set a lower
         # value for better recovery on less reliable connections.
         #
-        # Setting "chunksize" equal to -1 in the code below means that the entire
+        # Setting 'chunksize' equal to -1 in the code below means that the entire
         # file will be uploaded in a single HTTP request. (If the upload fails,
         # it will still be retried where it left off.) This is usually a best
         # practice, but if you're using Python older than 2.6 or if you're
@@ -162,7 +164,7 @@ def _resumable_upload(insert_request, filename, update):
     retry = 0
     file_size = os.path.getsize(filename)
     if update is None:
-        print("Uploading file...")
+        print('Uploading file...')
         bar = progressbar.ProgressBar(
             widgets=[
                 progressbar.FileTransferSpeed(),
@@ -190,28 +192,28 @@ def _resumable_upload(insert_request, filename, update):
                         update(file_size, file_size)
                     else:
                         bar.finish()
-                    print("Video id '%s' was successfully uploaded." % response['id'])
+                    print('Video id \'%s\' was successfully uploaded.' % response['id'])
                     return response['id']
                 else:
-                    raise Exception("The upload failed with an unexpected response: %s" % response)
+                    raise Exception('The upload failed with an unexpected response: %s' % response)
         except googleapiclient.errors.HttpError as e:
             if e.resp.status in RETRIABLE_STATUS_CODES:
-                error = "A retriable HTTP error %d occurred:\n%s" % (e.resp.status,
+                error = 'A retriable HTTP error %d occurred:\n%s' % (e.resp.status,
                                                                      e.content)
             else:
                 raise
         except RETRIABLE_EXCEPTIONS as e:
-            error = "A retriable error occurred: %s" % e
+            error = 'A retriable error occurred: %s' % e
 
         if error is not None:
             print(error)
             retry += 1
             if retry > MAX_RETRIES:
-                raise Exception("No longer attempting to retry.")
+                raise Exception('No longer attempting to retry.')
 
             max_sleep = 2 ** retry
             sleep_seconds = random.random() * max_sleep
-            print("Sleeping %f seconds and then retrying..." % sleep_seconds)
+            print('Sleeping %f seconds and then retrying...' % sleep_seconds)
             time.sleep(sleep_seconds)
 
 
@@ -221,12 +223,65 @@ def upload(filename, title=None, description=None, lang=None, update=None):
     return _initialize_upload(youtube, filename, body, update=update)
 
 
+def print_my_videos():
+    videos = get_my_videos()
+    for video in videos:
+        str = '%s (%s)' % (video['title'], video['videoId'])
+        print(repr(str))
+        # print(str.encode(sys.stdout.encoding or 'utf-8', errors='replace'))
+
+
+def get_my_videos():
+    youtube = _get_authenticated_service()
+    # Retrieve the contentDetails part of the channel resource for the
+    # authenticated user's channel.
+    channels_response = youtube.channels().list(
+        mine=True,
+        part='contentDetails'
+    ).execute()
+
+    videos = []
+    for channel in channels_response['items']:
+        # From the API response, extract the playlist ID that identifies the list
+        # of videos uploaded to the authenticated user's channel.
+        uploads_list_id = channel['contentDetails']['relatedPlaylists']['uploads']
+
+        print('Videos in list %s' % uploads_list_id)
+
+        # Retrieve the list of videos uploaded to the authenticated user's channel.
+        playlistitems_list_request = youtube.playlistItems().list(
+            playlistId=uploads_list_id,
+            part='snippet',
+            maxResults=50
+        )
+
+        while playlistitems_list_request:
+            playlistitems_list_response = playlistitems_list_request.execute()
+
+            # Print information about each video.
+            for playlist_item in playlistitems_list_response['items']:
+                title = playlist_item['snippet']['title']
+                video_id = playlist_item['snippet']['resourceId']['videoId']
+                new_video = {'title': title, 'videoId': video_id}
+                videos.append(new_video)
+
+            playlistitems_list_request = youtube.playlistItems().list_next(
+                playlistitems_list_request, playlistitems_list_response)
+    return videos
+
+
 def _main():
-    oauth2client.tools.argparser.add_argument("--file", required=True, help="Video file to upload")
+    oauth2client.tools.argparser.add_argument('-f', '--file', help='Video file to upload')
+    oauth2client.tools.argparser.add_argument('-l', '--list', action='store_true', help='List videos on my channel')
     args = oauth2client.tools.argparser.parse_args()
-    if not os.path.exists(args.file):
-        exit("Please specify a valid file using the --file= parameter.")
-    upload(args.file)
+    if args.file is not None:
+        if not os.path.exists(args.file):
+            exit('Please specify a valid file using the --file= parameter.')
+        upload(args.file)
+    elif args.list:
+        print_my_videos()
+    else:
+        oauth2client.tools.argparser.print_help()
 
 if __name__ == '__main__':
     _main()
