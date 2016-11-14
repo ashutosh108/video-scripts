@@ -227,8 +227,8 @@ def upload(filename, title=None, description=None, lang=None, update=None):
 def print_my_videos():
     videos = get_my_videos(10)
     for video in videos:
-        str = '%s (%s)\n' % (video['title'], video['videoId'])
-        sys.stdout.buffer.write(str.encode(sys.stdout.encoding or 'utf-8', errors='replace'))
+        s = '%s (%s)\n' % (video['title'], video['videoId'])
+        sys.stdout.buffer.write(s.encode(sys.stdout.encoding or 'utf-8', errors='replace'))
 
 
 def get_my_videos(max_count=None):
@@ -247,8 +247,6 @@ def get_my_videos(max_count=None):
         # of videos uploaded to the authenticated user's channel.
         uploads_list_id = channel['contentDetails']['relatedPlaylists']['uploads']
 
-        print('Videos in list %s' % uploads_list_id)
-
         # Retrieve the list of videos uploaded to the authenticated user's channel.
         playlistitems_list_request = youtube.playlistItems().list(
             playlistId=uploads_list_id,
@@ -259,7 +257,7 @@ def get_my_videos(max_count=None):
         while playlistitems_list_request:
             playlistitems_list_response = playlistitems_list_request.execute()
 
-            # Print information about each video.
+            # Get information about each video.
             for playlist_item in playlistitems_list_response['items']:
                 title = playlist_item['snippet']['title']
                 video_id = playlist_item['snippet']['resourceId']['videoId']
@@ -271,6 +269,13 @@ def get_my_videos(max_count=None):
             playlistitems_list_request = youtube.playlistItems().list_next(
                 playlistitems_list_request, playlistitems_list_response)
     return videos
+
+
+def get_recent_video_id(title):
+    for video in get_my_videos(10):
+        if video['title'] == title:
+            return video['videoId']
+    return None
 
 
 def _main():
