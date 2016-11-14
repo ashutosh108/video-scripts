@@ -4,7 +4,7 @@ import subprocess
 import multiprocessing
 
 import meta
-import upload_video
+import my_youtube
 
 
 def usage_and_exit():
@@ -49,7 +49,7 @@ def _create_and_upload_ru_stereo_video(orig_mp4_filename):
 
     title = meta.get_youtube_title_ru_stereo(orig_mp4_filename)
     description = meta.get_youtube_description_ru_stereo(orig_mp4_filename)
-    youtube_id = upload_video.upload(ru_stereo_video_filename, title=title, description=description, lang='ru')
+    youtube_id = my_youtube.upload(ru_stereo_video_filename, title=title, description=description, lang='ru')
     meta.update_yaml(orig_mp4_filename, 'youtube_id_rus_stereo', youtube_id)
 
 
@@ -78,7 +78,7 @@ def _create_and_upload_ru_mono_video(orig_mp4_filename):
 
     title = meta.get_youtube_title_ru_mono(orig_mp4_filename)
     description = meta.get_youtube_description_ru_mono(orig_mp4_filename)
-    youtube_id = upload_video.upload(ru_mono_video_filename, title=title, description=description, lang='ru')
+    youtube_id = my_youtube.upload(ru_mono_video_filename, title=title, description=description, lang='ru')
     meta.update_yaml(orig_mp4_filename, 'youtube_id_rus_mono', youtube_id)
 
 
