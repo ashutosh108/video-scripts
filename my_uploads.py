@@ -4,7 +4,7 @@ import httplib2
 import os
 import sys
 
-from apiclient.discovery import build
+from googleapiclient.discovery import build
 from oauth2client.client import flow_from_clientsecrets
 from oauth2client.file import Storage
 from oauth2client.tools import argparser, run_flow
@@ -68,7 +68,7 @@ for channel in channels_response["items"]:
   # of videos uploaded to the authenticated user's channel.
   uploads_list_id = channel["contentDetails"]["relatedPlaylists"]["uploads"]
 
-  print "Videos in list %s" % uploads_list_id
+  print("Videos in list %s" % uploads_list_id)
 
   # Retrieve the list of videos uploaded to the authenticated user's channel.
   playlistitems_list_request = youtube.playlistItems().list(
@@ -84,9 +84,7 @@ for channel in channels_response["items"]:
     for playlist_item in playlistitems_list_response["items"]:
       title = playlist_item["snippet"]["title"]
       video_id = playlist_item["snippet"]["resourceId"]["videoId"]
-      print "%s (%s)" % (title, video_id)
+      print(("%s (%s)" % (title, video_id)).encode(sys.stdout.encoding or 'utf-8', errors='replace'))
 
     playlistitems_list_request = youtube.playlistItems().list_next(
       playlistitems_list_request, playlistitems_list_response)
-
-  print
