@@ -7,6 +7,7 @@ import random
 import progressbar
 import time
 import re
+import sys
 
 import googleapiclient.discovery  # build
 import googleapiclient.errors  # HTTPError
@@ -224,14 +225,13 @@ def upload(filename, title=None, description=None, lang=None, update=None):
 
 
 def print_my_videos():
-    videos = get_my_videos()
+    videos = get_my_videos(10)
     for video in videos:
-        str = '%s (%s)' % (video['title'], video['videoId'])
-        print(repr(str))
-        # print(str.encode(sys.stdout.encoding or 'utf-8', errors='replace'))
+        str = '%s (%s)\n' % (video['title'], video['videoId'])
+        sys.stdout.buffer.write(str.encode(sys.stdout.encoding or 'utf-8', errors='replace'))
 
 
-def get_my_videos():
+def get_my_videos(max_count=None):
     youtube = _get_authenticated_service()
     # Retrieve the contentDetails part of the channel resource for the
     # authenticated user's channel.
@@ -241,6 +241,7 @@ def get_my_videos():
     ).execute()
 
     videos = []
+    chunk_size = min(max_count or 50, 50)
     for channel in channels_response['items']:
         # From the API response, extract the playlist ID that identifies the list
         # of videos uploaded to the authenticated user's channel.
@@ -252,7 +253,7 @@ def get_my_videos():
         playlistitems_list_request = youtube.playlistItems().list(
             playlistId=uploads_list_id,
             part='snippet',
-            maxResults=50
+            maxResults=chunk_size
         )
 
         while playlistitems_list_request:
@@ -264,6 +265,8 @@ def get_my_videos():
                 video_id = playlist_item['snippet']['resourceId']['videoId']
                 new_video = {'title': title, 'videoId': video_id}
                 videos.append(new_video)
+                if len(videos) >= max_count:
+                    return videos
 
             playlistitems_list_request = youtube.playlistItems().list_next(
                 playlistitems_list_request, playlistitems_list_response)
