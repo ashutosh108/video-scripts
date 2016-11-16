@@ -39,7 +39,7 @@ def _create_and_upload_ru_stereo_video(orig_mp4_filename):
            '-c:v', 'copy',
            '-map', '1:a',
            '-c:a:0', 'libfdk_aac',
-           '-b:a', '384k',
+           '-b:a', '192k',
            '-metadata:s:a:0', 'language=rus']
     cmd += meta.ffmpeg_meta_args_ru_stereo(orig_mp4_filename)
     cmd += meta.get_ss_args(orig_mp4_filename)
