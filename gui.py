@@ -15,6 +15,7 @@ class FileFrame():
     frame = None
     filename = None
     lang = None
+    lang_frame = None
 
     def __init__(self, parent_frame):
         self.frame = ttk.LabelFrame(parent_frame, text='Source file: ')
@@ -30,10 +31,17 @@ class FileFrame():
 
         self.lang = tk.StringVar()
         self.lang.set('en')
-        lang_frame = ttk.LabelFrame(self.frame, text='Source language:')
-        ttk.Radiobutton(lang_frame, text='English', variable=self.lang, value='en').grid()
-        ttk.Radiobutton(lang_frame, text='Russian', variable=self.lang, value='ru').grid()
-        lang_frame.grid()
+        self.lang_frame = ttk.LabelFrame(self.frame, text='Source language:')
+        ttk.Radiobutton(self.lang_frame, text='English', variable=self.lang, value='en').grid()
+        ttk.Radiobutton(self.lang_frame, text='Russian', variable=self.lang, value='ru').grid()
+        self.lang_frame.grid()
+        self.disable_widget(self.lang_frame)
+
+    def disable_widget(self, widget):
+        widget.state(['disabled'])
+        if hasattr(widget, 'children'):
+            for ch in widget.children.values():
+                self.disable_widget(ch)
 
     def browse_for_file(self):
         new_filename = filedialog.askopenfilename(
