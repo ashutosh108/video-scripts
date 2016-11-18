@@ -25,6 +25,7 @@ class FileFrame():
 
         self.lang = tk.StringVar()
         self.lang.set('en')
+        self.lang.trace('w', lambda *args: self.lang_changed_callback())
         self.lang_frame = ttk.LabelFrame(self.frame, text='Source language:')
         ttk.Radiobutton(self.lang_frame, text='English', variable=self.lang, value='en').grid()
         ttk.Radiobutton(self.lang_frame, text='Russian', variable=self.lang, value='ru').grid()
@@ -54,6 +55,12 @@ class FileFrame():
     def load_metadata(self, source_filename):
         self.lang.set(meta.get_lang(source_filename))
         self.enable_widget(self.lang_frame)
+
+    def lang_changed_callback(self):
+        new_lang = self.lang.get()
+        old_lang = meta.get_lang(self.filename.get())
+        if new_lang != old_lang:
+            meta.update_yaml(self.filename.get(), 'lang', new_lang)
 
 root = tk.Tk()
 root.title('Best Talks\' Uploader')
