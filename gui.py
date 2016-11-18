@@ -3,14 +3,6 @@ from tkinter import ttk
 from tkinter import filedialog
 
 
-def calculate(*args):
-    try:
-        value = float(feet.get())
-        meters.set((0.3048 * value * 10000.0 + 0.5)/10000.0)
-    except ValueError:
-        pass
-
-
 class FileFrame():
     frame = None
     filename = None
@@ -34,7 +26,7 @@ class FileFrame():
         self.lang_frame = ttk.LabelFrame(self.frame, text='Source language:')
         ttk.Radiobutton(self.lang_frame, text='English', variable=self.lang, value='en').grid()
         ttk.Radiobutton(self.lang_frame, text='Russian', variable=self.lang, value='ru').grid()
-        self.lang_frame.grid()
+        self.lang_frame.grid(column=0, row=1, columnspan=3, sticky='nw')
         self.disable_widget(self.lang_frame)
 
     def disable_widget(self, widget):
@@ -61,16 +53,4 @@ mainframe.rowconfigure(0, weight=1)
 file_frame = FileFrame(mainframe)
 file_frame.frame.grid(column=0, row=0)
 
-feet = tk.StringVar()
-meters = tk.StringVar()
-feet_entry = ttk.Entry(mainframe, width=7, textvariable=feet)
-feet_entry.grid(column=2, row=1, sticky=(tk.W, tk.E))
-ttk.Label(mainframe, textvariable=meters).grid(column=2, row=2, sticky=(tk.W, tk.E))
-ttk.Button(mainframe, text="Calculate", command=calculate).grid(column=3, row=3, sticky=tk.W)
-ttk.Label(mainframe, text="feet").grid(column=3, row=1, sticky=tk.W)
-ttk.Label(mainframe, text="is equivalent to").grid(column=1, row=2, sticky=tk.E)
-ttk.Label(mainframe, text="meters").grid(column=3, row=2, sticky=tk.W)
-for child in mainframe.winfo_children(): child.grid_configure(padx=5, pady=5)
-feet_entry.focus()
-root.bind('<Return>', calculate)
 root.mainloop()
