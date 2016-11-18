@@ -354,3 +354,6 @@ def get_youtube_description_ru_mono(filename):
 def update_yaml(orig_mp4_filename, key, value):
     yaml_filename = os.path.splitext(orig_mp4_filename)[0] + '.yml'
     yamlupdater.set(yaml_filename, key, value)
+    global _yaml_data_cache
+    if orig_mp4_filename in _yaml_data_cache:
+        _yaml_data_cache[orig_mp4_filename][key] = value
