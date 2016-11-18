@@ -2,6 +2,8 @@ import tkinter as tk
 from tkinter import ttk
 from tkinter import filedialog
 
+import meta
+
 
 class FileFrame():
     frame = None
@@ -30,10 +32,15 @@ class FileFrame():
         self.disable_widget(self.lang_frame)
 
     def disable_widget(self, widget):
-        widget.state(['disabled'])
-        if hasattr(widget, 'children'):
-            for ch in widget.children.values():
-                self.disable_widget(ch)
+        self.set_state_recursive(widget, ['disabled'])
+
+    def enable_widget(self, widget):
+        self.set_state_recursive(widget, ['!disabled'])
+
+    def set_state_recursive(self, widget, state):
+        widget.state(state)
+        for child_widget in widget.children.values():
+            self.set_state_recursive(child_widget, state)
 
     def browse_for_file(self):
         new_filename = filedialog.askopenfilename(
@@ -42,6 +49,11 @@ class FileFrame():
         )
         if new_filename:
             self.filename.set(new_filename)
+            self.load_metadata(new_filename)
+
+    def load_metadata(self, source_filename):
+        self.lang.set(meta.get_lang(source_filename))
+        self.enable_widget(self.lang_frame)
 
 root = tk.Tk()
 root.title('Best Talks\' Uploader')
