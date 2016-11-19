@@ -40,7 +40,7 @@ class test_meta(TestCase):
 
     def test_get_title_en(self):
         filename = self.get_test_filename('2016-10-07 goswamimj.mp4')
-        title_en = meta._get_title_en(filename)
+        title_en = meta.get_title_en(filename)
         self.assertEqual('Have faith in Guru-Vaishnava, not in yourself', title_en)
 
     def test_get_skip_time(self):

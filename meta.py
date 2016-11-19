@@ -79,7 +79,7 @@ def get_lang(filename):
         return 'en'
 
 
-def _get_title_en(filename):
+def get_title_en(filename):
     y = _yaml_data(filename)
     try:
         return y['title_en']
@@ -90,7 +90,7 @@ def _get_title_en(filename):
             return os.path.basename(os.path.splitext(filename)[0])
 
 
-def _get_title_ru(filename):
+def get_title_ru(filename):
     y = _yaml_data(filename)
     try:
         return y['title_ru']
@@ -176,19 +176,19 @@ def ffmpeg_meta_args(filename, lang):
 
 def _ffmpeg_meta_args_en(filename):
     artist = _get_artist_en(filename)
-    title = _get_title_en(filename)
+    title = get_title_en(filename)
     return _ffmpeg_meta_args(filename, artist, title, album='Gupta Govardhan 2016')
 
 
 def ffmpeg_meta_args_ru_mono(filename):
     artist = _get_artist_ru(filename)
-    title = _get_title_ru(filename) + ' (моно)'
+    title = get_title_ru(filename) + ' (моно)'
     return _ffmpeg_meta_args(filename, artist, title, 'Гупта Говардхан 2016')
 
 
 def ffmpeg_meta_args_ru_stereo(filename):
     artist = _get_artist_ru(filename)
-    title = _get_title_ru(filename)
+    title = get_title_ru(filename)
     return _ffmpeg_meta_args(filename, artist, title, 'Гупта Говардхан 2016')
 
 
@@ -222,7 +222,7 @@ def get_youtube_title(filename, lang):
 
 
 def get_youtube_title_en(filename):
-    title = _get_title_en(filename)
+    title = get_title_en(filename)
     if title[-1] not in string.punctuation:
         title += '.'
     artist = _get_artist_en(filename)
@@ -230,7 +230,7 @@ def get_youtube_title_en(filename):
 
 
 def get_youtube_title_ru_stereo(filename):
-    title = _get_title_ru(filename)
+    title = get_title_ru(filename)
     if title[-1] not in string.punctuation:
         title += '.'
     artist = _get_artist_ru(filename)
@@ -238,7 +238,7 @@ def get_youtube_title_ru_stereo(filename):
 
 
 def get_youtube_title_ru_mono(filename):
-    title = _get_title_ru(filename)
+    title = get_title_ru(filename)
     title_without_dot = title
     dot = '.'
     if title[-1] in string.punctuation and title[-1] != '.':
