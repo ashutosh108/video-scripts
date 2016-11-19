@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
 from tkinter import filedialog
+import re
 
 import meta
 
@@ -46,9 +47,10 @@ class FileFrame():
     def browse_for_file(self):
         new_filename = filedialog.askopenfilename(
             initialdir='D:\\video\\GoswamiMj-videos',
-            filetypes=[('mp4 or mp3', '*.mp4;*.mp3')]
+            filetypes=[('Supported files (mp4, mp3, sesx)', '*.mp4;*.mp3;*.sesx')]
         )
         if new_filename:
+            new_filename = re.sub(r' ru\.sesx$', '.mp4', new_filename)
             self.filename.set(new_filename)
             self.load_metadata(new_filename)
 
