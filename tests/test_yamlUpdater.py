@@ -4,6 +4,7 @@ import yaml
 import yamlupdater
 import sys
 import inspect
+import re
 
 import win
 
@@ -76,7 +77,8 @@ class TestYamlUpdater(TestCase):
         yamlupdater.set(self.filename, 'key', 1)
         self.mark('yaml update completed...')
         self.f = open(self.filename, 'r')
-        self.assertEqual('title_en: Test title\nkey: 1\n', self.f.read())
+        regex = re.compile(r'^title_en: Test title$', re.MULTILINE)
+        self.assertRegex(self.f.read(), regex)
         self.end()
 
     def test_set_keeps_text_blocks_same_pipe_type(self):
@@ -100,4 +102,5 @@ class TestYamlUpdater(TestCase):
         yamlupdater.set(self.filename, 'key2', 2)
 
         self.f = open(self.filename, 'r', encoding='utf-8')
-        self.assertEqual('key1: \u2600\nkey2: 2\n', self.f.read())
+        regex = re.compile(r'^key1: "?\u2600"?$', re.MULTILINE)
+        self.assertRegex(self.f.read(), regex)

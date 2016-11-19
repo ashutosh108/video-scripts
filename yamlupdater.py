@@ -6,31 +6,20 @@ import filelock
 import contextlib
 import tempfile
 import os
+import ruamel.yaml
 
 
 def set(filename, key, value):
     with filelock.FileLock(filename + '.lock'):
         try:
-            with open(filename, 'rb') as f:
-                lines = f.readlines()
+            with open(filename, 'r', encoding='utf-8') as f:
+                old = ruamel.yaml.round_trip_load(f)
         except FileNotFoundError:
-            lines = []
-        has_line = False
-        new_lines = []
-        for line in lines:
-            if line.startswith(key.encode('utf-8') + b':'):
-                line = key.encode('utf-8') + b': ' + str(value).encode('utf-8') + b'\n'
-                has_line = True
-            new_lines.append(line)
-        if new_lines:
-            # append new line at the end if it's missing
-            # we use '10' because for byte-strings [] returns int, not string
-            if new_lines[-1][-1] != 10:
-                new_lines[-1] += b'\n'
-        if not has_line:
-            new_lines.append(key.encode('utf-8') + b': ' + str(value).encode('utf-8') + b'\n')
+            old = {}
+        old.update({key: value})
         with atomic_open(filename) as f:
-            f.write(b''.join(new_lines))
+            yaml_str = ruamel.yaml.round_trip_dump(old, indent=4)
+            f.write(yaml_str.encode('UTF-8'))
             f.flush()
             os.fsync(f.fileno())
 
