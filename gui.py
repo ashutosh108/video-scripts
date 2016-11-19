@@ -11,6 +11,8 @@ class FileFrame():
     filename = None
     lang = None
     lang_frame = None
+    title_rus = None
+    title_rus_entry = None
 
     def __init__(self, parent_frame):
         self.frame = ttk.LabelFrame(parent_frame, text='Source file: ')
@@ -32,6 +34,12 @@ class FileFrame():
         ttk.Radiobutton(self.lang_frame, text='Russian', variable=self.lang, value='ru').grid()
         self.lang_frame.grid(column=0, row=1, columnspan=3, sticky='nw')
         self.disable_widget(self.lang_frame)
+
+        self.title_rus = tk.StringVar()
+        self.title_rus.trace('w', lambda *args: self.title_rus_changed_callback())
+        ttk.Label(self.frame, text="Title (Rus):").grid(row=2, column=0)
+        self.title_rus_entry = ttk.Entry(self.frame, state=['disabled'], textvariable=self.title_rus, width=70)
+        self.title_rus_entry.grid(row=2, column=1, columnspan=2, sticky='nwse')
 
     def disable_widget(self, widget):
         self.set_state_recursive(widget, ['disabled'])
@@ -58,11 +66,18 @@ class FileFrame():
         self.lang.set(meta.get_lang(source_filename))
         self.enable_widget(self.lang_frame)
 
+        self.title_rus.set(meta.get_title_ru(source_filename))
+        self.enable_widget(self.title_rus_entry)
+
     def lang_changed_callback(self):
         new_lang = self.lang.get()
         old_lang = meta.get_lang(self.filename.get())
         if new_lang != old_lang:
             meta.update_yaml(self.filename.get(), 'lang', new_lang)
+
+    def title_rus_changed_callback(self):
+        meta.update_yaml(self.filename.get(), 'title_rus', self.title_rus.get())
+
 
 root = tk.Tk()
 root.title('Best Talks\' Uploader')
