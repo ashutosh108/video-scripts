@@ -45,7 +45,11 @@ def atomic_open(filename):
         fd, tmp_name = tempfile.mkstemp(prefix=prefix, dir=file_dir)
         with os.fdopen(fd, 'wb') as f:
             yield f
-        os.replace(filename, filename_bak)
+        try:
+            os.replace(filename, filename_bak)
+        except FileNotFoundError:
+            # the original file might not even exist yet and then it's OK
+            pass
         os.replace(tmp_name, filename)
         tmp_name = None
     finally:
