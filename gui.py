@@ -13,6 +13,8 @@ class FileFrame():
     lang_frame = None
     title_rus = None
     title_rus_entry = None
+    title_eng = None
+    title_eng_entry = None
     descr_rus = None
     descr_rus_widget = None
 
@@ -43,10 +45,16 @@ class FileFrame():
         self.title_rus_entry = ttk.Entry(self.frame, state=['disabled'], textvariable=self.title_rus, width=70)
         self.title_rus_entry.grid(row=2, column=1, columnspan=2, sticky='nwse')
 
+        self.title_eng = tk.StringVar()
+        self.title_eng.trace('w', lambda *args: self.title_eng_changed_callback())
+        ttk.Label(self.frame, text="Title (Eng):").grid(row=3, column=0, sticky='nw')
+        self.title_eng_entry = ttk.Entry(self.frame, state=['disabled'], textvariable=self.title_eng, width=70)
+        self.title_eng_entry.grid(row=3, column=1, columnspan=2, sticky='nwse')
+
         self.descr_rus = ''
-        ttk.Label(self.frame, text='Descr (Rus):').grid(row=3, column=0, sticky='nw')
+        ttk.Label(self.frame, text='Descr (Rus):').grid(row=4, column=0, sticky='nw')
         self.descr_rus_widget = tk.Text(self.frame, state='disabled', width=70, height=7, undo=True, font='TkTextFont')
-        self.descr_rus_widget.grid(row=3, column=1, columnspan=2, sticky='nwse')
+        self.descr_rus_widget.grid(row=4, column=1, columnspan=2, sticky='nwse')
 
     def disable_widget(self, widget):
         self.set_state_recursive(widget, ['disabled'])
@@ -76,6 +84,9 @@ class FileFrame():
         self.title_rus.set(meta.get_title_ru(source_filename))
         self.enable_widget(self.title_rus_entry)
 
+        self.title_eng.set(meta.get_title_en(source_filename))
+        self.enable_widget(self.title_eng_entry)
+
         self.descr_rus_widget.delete('1.0', tk.END)
         self.descr_rus_widget.insert('1.0', meta.get_description_ru(source_filename))
         self.descr_rus_widget.configure(state='normal')
@@ -88,6 +99,9 @@ class FileFrame():
 
     def title_rus_changed_callback(self):
         meta.update_yaml(self.filename.get(), 'title_rus', self.title_rus.get())
+
+    def title_eng_changed_callback(self):
+        meta.update_yaml(self.filename.get(), 'title_eng', self.title_eng.get())
 
 
 root = tk.Tk()
