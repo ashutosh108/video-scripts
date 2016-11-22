@@ -101,64 +101,80 @@ def get_title_ru(filename):
             return os.path.basename(os.path.splitext(filename)[0])
 
 
-def _artist_real_name_en(artist):
-    known_artists = dict(
-        goswamimj='Bhakti Sudhir Goswami',
-        bsgoswami='Bhakti Sudhir Goswami',
-        janardanmj='Bhakti Pavan Janardan',
-        bpjanardan='Bhakti Pavan Janardan',
-        avadhutmj='Bhakti Bimal Avadhut',
-        bbavadhut='Bhakti Bimal Avadhut',
-        madhusudanmj='Bhakti Rañjan Madhusudan',
-        brmadhusudan='Bhakti Rañjan Madhusudan',
-        hasyapriya='Hasyapriya Prabhu'
-    )
-    if artist in known_artists:
-        return known_artists[artist]
-    return artist
+_known_artists_en = dict(
+    goswamimj=['Bhakti Sudhir Goswami', 'Srila Bhakti Sudhir Goswami Maharaj'],
+    bsgoswami=['Bhakti Sudhir Goswami', 'Srila Bhakti Sudhir Goswami Maharaj'],
+    janardanmj=['Bhakti Pavan Janardan', 'Srila Bhakti Pavan Janardan Maharaj'],
+    bpjanardan=['Bhakti Pavan Janardan', 'Srila Bhakti Pavan Janardan Maharaj'],
+    avadhutmj=['Bhakti Bimal Avadhut', 'Srila Bhakti Bimal Avadhut Maharaj'],
+    bbavadhut=['Bhakti Bimal Avadhut', 'Srila Bhakti Bimal Avadhut Maharaj'],
+    madhusudanmj=['Bhakti Rañjan Madhusudan', 'Srila Bhakti Rañjan Madhusudan Maharaj'],
+    brmadhusudan=['Bhakti Rañjan Madhusudan', 'Srila Bhakti Rañjan Madhusudan Maharaj'],
+    hasyapriya=['Hasyapriya Prabhu', 'Hasyapriya Prabhu']
+)
+
+
+def _artist_real_name_en(artist_code):
+    if artist_code in _known_artists_en:
+        return _known_artists_en[artist_code][0]
+    return artist_code
+
+
+def _artist_full_name_en(artist_code):
+    if artist_code in _known_artists_en:
+        return _known_artists_en[artist_code][1]
+    return artist_code
+
+
+_known_artists_ru = dict(
+    goswamimj=['Бхакти Судхир Госвами', 'Шрила Бхакти Судхир Госвами Махарадж'],
+    bsgoswami=['Бхакти Судхир Госвами', 'Шрила Бхакти Судхир Госвами Махарадж'],
+    janardanmj=['Бхакти Паван Джанардан', 'Шрила Бхакти Паван Джанардан Махарадж'],
+    bpjanardan=['Бхакти Паван Джанардан', 'Шрила Бхакти Паван Джанардан Махарадж'],
+    avadhutmj=['Бхакти Бимал Авадхут', 'Шрила Бхакти Бимал Авадхут Махарадж'],
+    bbavadhut=['Бхакти Бимал Авадхут', 'Шрила Бхакти Бимал Авадхут Махарадж'],
+    madhusudanmj=['Бхакти Ранджан Мадхусудан', 'Шрила Бхакти Ранджан Мадхусудан Махарадж'],
+    brmadhusudan=['Бхакти Ранджан Мадхусудан', 'Шрила Бхакти Ранджан Мадхусудан Махарадж'],
+    hasyapriya=['Хасьяприя Прабху', 'Хасьяприя Прабху'],
+    unknown=['Автор неизвестен', 'Автор неизвестен']
+)
 
 
 def _artist_real_name_ru(artist):
-    known_artists = dict(
-        goswamimj='Бхакти Судхир Госвами',
-        bsgoswami='Бхакти Судхир Госвами',
-        janardanmj='Бхакти Паван Джанардан',
-        bpjanardan='Бхакти Паван Джанардан',
-        avadhutmj='Бхакти Бимал Авадхут',
-        bbavadhut='Бхакти Бимал Авадхут',
-        madhusudanmj='Бхакти Ранджан Мадхусудан',
-        brmadhusudan='Бхакти Ранджан Мадхусудан',
-        hasyapriya='Хасьяприя Прабху'
-    )
-    if artist in known_artists:
-        return known_artists[artist]
+    if artist in _known_artists_ru:
+        return _known_artists_ru[artist][0]
     return artist
 
 
-def _get_artist_en(filename):
-    basename = os.path.basename(filename)
-    match = re.match('^(\d\d\d\d)-?(\d\d)-?(\d\d)\s+(.*)\.', basename)
-    if match is not None:
-        artists_str = match.group(4)
-        artists = []
-        for artist in artists_str.split('_'):
-            artists.append(_artist_real_name_en(artist))
-        return ', '.join(artists)
-    else:
-        return 'Unknown'
+def _artist_full_name_ru(artist_code):
+    if artist_code in _known_artists_ru:
+        return _known_artists_ru[artist_code][1]
+    return artist_code
 
 
-def _get_artist_ru(filename):
+def _get_artists_codes(filename):
     basename = os.path.basename(filename)
     match = re.match('^(\d\d\d\d)-?(\d\d)-?(\d\d)\s+(.*)\.', basename)
     if match is not None:
         artists_str = match.group(4)
         artists = []
         for artist in re.split('[_-]', artists_str):
-            artists.append(_artist_real_name_ru(artist))
-        return ', '.join(artists)
+            artists.append(artist)
+        return artists
     else:
-        return 'Автор неизвестен'
+        return ['unknown']
+
+
+def _get_artist_en(filename):
+    codes = _get_artists_codes(filename)
+    names = map(lambda code: _artist_real_name_en(code), codes)
+    return ', '.join(names)
+
+
+def _get_artist_ru(filename):
+    codes = _get_artists_codes(filename)
+    names = map(lambda code: _artist_real_name_ru(code), codes)
+    return ', '.join(names)
 
 
 def _get_year_month_day(filename):
@@ -271,13 +287,10 @@ def get_description_ru(filename):
             return ''
 
 
-def _srila_maharaj_en(name):
-    return 'Srila ' + name + ' Maharaj'
-
-
 def _get_author_with_title_en(filename):
-    authors = _get_artist_en(filename).split(', ')
-    return ', '.join(map(_srila_maharaj_en, authors))
+    authors_codes = _get_artists_codes(filename)
+    authors_full_names = map(_artist_full_name_en, authors_codes)
+    return ', '.join(authors_full_names)
 
 
 def get_youtube_description(filename, lang):
@@ -301,13 +314,10 @@ def _get_youtube_description_en(filename):
     return yt_descr
 
 
-def _srila_maharaj_ru(name):
-    return 'Шрила ' + name + ' Махарадж'
-
-
 def _get_author_with_title_ru(filename):
-    authors = _get_artist_ru(filename).split(', ')
-    return ', '.join(map(_srila_maharaj_ru, authors))
+    authors_codes = _get_artists_codes(filename)
+    authors_full_names = map(_artist_full_name_ru, authors_codes)
+    return ', '.join(authors_full_names)
 
 
 def _get_youtube_description_ru_orig(filename):
