@@ -13,6 +13,8 @@ class FileFrame():
     lang_frame = None
     title_rus = None
     title_rus_entry = None
+    descr_rus = None
+    descr_rus_widget = None
 
     def __init__(self, parent_frame):
         self.frame = ttk.LabelFrame(parent_frame, text='Source file: ')
@@ -22,9 +24,9 @@ class FileFrame():
         self.filename.set('(not selected)')
         filename_entry = ttk.Entry(self.frame, width=60, textvariable=self.filename)
         filename_entry.configure(state='readonly')
-        filename_entry.grid(column=1, row=0, sticky=(tk.N, tk.W))
+        filename_entry.grid(column=1, row=0, sticky='nwse')
 
-        ttk.Button(self.frame, text='Browse...', command=self.browse_for_file).grid(column=2, row=0)
+        ttk.Button(self.frame, text='Browse...', command=self.browse_for_file).grid(column=2, row=0, sticky='nw')
 
         self.lang = tk.StringVar()
         self.lang.set('en')
@@ -37,9 +39,14 @@ class FileFrame():
 
         self.title_rus = tk.StringVar()
         self.title_rus.trace('w', lambda *args: self.title_rus_changed_callback())
-        ttk.Label(self.frame, text="Title (Rus):").grid(row=2, column=0)
+        ttk.Label(self.frame, text="Title (Rus):").grid(row=2, column=0, sticky='nw')
         self.title_rus_entry = ttk.Entry(self.frame, state=['disabled'], textvariable=self.title_rus, width=70)
         self.title_rus_entry.grid(row=2, column=1, columnspan=2, sticky='nwse')
+
+        self.descr_rus = ''
+        ttk.Label(self.frame, text='Descr (Rus):').grid(row=3, column=0, sticky='nw')
+        self.descr_rus_widget = tk.Text(self.frame, state='disabled', width=70, height=7, undo=True, font='TkTextFont')
+        self.descr_rus_widget.grid(row=3, column=1, columnspan=2, sticky='nwse')
 
     def disable_widget(self, widget):
         self.set_state_recursive(widget, ['disabled'])
@@ -68,6 +75,10 @@ class FileFrame():
 
         self.title_rus.set(meta.get_title_ru(source_filename))
         self.enable_widget(self.title_rus_entry)
+
+        self.descr_rus_widget.delete('1.0', tk.END)
+        self.descr_rus_widget.insert('1.0', meta.get_description_ru(source_filename))
+        self.descr_rus_widget.configure(state='normal')
 
     def lang_changed_callback(self):
         new_lang = self.lang.get()
