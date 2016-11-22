@@ -110,7 +110,8 @@ def _artist_real_name_en(artist):
         avadhutmj='Bhakti Bimal Avadhut',
         bbavadhut='Bhakti Bimal Avadhut',
         madhusudanmj='Bhakti Rañjan Madhusudan',
-        brmadhusudan='Bhakti Rañjan Madhusudan'
+        brmadhusudan='Bhakti Rañjan Madhusudan',
+        hasyapriya='Hasyapriya Prabhu'
     )
     if artist in known_artists:
         return known_artists[artist]
@@ -126,7 +127,8 @@ def _artist_real_name_ru(artist):
         avadhutmj='Бхакти Бимал Авадхут',
         bbavadhut='Бхакти Бимал Авадхут',
         madhusudanmj='Бхакти Ранджан Мадхусудан',
-        brmadhusudan='Бхакти Ранджан Мадхусудан'
+        brmadhusudan='Бхакти Ранджан Мадхусудан',
+        hasyapriya='Хасьяприя Прабху'
     )
     if artist in known_artists:
         return known_artists[artist]
@@ -152,7 +154,7 @@ def _get_artist_ru(filename):
     if match is not None:
         artists_str = match.group(4)
         artists = []
-        for artist in artists_str.split('_'):
+        for artist in re.split('[_-]', artists_str):
             artists.append(_artist_real_name_ru(artist))
         return ', '.join(artists)
     else:
@@ -249,7 +251,7 @@ def get_youtube_title_ru_mono(filename):
     return title_without_dot + ' (моно)' + dot + ' ' + artist
 
 
-def _get_description_en(filename):
+def get_description_en(filename):
     try:
         return _yaml_data(filename)['descr_en']
     except KeyError:
@@ -259,7 +261,7 @@ def _get_description_en(filename):
             return ''
 
 
-def _get_description_ru(filename):
+def get_description_ru(filename):
     try:
         return _yaml_data(filename)['descr_ru']
     except KeyError:
@@ -290,7 +292,7 @@ def _get_youtube_description_en(filename):
     dt_obj = datetime.date(int(year), int(month), int(day))
     author_with_title = _get_author_with_title_en(filename)
     date = '{dt:%B} {dt.day}, {dt:%Y}'.format(dt=dt_obj)
-    yt_descr = _get_description_en(filename) + '\n'
+    yt_descr = get_description_en(filename) + '\n'
     yt_descr += author_with_title + '\n'  # e.g. Srila Bhakti Rañjan Madhusudan Maharaj
     yt_descr += date + '\n'  # e.g. October 11, 2016
     yt_descr += 'Theistic Media Studios, Gupta Govardhan Ashram.\n'
@@ -313,7 +315,7 @@ def _get_youtube_description_ru_orig(filename):
     dt_obj = datetime.date(int(year), int(month), int(day))
     author_with_title = _get_author_with_title_ru(filename)
     date = babel.dates.format_datetime(dt_obj, 'dd MMMM YYYY', locale='ru_RU')
-    yt_descr = _get_description_ru(filename) + '\n'
+    yt_descr = get_description_ru(filename) + '\n'
     yt_descr += author_with_title + '\n'  # e.g. Srila Bhakti Rañjan Madhusudan Maharaj
     yt_descr += date + '\n'  # e.g. October 11, 2016
     yt_descr += 'Студия "Теистик Медиа", Ашрам на Гупта Говардхане.\n'
@@ -326,7 +328,7 @@ def get_youtube_description_ru_stereo(filename):
     dt_obj = datetime.date(int(year), int(month), int(day))
     author_with_title = _get_author_with_title_ru(filename)
     date = babel.dates.format_datetime(dt_obj, 'dd MMMM YYYY', locale='ru_RU')
-    yt_descr = _get_description_ru(filename) + '\n'
+    yt_descr = get_description_ru(filename) + '\n'
     yt_descr += author_with_title + '\n'  # e.g. Srila Bhakti Rañjan Madhusudan Maharaj
     yt_descr += date + '\n'  # e.g. October 11, 2016
     yt_descr += 'Студия "Теистик Медиа", Ашрам на Гупта Говардхане.\n'
@@ -341,7 +343,7 @@ def get_youtube_description_ru_mono(filename):
     dt_obj = datetime.date(int(year), int(month), int(day))
     author_with_title = _get_author_with_title_ru(filename)
     date = babel.dates.format_datetime(dt_obj, 'dd MMMM YYYY', locale='ru_RU')
-    yt_descr = _get_description_ru(filename) + '\n'
+    yt_descr = get_description_ru(filename) + '\n'
     yt_descr += author_with_title + '\n'  # e.g. Srila Bhakti Rañjan Madhusudan Maharaj
     yt_descr += date + '\n'  # e.g. October 11, 2016
     yt_descr += 'Студия "Теистик Медиа", Ашрам на Гупта Говардхане.\n'
