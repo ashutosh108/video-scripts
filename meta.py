@@ -102,15 +102,15 @@ def get_title_ru(filename):
 
 
 _known_artists_en = dict(
-    goswamimj=['Bhakti Sudhir Goswami', 'Srila Bhakti Sudhir Goswami Maharaj'],
-    bsgoswami=['Bhakti Sudhir Goswami', 'Srila Bhakti Sudhir Goswami Maharaj'],
-    janardanmj=['Bhakti Pavan Janardan', 'Srila Bhakti Pavan Janardan Maharaj'],
-    bpjanardan=['Bhakti Pavan Janardan', 'Srila Bhakti Pavan Janardan Maharaj'],
-    avadhutmj=['Bhakti Bimal Avadhut', 'Srila Bhakti Bimal Avadhut Maharaj'],
-    bbavadhut=['Bhakti Bimal Avadhut', 'Srila Bhakti Bimal Avadhut Maharaj'],
-    madhusudanmj=['Bhakti Rañjan Madhusudan', 'Srila Bhakti Rañjan Madhusudan Maharaj'],
-    brmadhusudan=['Bhakti Rañjan Madhusudan', 'Srila Bhakti Rañjan Madhusudan Maharaj'],
-    hasyapriya=['Hasyapriya Prabhu', 'Hasyapriya Prabhu']
+    goswamimj=['Bhakti Sudhīr Goswāmī', 'Śrīla Bhakti Sudhīr Goswāmī Mahārāj'],
+    bsgoswami=['Bhakti Sudhīr Goswāmī', 'Śrīla Bhakti Sudhīr Goswāmī Mahārāj'],
+    janardanmj=['Bhakti Pāvan Janārdan', 'Śrīla Bhakti Pāvan Janārdan Mahārāj'],
+    bpjanardan=['Bhakti Pāvan Janārdan', 'Śrīla Bhakti Pāvan Janārdan Mahārāj'],
+    avadhutmj=['Bhakti Bimal Avadhūt', 'Śrīla Bhakti Bimal Avadhūt Mahārāj'],
+    bbavadhut=['Bhakti Bimal Avadhūt', 'Śrīla Bhakti Bimal Avadhūt Mahārāj'],
+    madhusudanmj=['Bhakti Rañjan Madhusūdan', 'Śrīla Bhakti Rañjan Madhusūdan Mahārāj'],
+    brmadhusudan=['Bhakti Rañjan Madhusūdan', 'Śrīla Bhakti Rañjan Madhusūdan Mahārāj'],
+    hasyapriya=['Hāsyapriya Prabhu', 'Hāsyapriya Prabhu']
 )
 
 
@@ -127,15 +127,15 @@ def _artist_full_name_en(artist_code):
 
 
 _known_artists_ru = dict(
-    goswamimj=['Бхакти Судхир Госвами', 'Шрила Бхакти Судхир Госвами Махарадж'],
-    bsgoswami=['Бхакти Судхир Госвами', 'Шрила Бхакти Судхир Госвами Махарадж'],
-    janardanmj=['Бхакти Паван Джанардан', 'Шрила Бхакти Паван Джанардан Махарадж'],
-    bpjanardan=['Бхакти Паван Джанардан', 'Шрила Бхакти Паван Джанардан Махарадж'],
-    avadhutmj=['Бхакти Бимал Авадхут', 'Шрила Бхакти Бимал Авадхут Махарадж'],
-    bbavadhut=['Бхакти Бимал Авадхут', 'Шрила Бхакти Бимал Авадхут Махарадж'],
-    madhusudanmj=['Бхакти Ранджан Мадхусудан', 'Шрила Бхакти Ранджан Мадхусудан Махарадж'],
-    brmadhusudan=['Бхакти Ранджан Мадхусудан', 'Шрила Бхакти Ранджан Мадхусудан Махарадж'],
-    hasyapriya=['Хасьяприя Прабху', 'Хасьяприя Прабху'],
+    goswamimj=['Бхакти Судхӣр Госва̄мӣ', 'Ш́рӣла Бхакти Судхӣр Госва̄мӣ Mаха̄ра̄дж'],
+    bsgoswami=['Бхакти Судхӣр Госва̄мӣ', 'Ш́рӣла Бхакти Судхӣр Госва̄мӣ Mаха̄ра̄дж'],
+    janardanmj=['Бхакти Па̄ван Джана̄рдан', 'Ш́рӣла Бхакти Па̄ван Джана̄рдан Mаха̄ра̄дж'],
+    bpjanardan=['Бхакти Па̄ван Джана̄рдан', 'Ш́рӣла Бхакти Па̄ван Джана̄рдан Mаха̄ра̄дж'],
+    avadhutmj=['Бхакти Бимал Авадхӯт', 'Ш́рӣла Бхакти Бимал Авадхӯт Mаха̄ра̄дж'],
+    bbavadhut=['Бхакти Бимал Авадхӯт', 'Ш́рӣла Бхакти Бимал Авадхӯт Mаха̄ра̄дж'],
+    madhusudanmj=['Бхакти Ран̃джан Мадхусӯдан', 'Ш́рӣла Бхакти Ран̃джан Мадхусӯдан Mаха̄ра̄дж'],
+    brmadhusudan=['Бхакти Ран̃джан Мадхусӯдан', 'Ш́рӣла Бхакти Ран̃джан Мадхусӯдан Mаха̄ра̄дж'],
+    hasyapriya=['Ха̄сьяприя Прабху', 'Ха̄сьяприя Прабху'],
     unknown=['Автор неизвестен', 'Автор неизвестен']
 )
 
