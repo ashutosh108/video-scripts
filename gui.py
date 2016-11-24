@@ -88,8 +88,19 @@ class FileFrame():
         self.enable_widget(self.title_eng_entry)
 
         self.descr_rus_widget.delete('1.0', tk.END)
-        self.descr_rus_widget.insert('1.0', meta.get_description_ru(source_filename))
         self.descr_rus_widget.configure(state='normal')
+        descr = meta.get_description_ru(source_filename).strip()
+        self.descr_rus_widget.insert('1.0', descr)
+        self.descr_rus_widget.edit_modified(False)
+        self.descr_rus_widget.bind('<<Modified>>', self.descr_rus_modified)
+
+    def descr_rus_modified(self, *args):
+        really_modified = self.descr_rus_widget.edit_modified()
+        if not really_modified:
+            return
+        text = self.descr_rus_widget.get('1.0', tk.END).strip()
+        meta.update_yaml(self.filename.get(), 'descr_rus', text)
+        self.descr_rus_widget.edit_modified(False)
 
     def lang_changed_callback(self):
         new_lang = self.lang.get()
