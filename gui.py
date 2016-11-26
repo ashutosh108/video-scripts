@@ -15,8 +15,8 @@ class FileFrame():
     title_rus_entry = None
     title_eng = None
     title_eng_entry = None
-    descr_rus = None
     descr_rus_widget = None
+    descr_rus_active = False
 
     def __init__(self, parent_frame):
         self.frame = ttk.LabelFrame(parent_frame, text='Source file: ')
@@ -51,9 +51,9 @@ class FileFrame():
         self.title_eng_entry = ttk.Entry(self.frame, state=['disabled'], textvariable=self.title_eng, width=70)
         self.title_eng_entry.grid(row=3, column=1, columnspan=2, sticky='nwse')
 
-        self.descr_rus = ''
         ttk.Label(self.frame, text='Descr (Rus):').grid(row=4, column=0, sticky='nw')
         self.descr_rus_widget = tk.Text(self.frame, state='disabled', width=70, height=7, undo=True, font='TkTextFont')
+        self.descr_rus_widget.bind('<<Modified>>', self.descr_rus_modified)
         self.descr_rus_widget.grid(row=4, column=1, columnspan=2, sticky='nwse')
 
     def disable_widget(self, widget):
@@ -87,16 +87,19 @@ class FileFrame():
         self.title_eng.set(meta.get_title_en(source_filename))
         self.enable_widget(self.title_eng_entry)
 
+        self.descr_rus_active = False
         self.descr_rus_widget.delete('1.0', tk.END)
         self.descr_rus_widget.configure(state='normal')
         descr = meta.get_description_ru(source_filename).strip()
         self.descr_rus_widget.insert('1.0', descr)
         self.descr_rus_widget.edit_modified(False)
-        self.descr_rus_widget.bind('<<Modified>>', self.descr_rus_modified)
+        self.descr_rus_active = True
 
     def descr_rus_modified(self, *args):
         really_modified = self.descr_rus_widget.edit_modified()
         if not really_modified:
+            return
+        if not self.descr_rus_active:
             return
         text = self.descr_rus_widget.get('1.0', tk.END).strip()
         meta.update_yaml(self.filename.get(), 'descr_rus', text)
