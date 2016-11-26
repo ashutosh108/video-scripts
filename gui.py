@@ -17,6 +17,8 @@ class FileFrame():
     title_eng_entry = None
     descr_rus_widget = None
     descr_rus_active = False
+    descr_eng_widget = None
+    descr_eng_active = False
 
     def __init__(self, parent_frame):
         self.frame = ttk.LabelFrame(parent_frame, text='Source file: ')
@@ -55,6 +57,11 @@ class FileFrame():
         self.descr_rus_widget = tk.Text(self.frame, state='disabled', width=70, height=7, undo=True, font='TkTextFont')
         self.descr_rus_widget.bind('<<Modified>>', self.descr_rus_modified)
         self.descr_rus_widget.grid(row=4, column=1, columnspan=2, sticky='nwse')
+
+        ttk.Label(self.frame, text='Descr (Eng):').grid(row=5, column=0, sticky='nw')
+        self.descr_eng_widget = tk.Text(self.frame, state='disabled', width=70, height=7, undo=True, font='TkTextFont')
+        self.descr_eng_widget.bind('<<Modified>>', self.descr_eng_modified)
+        self.descr_eng_widget.grid(row=5, column=1, columnspan=2, sticky='nwse')
 
     def disable_widget(self, widget):
         self.set_state_recursive(widget, ['disabled'])
@@ -95,6 +102,14 @@ class FileFrame():
         self.descr_rus_widget.edit_modified(False)
         self.descr_rus_active = True
 
+        self.descr_eng_active = False
+        self.descr_eng_widget.delete('1.0', tk.END)
+        self.descr_eng_widget.configure(state='normal')
+        descr = meta.get_description_en(source_filename).strip()
+        self.descr_eng_widget.insert('1.0', descr)
+        self.descr_eng_widget.edit_modified(False)
+        self.descr_eng_active = True
+
     def descr_rus_modified(self, *args):
         really_modified = self.descr_rus_widget.edit_modified()
         if not really_modified:
@@ -104,6 +119,16 @@ class FileFrame():
         text = self.descr_rus_widget.get('1.0', tk.END).strip()
         meta.update_yaml(self.filename.get(), 'descr_rus', text)
         self.descr_rus_widget.edit_modified(False)
+
+    def descr_eng_modified(self, *args):
+        really_modified = self.descr_eng_widget.edit_modified()
+        if not really_modified:
+            return
+        if not self.descr_eng_active:
+            return
+        text = self.descr_eng_widget.get('1.0', tk.END).strip()
+        meta.update_yaml(self.filename.get(), 'descr_eng', text)
+        self.descr_eng_widget.edit_modified(False)
 
     def lang_changed_callback(self):
         new_lang = self.lang.get()
