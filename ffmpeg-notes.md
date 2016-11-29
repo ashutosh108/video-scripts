@@ -3,7 +3,9 @@ Single jpg with mp3 for youtube
 
 ~70x encoding speed (i3 550 3.2GHz)
 Resizing is meant to ask youtube to keep higher-quality audio (rumours are that 720p and higher gets better audio in youtube)
-ffmpeg -loop 1 -r 1 -i "D:\video\GoswamiMj-videos\2016-11-10 goswamimj-part1.png" -i "D:\video\GoswamiMj-videos\2016-11-10 goswamimj en.mp3" -c:v h264_nvenc -c:a copy -shortest -pix_fmt yuv420p -tune stillimage -preset ultrafast -vf "scale=iw*min(1280/iw\,720/ih):ih*min(1280/iw\,720/ih),pad=1280:720:(1280-iw)/2:(720-ih)/2" "2016-11-10 goswamimj-test.mkv"
+ffmpeg -loop 1 -r 1 -i "2016-11-28 goswamimj.jpg" -i "2016-11-28 goswamimj.mp3" -c:v h264_nvenc -c:a copy -shortest -pix_fmt yuv420p -tune stillimage -vf "scale=iw*min(1280/iw\,720/ih):ih*min(1280/iw\,720/ih),pad=1280:720:(1280-iw)/2:(720-ih)/2" "2016-11-28 goswamimj.mkv"
+
+# -preset ultrafast 
 
 Use NVIDIA videocard for encoding
 =================================
