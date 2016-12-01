@@ -19,6 +19,10 @@ class FileFrame():
     descr_rus_active = False
     descr_eng_widget = None
     descr_eng_active = False
+    skip_var = None
+    skip_entry = None
+    cut_var = None
+    cut_entry = None
 
     def __init__(self, parent_frame):
         self.frame = ttk.LabelFrame(parent_frame, text='Source file: ')
@@ -62,6 +66,18 @@ class FileFrame():
         self.descr_eng_widget = tk.Text(self.frame, state='disabled', width=70, height=7, undo=True, font='TkTextFont')
         self.descr_eng_widget.bind('<<Modified>>', self.descr_eng_modified)
         self.descr_eng_widget.grid(row=5, column=1, columnspan=2, sticky='nwse')
+
+        self.skip_var = tk.StringVar()
+        self.skip_var.trace('w', lambda *args: self.skip_var_changed_callback())
+        ttk.Label(self.frame, text="Skip at the start:").grid(row=6, column=0, sticky='nw')
+        self.skip_entry = ttk.Entry(self.frame, state=['disabled'], textvariable=self.skip_var, width=10)
+        self.skip_entry.grid(row=6, column=1, columnspan=2, sticky='nw')
+
+        self.cut_var = tk.StringVar()
+        self.cut_var.trace('w', lambda *args: self.cut_var_changed_callback())
+        ttk.Label(self.frame, text="Cut at the end:").grid(row=7, column=0, sticky='nw')
+        self.cut_entry = ttk.Entry(self.frame, state=['disabled'], textvariable=self.cut_var, width=10)
+        self.cut_entry.grid(row=7, column=1, columnspan=2, sticky='nw')
 
     def disable_widget(self, widget):
         self.set_state_recursive(widget, ['disabled'])
@@ -110,13 +126,19 @@ class FileFrame():
         self.descr_eng_widget.edit_modified(False)
         self.descr_eng_active = True
 
+        self.skip_var.set(meta.get_skip_time(source_filename))
+        self.enable_widget(self.skip_entry)
+
+        self.cut_var.set(meta.get_cut_time(source_filename))
+        self.enable_widget(self.cut_entry)
+
     def descr_rus_modified(self, *args):
         really_modified = self.descr_rus_widget.edit_modified()
         if not really_modified:
             return
         if not self.descr_rus_active:
             return
-        text = self.descr_rus_widget.get('1.0', tk.END).strip()
+        text = self.descr_rus_widget.get('1.0', tk.END).strip() + '\n'
         meta.update_yaml(self.filename.get(), 'descr_rus', text)
         self.descr_rus_widget.edit_modified(False)
 
@@ -126,7 +148,7 @@ class FileFrame():
             return
         if not self.descr_eng_active:
             return
-        text = self.descr_eng_widget.get('1.0', tk.END).strip()
+        text = self.descr_eng_widget.get('1.0', tk.END).strip() + '\n'
         meta.update_yaml(self.filename.get(), 'descr_eng', text)
         self.descr_eng_widget.edit_modified(False)
 
@@ -141,6 +163,12 @@ class FileFrame():
 
     def title_eng_changed_callback(self):
         meta.update_yaml(self.filename.get(), 'title_eng', self.title_eng.get())
+
+    def skip_var_changed_callback(self):
+        meta.update_yaml(self.filename.get(), 'skip', self.skip_entry.get())
+
+    def cut_var_changed_callback(self):
+        meta.update_yaml(self.filename.get(), 'cut', self.cut_entry.get())
 
 
 root = tk.Tk()

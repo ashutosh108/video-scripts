@@ -65,11 +65,15 @@ def _yaml_get_time_length(filename: str, key: str) -> str:
 
 
 def get_to_args(filename):
-    cut_time = _yaml_get_time_length(filename, 'cut')
+    cut_time = get_cut_time(filename)
     if cut_time:
         return ['-to', cut_time]
     else:
         return []
+
+
+def get_cut_time(filename):
+    return _yaml_get_time_length(filename, 'cut')
 
 
 def get_lang(filename):
