@@ -22,7 +22,7 @@ def _yaml_data(filename):
     return _yaml_data_cache[filename]
 
 
-def _get_skip_time(filename: str) -> str:
+def get_skip_time(filename: str) -> str:
     """
     get proper argument for -ss min:sec part of the ffmpeg command line
     e.g. '2:51' if that's what's written in filename_offset.txt
@@ -41,7 +41,7 @@ def _get_skip_time(filename: str) -> str:
 
 
 def get_ss_args(filename):
-    skip_time = _get_skip_time(filename)
+    skip_time = get_skip_time(filename)
     if skip_time:
         return ['-ss', skip_time]
     else:
