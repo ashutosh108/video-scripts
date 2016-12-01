@@ -6,7 +6,7 @@ import re
 import meta
 
 
-class FileFrame():
+class FileFrame:
     frame = None
     filename = None
     lang = None
@@ -132,6 +132,7 @@ class FileFrame():
         self.cut_var.set(meta.get_cut_time(source_filename))
         self.enable_widget(self.cut_entry)
 
+    # noinspection PyUnusedLocal
     def descr_rus_modified(self, *args):
         really_modified = self.descr_rus_widget.edit_modified()
         if not really_modified:
@@ -142,6 +143,7 @@ class FileFrame():
         meta.update_yaml(self.filename.get(), 'descr_rus', text)
         self.descr_rus_widget.edit_modified(False)
 
+    # noinspection PyUnusedLocal
     def descr_eng_modified(self, *args):
         really_modified = self.descr_eng_widget.edit_modified()
         if not really_modified:
