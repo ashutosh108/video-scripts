@@ -7,29 +7,29 @@ import os
 
 class test_meta(TestCase):
     def test_get_ss_arg_for_file_nonexisting(self):
-        self.assertEqual(meta._get_skip_time('qwe'), None)
+        self.assertEqual(meta.get_skip_time('qwe'), None)
 
     def test_get_ss_arg_for_file_existing(self):
         filename = self.get_test_filename('2016-10-07 goswamimj.mp4')
-        self.assertEqual(meta._get_skip_time(filename), '1:15')
+        self.assertEqual(meta.get_skip_time(filename), '1:15')
 
     # pyyaml somehow automatically leaves 0:07 as '0:07', but converts 1:07 to int 67 (seconds).
     # We have to deal with either.
     def test_get_ss_args_for_zero_minutes(self):
         filename = self.get_test_filename('2016-10-17 avadhutmj.mp4')
-        self.assertEqual(meta._get_skip_time(filename), '0:07')
+        self.assertEqual(meta.get_skip_time(filename), '0:07')
 
     def test_get_artist_en(self):
         filename = self.get_test_filename('2016-10-07 goswamimj.mp4')
-        self.assertEqual('Bhakti Sudhir Goswami', meta._get_artist_en(filename))
+        self.assertEqual('Bhakti Sudhīr Goswāmī', meta._get_artist_en(filename))
 
     def test_get_artist_en_multiple(self):
         filename = self.get_test_filename('2016-10-07 janardanmj_goswamimj.mp4')
-        self.assertEqual('Bhakti Pavan Janardan, Bhakti Sudhir Goswami', meta._get_artist_en(filename))
+        self.assertEqual('Bhakti Pāvan Janārdan, Bhakti Sudhīr Goswāmī', meta._get_artist_en(filename))
 
     def test_get_artist_en_ranjan(self):
         filename = self.get_test_filename('2016-10-07 brmadhusudan.mp4')
-        self.assertEqual('Bhakti Rañjan Madhusudan', meta._get_artist_en(filename))
+        self.assertEqual('Bhakti Rañjan Madhusūdan', meta._get_artist_en(filename))
 
     def test_get_year_month_day(self):
         filename = self.get_test_filename('2016-10-07 brmadhusudan.mp4')
@@ -45,12 +45,12 @@ class test_meta(TestCase):
 
     def test_get_skip_time(self):
         filename = self.get_test_filename('2016-10-07 goswamimj.mp4')
-        skip_time = meta._get_skip_time(filename)
+        skip_time = meta.get_skip_time(filename)
         self.assertEqual('1:15', skip_time)
 
     def test_get_skip_time_from_yml(self):
         filename = self.get_test_filename('2016-10-12 brmadhusudan.mp4')
-        skip_time = meta._get_skip_time(filename)
+        skip_time = meta.get_skip_time(filename)
         self.assertEqual('0:07:56', skip_time)
 
     def test_get_youtube_description_en(self):
@@ -60,7 +60,7 @@ class test_meta(TestCase):
 - How Srila Govinda Maharaj appreciated Thai culture
 - The original purpose of the building of Chiangmai ashram: sanskrit school
 
-Srila Bhakti Rañjan Madhusudan Maharaj
+Śrīla Bhakti Rañjan Madhusūdan Mahārāj
 October 12, 2016
 Theistic Media Studios, Gupta Govardhan Ashram.
 Downloaded from TMS_TV livestream.com/accounts/2645002
@@ -70,27 +70,27 @@ Downloaded from TMS_TV livestream.com/accounts/2645002
 
     def test_get_youtube_title_ru_stereo(self):
         filename = self.get_test_filename('2016-10-12 brmadhusudan.mp4')
-        expected = 'Удача Чиангмайского ашрама. Бхакти Ранджан Мадхусудан'
+        expected = 'Удача Чиангмайского ашрама. Бхакти Ран̃джан Мадхусӯдан'
         self.assertEqual(expected, meta.get_youtube_title_ru_stereo(filename))
 
     def test_get_youtube_title_ru_mono(self):
         filename = self.get_test_filename('2016-10-12 brmadhusudan.mp4')
-        expected = 'Удача Чиангмайского ашрама (моно). Бхакти Ранджан Мадхусудан'
+        expected = 'Удача Чиангмайского ашрама (моно). Бхакти Ран̃джан Мадхусӯдан'
         self.assertEqual(expected, meta.get_youtube_title_ru_mono(filename))
 
     def test_get_youtube_title_ru_mono_dot(self):
         filename = self.get_test_filename('2016-01-01 goswamimj.mp4')
-        expected = 'Проверка точки (моно). Бхакти Судхир Госвами'
+        expected = 'Проверка точки (моно). Бхакти Судхӣр Госва̄мӣ'
         self.assertEqual(expected, meta.get_youtube_title_ru_mono(filename))
 
     def test_get_youtube_title_ru_stereo_question_mark(self):
         filename = self.get_test_filename('2016-10-05 goswamimj.mp4')
-        expected = 'Настроение или сердце? Бхакти Судхир Госвами'
+        expected = 'Настроение или сердце? Бхакти Судхӣр Госва̄мӣ'
         self.assertEqual(expected, meta.get_youtube_title_ru_stereo(filename))
 
     def test_get_youtube_title_ru_mono_question_mark(self):
         filename = self.get_test_filename('2016-10-05 goswamimj.mp4')
-        expected = 'Настроение или сердце? (моно) Бхакти Судхир Госвами'
+        expected = 'Настроение или сердце? (моно) Бхакти Судхӣр Госва̄мӣ'
         self.assertEqual(expected, meta.get_youtube_title_ru_mono(filename))
 
     def test_get_youtube_descr_ru_stereo(self):
@@ -100,7 +100,7 @@ Downloaded from TMS_TV livestream.com/accounts/2645002
 - Как Шрила Говинда Махарадж ценил Тайскую культуру
 - Здание Чиангмайского ашрама строилось для санскритской школы
 
-Шрила Бхакти Ранджан Мадхусудан Махарадж
+Ш́рӣла Бхакти Ран̃джан Мадхусӯдан Mаха̄ра̄дж
 12 октября 2016
 Студия "Теистик Медиа", Ашрам на Гупта Говардхане.
 Загружено с TMS_TV livestream.com/accounts/2645002
@@ -116,7 +116,7 @@ English original: (link pending)
 - Как Шрила Говинда Махарадж ценил Тайскую культуру
 - Здание Чиангмайского ашрама строилось для санскритской школы
 
-Шрила Бхакти Ранджан Мадхусудан Махарадж
+Ш́рӣла Бхакти Ран̃джан Мадхусӯдан Mаха̄ра̄дж
 12 октября 2016
 Студия "Теистик Медиа", Ашрам на Гупта Говардхане.
 Загружено с TMS_TV livestream.com/accounts/2645002
