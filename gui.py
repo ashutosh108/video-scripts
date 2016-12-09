@@ -111,19 +111,13 @@ class FileFrame:
         self.enable_widget(self.title_eng_entry)
 
         self.descr_rus_active = False
-        self.descr_rus_widget.delete('1.0', tk.END)
-        self.descr_rus_widget.configure(state='normal')
         descr = meta.get_description_ru(source_filename).strip()
-        self.descr_rus_widget.insert('1.0', descr)
-        self.descr_rus_widget.edit_modified(False)
+        self.replace_text_in_text_widget(self.descr_rus_widget, descr)
         self.descr_rus_active = True
 
         self.descr_eng_active = False
-        self.descr_eng_widget.delete('1.0', tk.END)
-        self.descr_eng_widget.configure(state='normal')
         descr = meta.get_description_en(source_filename).strip()
-        self.descr_eng_widget.insert('1.0', descr)
-        self.descr_eng_widget.edit_modified(False)
+        self.replace_text_in_text_widget(self.descr_eng_widget, descr)
         self.descr_eng_active = True
 
         self.skip_var.set(meta.get_skip_time(source_filename))
@@ -131,6 +125,12 @@ class FileFrame:
 
         self.cut_var.set(meta.get_cut_time(source_filename))
         self.enable_widget(self.cut_entry)
+
+    def replace_text_in_text_widget(self, widget, text):
+        widget.delete('1.0', tk.END)
+        widget.configure(state='normal')
+        widget.insert('1.0', text)
+        widget.edit_modified(False)
 
     # noinspection PyUnusedLocal
     def descr_rus_modified(self, *args):
