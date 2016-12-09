@@ -126,7 +126,8 @@ class FileFrame:
         self.cut_var.set(meta.get_cut_time(source_filename))
         self.enable_widget(self.cut_entry)
 
-    def replace_text_in_text_widget(self, widget, text):
+    @staticmethod
+    def replace_text_in_text_widget(widget, text):
         widget.delete('1.0', tk.END)
         widget.configure(state='normal')
         widget.insert('1.0', text)
