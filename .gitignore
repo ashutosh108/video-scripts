@@ -2,3 +2,5 @@
 .idea/
 client_secrets.json
 my_youtube.py-oauth2.json
+__pycache__
+my_uploads.py-oauth2.json
