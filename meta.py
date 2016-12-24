@@ -106,16 +106,16 @@ def get_title_ru(filename):
 
 
 _known_artists_en = dict(
-    goswamimj=['Bhakti Sudhīr Goswāmī', 'Śrīla Bhakti Sudhīr Goswāmī Mahārāj'],
-    bsgoswami=['Bhakti Sudhīr Goswāmī', 'Śrīla Bhakti Sudhīr Goswāmī Mahārāj'],
-    janardanmj=['Bhakti Pāvan Janārdan', 'Śrīla Bhakti Pāvan Janārdan Mahārāj'],
-    bpjanardan=['Bhakti Pāvan Janārdan', 'Śrīla Bhakti Pāvan Janārdan Mahārāj'],
-    avadhutmj=['Bhakti Bimal Avadhūt', 'Śrīla Bhakti Bimal Avadhūt Mahārāj'],
-    bbavadhut=['Bhakti Bimal Avadhūt', 'Śrīla Bhakti Bimal Avadhūt Mahārāj'],
-    madhusudanmj=['Bhakti Rañjan Madhusūdan', 'Śrīla Bhakti Rañjan Madhusūdan Mahārāj'],
-    brmadhusudan=['Bhakti Rañjan Madhusūdan', 'Śrīla Bhakti Rañjan Madhusūdan Mahārāj'],
-    hasyapriya=['Hāsyapriya Prabhu', 'Hāsyapriya Prabhu'],
-    taritkrishna = ['Tārit Kṛṣṇa Prabhu', 'Tārit Kṛṣṇa Prabhu']
+    goswamimj=['Bhakti Sudhīr Goswāmī', 'Śrīla Bhakti Sudhīr Goswāmī Mahārāj', 'B.S.Goswāmī'],
+    bsgoswami=['Bhakti Sudhīr Goswāmī', 'Śrīla Bhakti Sudhīr Goswāmī Mahārāj', 'B.S.Goswāmī'],
+    janardanmj=['Bhakti Pāvan Janārdan', 'Śrīla Bhakti Pāvan Janārdan Mahārāj', 'B.P.Janārdan'],
+    bpjanardan=['Bhakti Pāvan Janārdan', 'Śrīla Bhakti Pāvan Janārdan Mahārāj', 'B.P.Janārdan'],
+    avadhutmj=['Bhakti Bimal Avadhūt', 'Śrīla Bhakti Bimal Avadhūt Mahārāj', 'B.B.Avadhūt'],
+    bbavadhut=['Bhakti Bimal Avadhūt', 'Śrīla Bhakti Bimal Avadhūt Mahārāj', 'B.B.Avadhūt'],
+    madhusudanmj=['Bhakti Rañjan Madhusūdan', 'Śrīla Bhakti Rañjan Madhusūdan Mahārāj', 'B.R.Madhusūdan'],
+    brmadhusudan=['Bhakti Rañjan Madhusūdan', 'Śrīla Bhakti Rañjan Madhusūdan Mahārāj', 'B.R.Madhusūdan'],
+    hasyapriya=['Hāsyapriya Prabhu', 'Hāsyapriya Prabhu', 'Hāsyapriya Pr.'],
+    taritkrishna = ['Tārit Kṛṣṇa Prabhu', 'Tārit Kṛṣṇa Prabhu', 'Tārit Kṛṣṇa Pr.']
 )
 
 
@@ -131,18 +131,24 @@ def _artist_full_name_en(artist_code):
     return artist_code
 
 
+def _artist_short_name_en(artist_code):
+    if artist_code in _known_artists_en:
+        return _known_artists_en[artist_code][2]
+    return artist_code
+
+
 _known_artists_ru = dict(
-    goswamimj=['Бхакти Судхӣр Госва̄мӣ', 'Ш́рӣла Бхакти Судхӣр Госва̄мӣ Mаха̄ра̄дж'],
-    bsgoswami=['Бхакти Судхӣр Госва̄мӣ', 'Ш́рӣла Бхакти Судхӣр Госва̄мӣ Mаха̄ра̄дж'],
-    janardanmj=['Бхакти Па̄ван Джана̄рдан', 'Ш́рӣла Бхакти Па̄ван Джана̄рдан Mаха̄ра̄дж'],
-    bpjanardan=['Бхакти Па̄ван Джана̄рдан', 'Ш́рӣла Бхакти Па̄ван Джана̄рдан Mаха̄ра̄дж'],
-    avadhutmj=['Бхакти Бимал Авадхӯт', 'Ш́рӣла Бхакти Бимал Авадхӯт Mаха̄ра̄дж'],
-    bbavadhut=['Бхакти Бимал Авадхӯт', 'Ш́рӣла Бхакти Бимал Авадхӯт Mаха̄ра̄дж'],
-    madhusudanmj=['Бхакти Ран̃джан Мадхусӯдан', 'Ш́рӣла Бхакти Ран̃джан Мадхусӯдан Mаха̄ра̄дж'],
-    brmadhusudan=['Бхакти Ран̃джан Мадхусӯдан', 'Ш́рӣла Бхакти Ран̃джан Мадхусӯдан Mаха̄ра̄дж'],
-    hasyapriya=['Ха̄сьяприя Прабху', 'Ха̄сьяприя Прабху'],
-    taritkrishna=['Та̄рит Кр̣ш̣н̣а Прабху', 'Та̄рит Кр̣ш̣н̣а Прабху'],
-    unknown=['Автор неизвестен', 'Автор неизвестен']
+    goswamimj=['Бхакти Судхӣр Госва̄мӣ', 'Ш́рӣла Бхакти Судхӣр Госва̄мӣ Mаха̄ра̄дж', 'Б.С.Госва̄мӣ'],
+    bsgoswami=['Бхакти Судхӣр Госва̄мӣ', 'Ш́рӣла Бхакти Судхӣр Госва̄мӣ Mаха̄ра̄дж', 'Б.С.Госва̄мӣ'],
+    janardanmj=['Бхакти Па̄ван Джана̄рдан', 'Ш́рӣла Бхакти Па̄ван Джана̄рдан Mаха̄ра̄дж', 'Б.П.Джана̄рдан'],
+    bpjanardan=['Бхакти Па̄ван Джана̄рдан', 'Ш́рӣла Бхакти Па̄ван Джана̄рдан Mаха̄ра̄дж', 'Б.П.Джана̄рдан'],
+    avadhutmj=['Бхакти Бимал Авадхӯт', 'Ш́рӣла Бхакти Бимал Авадхӯт Mаха̄ра̄дж', 'Б.Б.Авадхӯт'],
+    bbavadhut=['Бхакти Бимал Авадхӯт', 'Ш́рӣла Бхакти Бимал Авадхӯт Mаха̄ра̄дж', 'Б.Б.Авадхӯт'],
+    madhusudanmj=['Бхакти Ран̃джан Мадхусӯдан', 'Ш́рӣла Бхакти Ран̃джан Мадхусӯдан Mаха̄ра̄дж', 'Б.Р.Мадхусӯдан'],
+    brmadhusudan=['Бхакти Ран̃джан Мадхусӯдан', 'Ш́рӣла Бхакти Ран̃джан Мадхусӯдан Mаха̄ра̄дж', 'Б.Р.Мадхусӯдан'],
+    hasyapriya=['Ха̄сьяприя Прабху', 'Ха̄сьяприя Прабху', 'Ха̄сьяприя Пр.'],
+    taritkrishna=['Та̄рит Кр̣ш̣н̣а Прабху', 'Та̄рит Кр̣ш̣н̣а Прабху', 'Та̄рит Кр̣ш̣н̣а Пр.'],
+    unknown=['Автор неизвестен', 'Автор неизвестен', 'Автор неизвестен']
 )
 
 
@@ -156,6 +162,12 @@ def _artist_full_name_ru(artist_code):
     if artist_code in _known_artists_ru:
         return _known_artists_ru[artist_code][1]
     return artist_code
+
+
+def _artist_short_name_ru(artist):
+    if artist in _known_artists_ru:
+        return _known_artists_ru[artist][2]
+    return artist
 
 
 def _get_artists_codes(filename):
@@ -177,9 +189,21 @@ def _get_artist_en(filename):
     return ', '.join(names)
 
 
+def _get_artist_short_en(filename):
+    codes = _get_artists_codes(filename)
+    names = map(lambda code: _artist_short_name_en(code), codes)
+    return ', '.join(names)
+
+
 def _get_artist_ru(filename):
     codes = _get_artists_codes(filename)
     names = map(lambda code: _artist_real_name_ru(code), codes)
+    return ', '.join(names)
+
+
+def _get_artist_short_ru(filename):
+    codes = _get_artists_codes(filename)
+    names = map(lambda code: _artist_short_name_ru(code), codes)
     return ', '.join(names)
 
 
@@ -250,7 +274,11 @@ def get_youtube_title_en(filename):
     if title[-1] not in string.punctuation:
         title += '.'
     artist = _get_artist_en(filename)
-    return title + ' ' + artist
+    new_title = title + ' ' + artist
+    if len(new_title) > 100:
+        artist_short = _get_artist_short_en(filename)
+        new_title = title + ' ' + artist_short
+    return new_title[:100]
 
 
 def get_youtube_title_ru_stereo(filename):
@@ -258,7 +286,11 @@ def get_youtube_title_ru_stereo(filename):
     if title[-1] not in string.punctuation:
         title += '.'
     artist = _get_artist_ru(filename)
-    return title + ' ' + artist
+    new_title = title + ' ' + artist
+    if len(new_title) > 100:
+        artist_short = _get_artist_short_ru(filename)
+        new_title = title + ' ' + artist_short
+    return new_title[:100]
 
 
 def get_youtube_title_ru_mono(filename):
@@ -270,7 +302,11 @@ def get_youtube_title_ru_mono(filename):
     if title[-1] == '.':
         title_without_dot = title_without_dot[:-1]
     artist = _get_artist_ru(filename)
-    return title_without_dot + ' (моно)' + dot + ' ' + artist
+    new_title = title_without_dot + ' (моно)' + dot + ' ' + artist
+    if len(new_title) > 100:
+        artist_short = _get_artist_short_ru(filename)
+        new_title = title_without_dot + ' (моно)' + dot + ' ' + artist_short
+    return new_title[:100]
 
 
 def get_description_en(filename):
