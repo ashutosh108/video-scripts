@@ -66,7 +66,7 @@ Theistic Media Studios, Gupta Govardhan Ashram.
 Downloaded from TMS_TV livestream.com/accounts/2645002
 
 На русском: (ссылка скоро будет)"""
-        self.assertEqual(expected, meta.get_youtube_description(filename, 'en'))
+        self.assertEqual(expected, meta.get_youtube_description_orig(filename, 'en'))
 
     def test_get_youtube_title_ru_stereo(self):
         filename = self.get_test_filename('2016-10-12 brmadhusudan.mp4')

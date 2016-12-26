@@ -57,7 +57,7 @@ def _cut_orig_mp4(orig_mp4_filename, cut_mp4_filename, lang, line):
 def _upload_orig_mp4(orig_mp4_filename, cut_video_filename, lang, line):
     def run(callback):
         title = meta.get_youtube_title(orig_mp4_filename, lang)
-        description = meta.get_youtube_description(orig_mp4_filename, lang)
+        description = meta.get_youtube_description_orig(orig_mp4_filename, lang)
         youtube_id = my_youtube.upload(
             cut_video_filename,
             title=title,

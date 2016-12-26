@@ -282,9 +282,9 @@ def _get_author_with_title_en(filename):
     return ', '.join(authors_full_names)
 
 
-def get_youtube_description(filename, lang):
+def get_youtube_description_orig(filename, lang):
     if lang == 'ru':
-        return _get_youtube_description_ru_orig(filename)
+        return _get_youtube_description_ru(filename)
     else:
         return _get_youtube_description_en(filename)
 
@@ -309,7 +309,7 @@ def _get_author_with_title_ru(filename):
     return ', '.join(authors_full_names)
 
 
-def _get_youtube_description_ru_orig(filename):
+def _get_youtube_description_ru(filename):
     year, month, day = get_year_month_day(filename)
     dt_obj = datetime.date(int(year), int(month), int(day))
     author_with_title = _get_author_with_title_ru(filename)
@@ -323,30 +323,14 @@ def _get_youtube_description_ru_orig(filename):
 
 
 def get_youtube_description_ru_stereo(filename):
-    year, month, day = get_year_month_day(filename)
-    dt_obj = datetime.date(int(year), int(month), int(day))
-    author_with_title = _get_author_with_title_ru(filename)
-    date = babel.dates.format_datetime(dt_obj, 'dd MMMM YYYY', locale='ru_RU')
-    yt_descr = get_description_ru(filename) + '\n'
-    yt_descr += author_with_title + '\n'  # e.g. Srila Bhakti Rañjan Madhusudan Maharaj
-    yt_descr += date + '\n'  # e.g. October 11, 2016
-    yt_descr += 'Студия "Теистик Медиа", Ашрам на Гупта Говардхане.\n'
-    yt_descr += 'Загружено с TMS_TV livestream.com/accounts/2645002\n\n'
+    yt_descr = _get_youtube_description_ru(filename)
     yt_descr += 'English original: (link pending)\n'
     yt_descr += 'Моно перевод: (link pending)'
     return yt_descr
 
 
 def get_youtube_description_ru_mono(filename):
-    year, month, day = get_year_month_day(filename)
-    dt_obj = datetime.date(int(year), int(month), int(day))
-    author_with_title = _get_author_with_title_ru(filename)
-    date = babel.dates.format_datetime(dt_obj, 'dd MMMM YYYY', locale='ru_RU')
-    yt_descr = get_description_ru(filename) + '\n'
-    yt_descr += author_with_title + '\n'  # e.g. Srila Bhakti Rañjan Madhusudan Maharaj
-    yt_descr += date + '\n'  # e.g. October 11, 2016
-    yt_descr += 'Студия "Теистик Медиа", Ашрам на Гупта Говардхане.\n'
-    yt_descr += 'Загружено с TMS_TV livestream.com/accounts/2645002\n\n'
+    yt_descr = _get_youtube_description_ru(filename)
     yt_descr += 'English original: (link pending)\n'
     yt_descr += 'Стерео перевод: (link pending)'
     return yt_descr
