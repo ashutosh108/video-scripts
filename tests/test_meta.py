@@ -6,18 +6,39 @@ import os
 
 
 class test_meta(TestCase):
-    def test_get_ss_arg_for_file_nonexisting(self):
+    def test_get_skip_time_for_file_nonexisting(self):
         self.assertEqual(meta.get_skip_time('qwe'), None)
 
-    def test_get_ss_arg_for_file_existing(self):
+    def test_get_skip_time_for_file_existing(self):
         filename = self.get_test_filename('2016-10-07 goswamimj.mp4')
         self.assertEqual(meta.get_skip_time(filename), '1:15')
 
     # pyyaml somehow automatically leaves 0:07 as '0:07', but converts 1:07 to int 67 (seconds).
     # We have to deal with either.
-    def test_get_ss_args_for_zero_minutes(self):
+    def test_get_skip_time_for_zero_minutes(self):
         filename = self.get_test_filename('2016-10-17 avadhutmj.mp4')
         self.assertEqual(meta.get_skip_time(filename), '0:07')
+
+    def test_get_ss_arg_for_file_nonexisting(self):
+        self.assertEqual(meta.get_ss_args('qwe'), [])
+
+    def test_get_ss_arg_for_file_existing(self):
+        filename = self.get_test_filename('2016-10-07 goswamimj.mp4')
+        self.assertEqual(meta.get_ss_args(filename), ['-ss', '1:15'])
+
+    # pyyaml somehow automatically leaves 0:07 as '0:07', but converts 1:07 to int 67 (seconds).
+    # We have to deal with either.
+    def test_get_ss_args_for_zero_minutes(self):
+        filename = self.get_test_filename('2016-10-17 avadhutmj.mp4')
+        self.assertEqual(meta.get_ss_args(filename), ['-ss', '0:07'])
+
+    def test_get_to_args_for_file_nonexisting(self):
+        self.assertEqual(meta.get_to_args('qwe'), [])
+
+    def test_get_to_args_for_file_existing(self):
+        filename = self.get_test_filename('2016-10-17 avadhutmj.mp4')
+        self.assertEqual(meta.get_to_args(filename), ['-to', '1:02:03'])
+
 
     def test_get_artist_en(self):
         filename = self.get_test_filename('2016-10-07 goswamimj.mp4')
