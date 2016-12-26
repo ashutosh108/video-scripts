@@ -300,7 +300,7 @@ def _get_youtube_description_en(filename):
     yt_descr += date + '\n'  # e.g. October 11, 2016
     yt_descr += 'Theistic Media Studios, Gupta Govardhan Ashram.\n'
     yt_descr += 'Downloaded from TMS_TV livestream.com/accounts/2645002\n\n'
-    yt_descr += 'На русском: (ссылка скоро будет)'
+    yt_descr += 'На русском: ' + _get_youtube_link(filename, 'rus_stereo', '(ссылка скоро будет)')
     return yt_descr
 
 
@@ -323,17 +323,25 @@ def _get_youtube_description_ru(filename):
     return yt_descr
 
 
+def _get_youtube_link(filename, key, default='(link pending)'):
+    youtube_id = get(filename, 'youtube_id_'+key)
+    if youtube_id:
+        return 'https://youtu.be/' + youtube_id
+    else:
+        return default
+
+
 def get_youtube_description_ru_stereo(filename):
     yt_descr = _get_youtube_description_ru(filename)
-    yt_descr += 'English original: (link pending)\n'
-    yt_descr += 'Моно перевод: (link pending)'
+    yt_descr += 'English original: ' + _get_youtube_link(filename, 'orig') + '\n'
+    yt_descr += 'Моно перевод: ' + _get_youtube_link(filename, 'rus_mono')
     return yt_descr
 
 
 def get_youtube_description_ru_mono(filename):
     yt_descr = _get_youtube_description_ru(filename)
-    yt_descr += 'English original: (link pending)\n'
-    yt_descr += 'Стерео перевод: (link pending)'
+    yt_descr += 'English original: ' + _get_youtube_link(filename, 'orig') + '\n'
+    yt_descr += 'Стерео перевод: ' + _get_youtube_link(filename, 'rus_stereo')
     return yt_descr
 
 

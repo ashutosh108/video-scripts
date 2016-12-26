@@ -144,3 +144,37 @@ English original: (link pending)
     def test_get(self):
         filename = self.get_test_filename('2016-10-17 avadhutmj.mp4')
         self.assertEqual('ru', meta.get(filename, 'lang'))
+
+    def test_youtube_links_from_orig(self):
+        filename = self.get_test_filename('2016-01-02 goswamimj.mp4')
+        expected = """
+Śrīla Bhakti Sudhīr Goswāmī Mahārāj
+January 2, 2016
+Theistic Media Studios, Gupta Govardhan Ashram.
+Downloaded from TMS_TV livestream.com/accounts/2645002\n
+На русском: https://youtu.be/sssssssssss"""
+        self.assertEqual(expected, meta.get_youtube_description_orig(filename, 'en'))
+
+    def test_youtube_links_from_mono(self):
+        filename = self.get_test_filename('2016-01-02 goswamimj.mp4')
+        expected = """
+Ш́рӣла Бхакти Судхӣр Госва̄мӣ Mаха̄ра̄дж
+02 января 2016
+Студия "Теистик Медиа", Ашрам на Гупта Говардхане.
+Загружено с TMS_TV livestream.com/accounts/2645002
+
+English original: https://youtu.be/ooooooooooo
+Стерео перевод: https://youtu.be/sssssssssss"""
+        self.assertEqual(expected, meta.get_youtube_description_ru_mono(filename))
+
+    def test_youtube_links_from_stereo(self):
+        filename = self.get_test_filename('2016-01-02 goswamimj.mp4')
+        expected = """
+Ш́рӣла Бхакти Судхӣр Госва̄мӣ Mаха̄ра̄дж
+02 января 2016
+Студия "Теистик Медиа", Ашрам на Гупта Говардхане.
+Загружено с TMS_TV livestream.com/accounts/2645002
+
+English original: https://youtu.be/ooooooooooo
+Моно перевод: https://youtu.be/mmmmmmmmmmm"""
+        self.assertEqual(expected, meta.get_youtube_description_ru_stereo(filename))
