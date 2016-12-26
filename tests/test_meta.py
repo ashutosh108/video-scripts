@@ -19,42 +19,21 @@ class test_meta(TestCase):
         filename = self.get_test_filename('2016-10-17 avadhutmj.mp4')
         self.assertEqual(meta.get_skip_time(filename), '0:07')
 
-    def test_get_ss_arg_for_file_nonexisting(self):
-        self.assertEqual(meta.get_ss_args('qwe'), [])
-
-    def test_get_ss_arg_for_file_existing(self):
-        filename = self.get_test_filename('2016-10-07 goswamimj.mp4')
-        self.assertEqual(meta.get_ss_args(filename), ['-ss', '1:15'])
-
-    # pyyaml somehow automatically leaves 0:07 as '0:07', but converts 1:07 to int 67 (seconds).
-    # We have to deal with either.
-    def test_get_ss_args_for_zero_minutes(self):
-        filename = self.get_test_filename('2016-10-17 avadhutmj.mp4')
-        self.assertEqual(meta.get_ss_args(filename), ['-ss', '0:07'])
-
-    def test_get_to_args_for_file_nonexisting(self):
-        self.assertEqual(meta.get_to_args('qwe'), [])
-
-    def test_get_to_args_for_file_existing(self):
-        filename = self.get_test_filename('2016-10-17 avadhutmj.mp4')
-        self.assertEqual(meta.get_to_args(filename), ['-to', '1:02:03'])
-
-
     def test_get_artist_en(self):
         filename = self.get_test_filename('2016-10-07 goswamimj.mp4')
-        self.assertEqual('Bhakti Sudhīr Goswāmī', meta._get_artist_en(filename))
+        self.assertEqual('Bhakti Sudhīr Goswāmī', meta.get_artist_en(filename))
 
     def test_get_artist_en_multiple(self):
         filename = self.get_test_filename('2016-10-07 janardanmj_goswamimj.mp4')
-        self.assertEqual('Bhakti Pāvan Janārdan, Bhakti Sudhīr Goswāmī', meta._get_artist_en(filename))
+        self.assertEqual('Bhakti Pāvan Janārdan, Bhakti Sudhīr Goswāmī', meta.get_artist_en(filename))
 
     def test_get_artist_en_ranjan(self):
         filename = self.get_test_filename('2016-10-07 brmadhusudan.mp4')
-        self.assertEqual('Bhakti Rañjan Madhusūdan', meta._get_artist_en(filename))
+        self.assertEqual('Bhakti Rañjan Madhusūdan', meta.get_artist_en(filename))
 
     def test_get_year_month_day(self):
         filename = self.get_test_filename('2016-10-07 brmadhusudan.mp4')
-        [year, month, day] = meta._get_year_month_day(filename)
+        [year, month, day] = meta.get_year_month_day(filename)
         self.assertEqual('2016', year)
         self.assertEqual('10', month)
         self.assertEqual('07', day)

@@ -1,10 +1,12 @@
+import datetime
+import numbers
 import os
 import re
-import yaml
-import datetime
 import string
-import numbers
+
 import babel.dates
+import yaml
+
 import yamlupdater
 
 _yaml_data_cache = {}
@@ -40,14 +42,6 @@ def get_skip_time(filename: str) -> str:
     return _yaml_get_time_length(filename, 'skip')
 
 
-def get_ss_args(filename):
-    skip_time = get_skip_time(filename)
-    if skip_time:
-        return ['-ss', skip_time]
-    else:
-        return []
-
-
 def _yaml_get_time_length(filename: str, key: str) -> str:
     """
     get proper argument for -tt min:sec part of the ffmpeg command line
@@ -62,14 +56,6 @@ def _yaml_get_time_length(filename: str, key: str) -> str:
         return skip
     except KeyError:
         return None
-
-
-def get_to_args(filename):
-    cut_time = get_cut_time(filename)
-    if cut_time:
-        return ['-to', cut_time]
-    else:
-        return []
 
 
 def get_cut_time(filename):
@@ -183,7 +169,7 @@ def _get_artists_codes(filename):
         return ['unknown']
 
 
-def _get_artist_en(filename):
+def get_artist_en(filename):
     codes = _get_artists_codes(filename)
     names = map(lambda code: _artist_real_name_en(code), codes)
     return ', '.join(names)
@@ -195,7 +181,7 @@ def _get_artist_short_en(filename):
     return ', '.join(names)
 
 
-def _get_artist_ru(filename):
+def get_artist_ru(filename):
     codes = _get_artists_codes(filename)
     names = map(lambda code: _artist_real_name_ru(code), codes)
     return ', '.join(names)
@@ -207,52 +193,12 @@ def _get_artist_short_ru(filename):
     return ', '.join(names)
 
 
-def _get_year_month_day(filename):
+def get_year_month_day(filename):
     basename = os.path.basename(filename)
     match = re.match('^(\d\d\d\d)-?(\d\d)-?(\d\d)', basename)
     if match:
         return match.groups()
     return [None, None, None]
-
-
-def ffmpeg_meta_args(filename, lang):
-    if lang == 'ru':
-        return ffmpeg_meta_args_ru_stereo(filename)
-    else:
-        return _ffmpeg_meta_args_en(filename)
-
-
-def _ffmpeg_meta_args_en(filename):
-    artist = _get_artist_en(filename)
-    title = get_title_en(filename)
-    return _ffmpeg_meta_args(filename, artist, title, album='Gupta Govardhan 2016')
-
-
-def ffmpeg_meta_args_ru_mono(filename):
-    artist = _get_artist_ru(filename)
-    title = get_title_ru(filename) + ' (моно)'
-    return _ffmpeg_meta_args(filename, artist, title, 'Гупта Говардхан 2016')
-
-
-def ffmpeg_meta_args_ru_stereo(filename):
-    artist = _get_artist_ru(filename)
-    title = get_title_ru(filename)
-    return _ffmpeg_meta_args(filename, artist, title, 'Гупта Говардхан 2016')
-
-
-def _ffmpeg_meta_args(filename, artist, title, album):
-    [year, month, day] = _get_year_month_day(filename)
-    args = [
-        '-id3v2_version', '3',
-        '-write_id3v1', '1',
-        '-metadata', 'artist=' + artist,
-        '-metadata', 'title=' + title,
-        '-metadata', 'album=' + album,
-        '-metadata', 'genre=Speech']
-    if year:
-        args += ['-metadata', 'date=' + year + '-' + month + '-' + day]
-        args += ['-metadata', 'comment=' + year + '-' + month + '-' + day]
-    return args
 
 
 def get_work_filename(filename, add):
@@ -273,7 +219,7 @@ def get_youtube_title_en(filename):
     title = get_title_en(filename)
     if title[-1] not in string.punctuation:
         title += '.'
-    artist = _get_artist_en(filename)
+    artist = get_artist_en(filename)
     new_title = title + ' ' + artist
     if len(new_title) > 100:
         artist_short = _get_artist_short_en(filename)
@@ -285,7 +231,7 @@ def get_youtube_title_ru_stereo(filename):
     title = get_title_ru(filename)
     if title[-1] not in string.punctuation:
         title += '.'
-    artist = _get_artist_ru(filename)
+    artist = get_artist_ru(filename)
     new_title = title + ' ' + artist
     if len(new_title) > 100:
         artist_short = _get_artist_short_ru(filename)
@@ -301,7 +247,7 @@ def get_youtube_title_ru_mono(filename):
         dot = ''
     if title[-1] == '.':
         title_without_dot = title_without_dot[:-1]
-    artist = _get_artist_ru(filename)
+    artist = get_artist_ru(filename)
     new_title = title_without_dot + ' (моно)' + dot + ' ' + artist
     if len(new_title) > 100:
         artist_short = _get_artist_short_ru(filename)
@@ -343,7 +289,7 @@ def get_youtube_description(filename, lang):
 
 
 def _get_youtube_description_en(filename):
-    year, month, day = _get_year_month_day(filename)
+    year, month, day = get_year_month_day(filename)
     dt_obj = datetime.date(int(year), int(month), int(day))
     author_with_title = _get_author_with_title_en(filename)
     date = '{dt:%B} {dt.day}, {dt:%Y}'.format(dt=dt_obj)
@@ -363,7 +309,7 @@ def _get_author_with_title_ru(filename):
 
 
 def _get_youtube_description_ru_orig(filename):
-    year, month, day = _get_year_month_day(filename)
+    year, month, day = get_year_month_day(filename)
     dt_obj = datetime.date(int(year), int(month), int(day))
     author_with_title = _get_author_with_title_ru(filename)
     date = babel.dates.format_datetime(dt_obj, 'dd MMMM YYYY', locale='ru_RU')
@@ -376,7 +322,7 @@ def _get_youtube_description_ru_orig(filename):
 
 
 def get_youtube_description_ru_stereo(filename):
-    year, month, day = _get_year_month_day(filename)
+    year, month, day = get_year_month_day(filename)
     dt_obj = datetime.date(int(year), int(month), int(day))
     author_with_title = _get_author_with_title_ru(filename)
     date = babel.dates.format_datetime(dt_obj, 'dd MMMM YYYY', locale='ru_RU')
@@ -391,7 +337,7 @@ def get_youtube_description_ru_stereo(filename):
 
 
 def get_youtube_description_ru_mono(filename):
-    year, month, day = _get_year_month_day(filename)
+    year, month, day = get_year_month_day(filename)
     dt_obj = datetime.date(int(year), int(month), int(day))
     author_with_title = _get_author_with_title_ru(filename)
     date = babel.dates.format_datetime(dt_obj, 'dd MMMM YYYY', locale='ru_RU')
