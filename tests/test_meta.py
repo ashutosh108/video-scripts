@@ -140,3 +140,7 @@ English original: (link pending)
         filename = self.get_test_filename('2016-10-12 brmadhusudan.mp4')
         expected = 'en'
         self.assertEqual(expected, meta.get_lang(filename))
+
+    def test_get(self):
+        filename = self.get_test_filename('2016-10-17 avadhutmj.mp4')
+        self.assertEqual('ru', meta.get(filename, 'lang'))

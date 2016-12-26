@@ -5,7 +5,7 @@ import ffmpeg
 import os
 
 
-class test_meta(TestCase):
+class test_ffmpeg(TestCase):
     def test_get_ss_arg_for_file_nonexisting(self):
         self.assertEqual(ffmpeg.ss_args('qwe'), [])
 

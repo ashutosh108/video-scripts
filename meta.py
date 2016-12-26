@@ -13,7 +13,7 @@ import yamlupdater
 _yaml_data_cache = {}
 
 
-def _yaml_data(filename):
+def _yaml_data(filename) -> dict:
     global _yaml_data_cache
     if filename not in _yaml_data_cache:
         try:
@@ -63,11 +63,12 @@ def get_cut_time(filename):
     return _yaml_get_time_length(filename, 'cut')
 
 
+def get(filename: str, key: str, default=None):
+    return _yaml_data(filename).get(key, default)
+
+
 def get_lang(filename):
-    try:
-        return _yaml_data(filename)['lang']
-    except KeyError:
-        return 'en'
+    return get(filename, 'lang', 'en')
 
 
 def get_title_en(filename):
