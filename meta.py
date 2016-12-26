@@ -3,6 +3,7 @@ import numbers
 import os
 import re
 import string
+from typing import Optional
 
 import babel.dates
 import yaml
@@ -42,7 +43,7 @@ def get_skip_time(filename: str) -> str:
     return _yaml_get_time_length(filename, 'skip')
 
 
-def _yaml_get_time_length(filename: str, key: str) -> str:
+def _yaml_get_time_length(filename: str, key: str) -> Optional[str]:
     """
     get proper argument for -tt min:sec part of the ffmpeg command line
     :param filename:
@@ -101,7 +102,7 @@ _known_artists_en = dict(
     madhusudanmj=['Bhakti Rañjan Madhusūdan', 'Śrīla Bhakti Rañjan Madhusūdan Mahārāj', 'B.R.Madhusūdan'],
     brmadhusudan=['Bhakti Rañjan Madhusūdan', 'Śrīla Bhakti Rañjan Madhusūdan Mahārāj', 'B.R.Madhusūdan'],
     hasyapriya=['Hāsyapriya Prabhu', 'Hāsyapriya Prabhu', 'Hāsyapriya Pr.'],
-    taritkrishna = ['Tārit Kṛṣṇa Prabhu', 'Tārit Kṛṣṇa Prabhu', 'Tārit Kṛṣṇa Pr.']
+    taritkrishna=['Tārit Kṛṣṇa Prabhu', 'Tārit Kṛṣṇa Prabhu', 'Tārit Kṛṣṇa Pr.']
 )
 
 
