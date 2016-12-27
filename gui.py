@@ -10,7 +10,7 @@ class FileFrame:
     frame = None
     filename = None
     lang = None
-    lang_frame = None
+    lang_option_menu = None
     title_rus = None
     title_rus_entry = None
     title_eng = None
@@ -39,11 +39,10 @@ class FileFrame:
         self.lang = tk.StringVar()
         self.lang.set('en')
         self.lang.trace('w', lambda *args: self.lang_changed_callback())
-        self.lang_frame = ttk.LabelFrame(self.frame, text='Source language:')
-        ttk.Radiobutton(self.lang_frame, text='English', variable=self.lang, value='en').grid()
-        ttk.Radiobutton(self.lang_frame, text='Russian', variable=self.lang, value='ru').grid()
-        self.lang_frame.grid(column=0, row=1, columnspan=3, sticky='nw')
-        self.disable_widget(self.lang_frame)
+        ttk.Label(self.frame, text="Source lang:").grid(row=1, column=0, sticky='nw')
+        self.lang_option_menu = ttk.OptionMenu(self.frame, self.lang, 'en', 'en', 'ru')
+        self.lang_option_menu.grid(column=1, row=1, columnspan=2, sticky='nw')
+        self.lang_option_menu.configure(state='disabled')
 
         self.title_rus = tk.StringVar()
         self.title_rus.trace('w', lambda *args: self.title_rus_changed_callback())
@@ -102,7 +101,7 @@ class FileFrame:
 
     def load_metadata(self, source_filename):
         self.lang.set(meta.get_lang(source_filename))
-        self.enable_widget(self.lang_frame)
+        self.lang_option_menu.configure(state='enable')
 
         self.title_rus.set(meta.get_title_ru(source_filename))
         self.enable_widget(self.title_rus_entry)
