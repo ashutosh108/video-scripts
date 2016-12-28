@@ -1,6 +1,5 @@
 import tkinter as tk
 from tkinter import ttk
-import subprocess
 import os
 
 
@@ -22,10 +21,8 @@ class ProcessingFrame:
 
     def orig_run(self):
         dir = os.path.dirname(__file__)
-        cmd_exe = 'C:\\Windows\\System32\\cmd.exe'
         path = os.path.join(dir, 'orig.cmd')
         filename = self.filename_var.get()
-        cmd = [cmd_exe, path, filename]
         cmd_str = 'start cmd /c ' + path + ' ' + '"' + filename + '"'
         print(cmd_str)
         os.system(cmd_str)
