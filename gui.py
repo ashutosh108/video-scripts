@@ -4,11 +4,12 @@ from tkinter import filedialog
 import re
 
 import meta
+from gui_proc import ProcessingFrame
 
 
 class FileFrame:
     frame = None
-    filename = None
+    filename = None  # type: tk.StringVar
     lang = None
     lang_option_menu = None
     title_rus = None
@@ -176,11 +177,14 @@ class FileFrame:
 root = tk.Tk()
 root.title('Best Talks\' Uploader')
 mainframe = ttk.Frame(root, padding="3 3 12 12")
-mainframe.grid(column=0, row=0, sticky=(tk.N, tk.W, tk.E, tk.S))
+mainframe.grid(column=0, row=0, sticky='nwes')
 mainframe.columnconfigure(0, weight=1)
 mainframe.rowconfigure(0, weight=1)
 
 file_frame = FileFrame(mainframe)
 file_frame.frame.grid(column=0, row=0)
+
+proc_frame = ProcessingFrame(mainframe, file_frame.filename)
+proc_frame.frame.grid(column=1, row=0, sticky='nwse')
 
 root.mainloop()
