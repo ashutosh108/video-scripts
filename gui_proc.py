@@ -29,6 +29,3 @@ class ProcessingFrame:
         cmd_str = 'start cmd /c ' + path + ' ' + '"' + filename + '"'
         print(cmd_str)
         os.system(cmd_str)
-
-        p = subprocess.Popen(cmd)
-        # p.communicate()
