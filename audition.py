@@ -65,22 +65,45 @@ def _seconds_to_time_stamp(seconds):
 
 
 def _adjust_markers(markers, clips_recorded, clips_translation, skip_time):
+    adjusted_markers = []
     for marker in markers:
         marker_time = marker[0]
         marker_name = marker[1]
-        adjusted_time = _adjust_marker(marker_time, clips_recorded, clips_translation, skip_time)
-        time_str = _seconds_to_time_stamp(adjusted_time)
-        print(time_str, '—', marker_name)
+        adjusted_marker_time = _adjust_marker(marker_time, clips_recorded, clips_translation, skip_time)
+        adjusted_markers.append([adjusted_marker_time, marker_name])
+    return adjusted_markers
+
+
+def timestamps(mp4_filename: str) -> str:
+    """
+    Return multi-line string with marker timestamps for given mp4 file. e.g.
+    07:26 — Marker 37
+    24:44 — Marker 38
+    30:05 — Marker 39
+    :rtype: str
+    """
+    sesx_filename = re.sub(r'\.mp4$', ' ru.sesx', mp4_filename)
+    markers = _get_markers(sesx_filename)
+    clips_recorded = _get_clips(sesx_filename, 'Track 1')
+    clips_translation = _get_clips(sesx_filename, 'Translation')
+    skip_time = pytimeparse.parse(meta.get_skip_time(mp4_filename))
+    adjusted_markers = _adjust_markers(markers, clips_recorded, clips_translation, skip_time)
+
+    timestamps_str = ''
+
+    for marker in adjusted_markers:
+        marker_time_sec = marker[0]
+        marker_name = marker[1]
+        marker_time = _seconds_to_time_stamp(marker_time_sec)
+        timestamps_str += marker_time + ' — ' + marker_name + '\n'
+    return timestamps_str
 
 
 def _main():
     filename = 'D:\\video\\GoswamiMj-videos\\2017-01-06 goswamimj ru.sesx'
     mp4_filename = re.sub(r' ru\.sesx$', '.mp4', filename)
-    skip_time = pytimeparse.parse(meta.get_skip_time(mp4_filename))
-    markers = _get_markers(filename)
-    clips_recorded = _get_clips(filename, 'Track 1')
-    clips_translation = _get_clips(filename, 'Translation')
-    _adjust_markers(markers, clips_recorded, clips_translation, skip_time)
+    print(timestamps(mp4_filename))
+
 
 if __name__ == '__main__':
     _main()
