@@ -37,7 +37,7 @@ def get_clips(filename, track_name):
 def find_time_in_clip(clip_name, rel_time, clips_translation):
     for name, clip in clips_translation.items():
         if name == clip_name:
-            return rel_time+clip[0]-clip[2]
+            return rel_time+clip[0]-clip[2]-180+3
 
 
 def adjust_marker(time, clips_recorded, clips_translation):
@@ -68,9 +68,13 @@ def adjust_markers(markers, clips_recorded, clips_translation):
         time_str = seconds_to_time_stamp(adjusted_time)
         print(time_str, marker_name)
 
-if __name__ == '__main__':
-    filename = 'D:\\video\\GoswamiMj-videos\\2016-12-28 goswamimj ru.sesx'
+
+def main():
+    filename = 'D:\\video\\GoswamiMj-videos\\2016-12-30 goswamimj ru.sesx'
     markers = get_markers(filename)
     clips_recorded = get_clips(filename, 'Track 1')
     clips_translation = get_clips(filename, 'Translation')
-    markers_adjusted = adjust_markers(markers, clips_recorded, clips_translation)
+    adjust_markers(markers, clips_recorded, clips_translation)
+
+if __name__ == '__main__':
+    main()
