@@ -4,7 +4,8 @@ import pytimeparse
 
 import meta
 
-def get_markers(filename):
+
+def _get_markers(filename):
     with open(filename, 'rb') as f:
         o = ET.parse(f)
         xmp_as_xml_string = o.find('.//xmpMetadata').text
@@ -21,7 +22,7 @@ def get_markers(filename):
         return markers
 
 
-def get_clips(filename, track_name):
+def _get_clips(filename, track_name):
     clips = {}
     with open(filename, 'rb') as f:
         o = ET.parse(f)
@@ -37,21 +38,21 @@ def get_clips(filename, track_name):
     return clips
 
 
-def find_time_in_clip(clip_name, rel_time, clips_translation, skip_time):
+def _find_time_in_clip(clip_name, rel_time, clips_translation, skip_time):
     for name, clip in clips_translation.items():
         if name == clip_name:
             return rel_time+clip[0]-clip[2]-skip_time
 
 
-def adjust_marker(time, clips_recorded, clips_translation, skip_time):
+def _adjust_marker(time, clips_recorded, clips_translation, skip_time):
     for name, clip in clips_recorded.items():
         if clip[0] <= time <= clip[1]:
             rel_time = time - clip[0]
-            adj_time = find_time_in_clip(name, rel_time, clips_translation, skip_time)
+            adj_time = _find_time_in_clip(name, rel_time, clips_translation, skip_time)
             return adj_time
 
 
-def seconds_to_time_stamp(seconds):
+def _seconds_to_time_stamp(seconds):
     sec_round = round(seconds)
     hours = int(sec_round / 3600)
     min = int(sec_round / 60) % 60
@@ -63,23 +64,23 @@ def seconds_to_time_stamp(seconds):
     return res
 
 
-def adjust_markers(markers, clips_recorded, clips_translation, skip_time):
+def _adjust_markers(markers, clips_recorded, clips_translation, skip_time):
     for marker in markers:
         marker_time = marker[0]
         marker_name = marker[1]
-        adjusted_time = adjust_marker(marker_time, clips_recorded, clips_translation, skip_time)
-        time_str = seconds_to_time_stamp(adjusted_time)
+        adjusted_time = _adjust_marker(marker_time, clips_recorded, clips_translation, skip_time)
+        time_str = _seconds_to_time_stamp(adjusted_time)
         print(time_str, '—', marker_name)
 
 
-def main():
+def _main():
     filename = 'D:\\video\\GoswamiMj-videos\\2017-01-06 goswamimj ru.sesx'
     mp4_filename = re.sub(r' ru\.sesx$', '.mp4', filename)
     skip_time = pytimeparse.parse(meta.get_skip_time(mp4_filename))
-    markers = get_markers(filename)
-    clips_recorded = get_clips(filename, 'Track 1')
-    clips_translation = get_clips(filename, 'Translation')
-    adjust_markers(markers, clips_recorded, clips_translation, skip_time)
+    markers = _get_markers(filename)
+    clips_recorded = _get_clips(filename, 'Track 1')
+    clips_translation = _get_clips(filename, 'Translation')
+    _adjust_markers(markers, clips_recorded, clips_translation, skip_time)
 
 if __name__ == '__main__':
-    main()
+    _main()
