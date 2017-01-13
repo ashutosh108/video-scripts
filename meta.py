@@ -290,6 +290,22 @@ def get_youtube_description_orig(filename, lang):
         return _get_youtube_description_en(filename)
 
 
+def _youtube_playlists_en():
+    return """More Goswāmī Mahārāj: 2016 — https://www.youtube.com/playlist?list=PL6tEPx3Dy5-UTBh4hYonpv3HIeoRI8Hii
+2017 — https://www.youtube.com/playlist?list=PL6tEPx3Dy5-WwqFLQIhM3Hu7cBh60Y2VZ
+More Madhusūdan Mahārāj: https://www.youtube.com/playlist?list=PL6tEPx3Dy5-X13nA4LgtKgujEvCI_77NY
+More Avadhūt Mahārāj: 2016 — https://www.youtube.com/playlist?list=PL6tEPx3Dy5-XnC79_zqlekdFl0nFNpvjJ
+2017 — https://www.youtube.com/playlist?list=PL6tEPx3Dy5-XZkgmpnWfenoggfZOVOaPS"""
+
+
+def _youtube_playlists_ru():
+    return """Ещё Госва̄мӣ Mаха̄ра̄джа: 2016 — https://www.youtube.com/playlist?list=PL6tEPx3Dy5-Ugkm4jTb3VGdVChoCm3J8X
+2017 — https://www.youtube.com/playlist?list=PL6tEPx3Dy5-X8O8R9jP-TDJPbmgN0kIOD
+Ещё Мадхусӯдана Mаха̄ра̄джа: https://www.youtube.com/playlist?list=PL6tEPx3Dy5-VzEoAeaEliOm-iQUGmY-lz
+Ещё Авадхӯта Mаха̄ра̄джа: 2016 — https://www.youtube.com/playlist?list=PL6tEPx3Dy5-X3u6WgQtMTjhfErxKk1tkK
+2017 — https://www.youtube.com/playlist?list=PL6tEPx3Dy5-VheQwXw_fFnDft_AX4JqYo"""
+
+
 def _get_youtube_description_en(filename):
     year, month, day = get_year_month_day(filename)
     dt_obj = datetime.date(int(year), int(month), int(day))
@@ -298,10 +314,10 @@ def _get_youtube_description_en(filename):
     yt_descr = get_description_en(filename) + '\n'
     yt_descr += author_with_title + '\n'  # e.g. Srila Bhakti Rañjan Madhusudan Maharaj
     yt_descr += date + '\n'  # e.g. October 11, 2016
-    yt_descr += 'Theistic Media Studios, Gupta Govardhan Ashram.\n'
+    yt_descr += 'Theistic Media Studios, Gupta Govardhan Āśram.\n'
     yt_descr += 'Downloaded from TMS_TV livestream.com/accounts/2645002\n\n'
     yt_descr += 'На русском: ' + _get_youtube_link(filename, 'rus_stereo', '(ссылка скоро будет)')
-    return yt_descr
+    return yt_descr + '\n\n' + _youtube_playlists_en()
 
 
 def _get_author_with_title_ru(filename):
@@ -318,9 +334,9 @@ def _get_youtube_description_ru(filename):
     yt_descr = get_description_ru(filename) + '\n'
     yt_descr += author_with_title + '\n'  # e.g. Srila Bhakti Rañjan Madhusudan Maharaj
     yt_descr += date + '\n'  # e.g. October 11, 2016
-    yt_descr += 'Студия "Теистик Медиа", Ашрам на Гупта Говардхане.\n'
-    yt_descr += 'Загружено с TMS_TV livestream.com/accounts/2645002\n\n'
-    return yt_descr
+    yt_descr += 'Студия «Теистик Медиа», А̄ш́рам на Гупта Говардхане.\n'
+    yt_descr += 'Загружено с TMS_TV livestream.com/accounts/2645002'
+    return yt_descr + '\n\n' + _youtube_playlists_ru()
 
 
 def _get_youtube_link(filename, key, default='(link pending)'):
