@@ -94,14 +94,14 @@ def get_title_ru(filename):
 
 
 _known_artists_en = dict(
-    goswamimj=['Bhakti Sudhīr Goswāmī', 'Śrīla Bhakti Sudhīr Goswāmī Mahārāj', 'B.S.Goswāmī'],
-    bsgoswami=['Bhakti Sudhīr Goswāmī', 'Śrīla Bhakti Sudhīr Goswāmī Mahārāj', 'B.S.Goswāmī'],
-    janardanmj=['Bhakti Pāvan Janārdan', 'Śrīla Bhakti Pāvan Janārdan Mahārāj', 'B.P.Janārdan'],
-    bpjanardan=['Bhakti Pāvan Janārdan', 'Śrīla Bhakti Pāvan Janārdan Mahārāj', 'B.P.Janārdan'],
-    avadhutmj=['Bhakti Bimal Avadhūt', 'Śrīla Bhakti Bimal Avadhūt Mahārāj', 'B.B.Avadhūt'],
-    bbavadhut=['Bhakti Bimal Avadhūt', 'Śrīla Bhakti Bimal Avadhūt Mahārāj', 'B.B.Avadhūt'],
-    madhusudanmj=['Bhakti Rañjan Madhusūdan', 'Śrīla Bhakti Rañjan Madhusūdan Mahārāj', 'B.R.Madhusūdan'],
-    brmadhusudan=['Bhakti Rañjan Madhusūdan', 'Śrīla Bhakti Rañjan Madhusūdan Mahārāj', 'B.R.Madhusūdan'],
+    goswamimj=['Bhakti Sudhīr Goswāmī', 'Śrīla Bhakti Sudhīr Goswāmī Mahārāja', 'B.S.Goswāmī'],
+    bsgoswami=['Bhakti Sudhīr Goswāmī', 'Śrīla Bhakti Sudhīr Goswāmī Mahārāja', 'B.S.Goswāmī'],
+    janardanmj=['Bhakti Pāvan Janārdan', 'Śrīla Bhakti Pāvan Janārdan Mahārāja', 'B.P.Janārdan'],
+    bpjanardan=['Bhakti Pāvan Janārdan', 'Śrīla Bhakti Pāvan Janārdan Mahārāja', 'B.P.Janārdan'],
+    avadhutmj=['Bhakti Bimal Avadhūt', 'Śrīla Bhakti Bimal Avadhūt Mahārāja', 'B.B.Avadhūt'],
+    bbavadhut=['Bhakti Bimal Avadhūt', 'Śrīla Bhakti Bimal Avadhūt Mahārāja', 'B.B.Avadhūt'],
+    madhusudanmj=['Bhakti Rañjan Madhusūdan', 'Śrīla Bhakti Rañjan Madhusūdan Mahārāja', 'B.R.Madhusūdan'],
+    brmadhusudan=['Bhakti Rañjan Madhusūdan', 'Śrīla Bhakti Rañjan Madhusūdan Mahārāja', 'B.R.Madhusūdan'],
     hasyapriya=['Hāsyapriya Prabhu', 'Hāsyapriya Prabhu', 'Hāsyapriya Pr.'],
     taritkrishna=['Tārit Kṛṣṇa Prabhu', 'Tārit Kṛṣṇa Prabhu', 'Tārit Kṛṣṇa Pr.']
 )
@@ -291,10 +291,10 @@ def get_youtube_description_orig(filename, lang):
 
 
 def _youtube_playlists_en():
-    return """More Goswāmī Mahārāj: 2016 — https://www.youtube.com/playlist?list=PL6tEPx3Dy5-UTBh4hYonpv3HIeoRI8Hii
+    return """More Goswāmī Mahārāja: 2016 — https://www.youtube.com/playlist?list=PL6tEPx3Dy5-UTBh4hYonpv3HIeoRI8Hii
 2017 — https://www.youtube.com/playlist?list=PL6tEPx3Dy5-WwqFLQIhM3Hu7cBh60Y2VZ
-More Madhusūdan Mahārāj: https://www.youtube.com/playlist?list=PL6tEPx3Dy5-X13nA4LgtKgujEvCI_77NY
-More Avadhūt Mahārāj: 2016 — https://www.youtube.com/playlist?list=PL6tEPx3Dy5-XnC79_zqlekdFl0nFNpvjJ
+More Madhusūdan Mahārāja: https://www.youtube.com/playlist?list=PL6tEPx3Dy5-X13nA4LgtKgujEvCI_77NY
+More Avadhūt Mahārāja: 2016 — https://www.youtube.com/playlist?list=PL6tEPx3Dy5-XnC79_zqlekdFl0nFNpvjJ
 2017 — https://www.youtube.com/playlist?list=PL6tEPx3Dy5-XZkgmpnWfenoggfZOVOaPS"""
 
 
