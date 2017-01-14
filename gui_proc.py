@@ -2,6 +2,8 @@ import tkinter as tk
 from tkinter import ttk
 import os
 
+import audition
+
 
 class ProcessingFrame:
     frame = None  # type: ttk.LabelFrame
@@ -9,6 +11,7 @@ class ProcessingFrame:
     parent = None  # type: ttk.Frame
     filename_var = None  # type: tk.StringVar
     rus_button = None  # type: ttk.Button
+    timing_button = None  # type: ttk.Button
 
     def __init__(self, parent_frame: ttk.Frame, filename_var: tk.StringVar):
         super().__init__()
@@ -23,6 +26,10 @@ class ProcessingFrame:
         ttk.Label(self.frame, text='Rus:').grid(row=1, column=0)
         self.rus_button = ttk.Button(self.frame, text='Rus', command=self.rus_run)
         self.rus_button.grid(row=1, column=1)
+
+        ttk.Label(self.frame, text='Timing:').grid(row=2, column=0)
+        self.timing_button = ttk.Button(self.frame, text='Get', command=self.timing_run)
+        self.timing_button.grid(row=2, column=1)
 
     def orig_run(self):
         dir = os.path.dirname(__file__)
@@ -39,3 +46,8 @@ class ProcessingFrame:
         cmd_str = 'start cmd /c ' + path + ' ' + '"' + filename + '"'
         print(cmd_str)
         os.system(cmd_str)
+
+    def timing_run(self):
+        text = audition.timestamps(self.filename_var.get())
+        self.parent.clipboard_clear()
+        self.parent.clipboard_append(text)
