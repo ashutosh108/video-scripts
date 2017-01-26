@@ -103,7 +103,8 @@ _known_artists_en = dict(
     madhusudanmj=['Bhakti Rañjan Madhusūdan', 'Śrīla Bhakti Rañjan Madhusūdan Mahārāja', 'B.R.Madhusūdan'],
     brmadhusudan=['Bhakti Rañjan Madhusūdan', 'Śrīla Bhakti Rañjan Madhusūdan Mahārāja', 'B.R.Madhusūdan'],
     hasyapriya=['Hāsyapriya Prabhu', 'Hāsyapriya Prabhu', 'Hāsyapriya Pr.'],
-    taritkrishna=['Tārit Kṛṣṇa Prabhu', 'Tārit Kṛṣṇa Prabhu', 'Tārit Kṛṣṇa Pr.']
+    taritkrishna=['Tārit Kṛṣṇa Prabhu', 'Tārit Kṛṣṇa Prabhu', 'Tārit Kṛṣṇa Pr.'],
+    dandimj=['Bhakti Āśraya Daṇḍī', 'Śrīpād Bhakti Āśraya Daṇḍī Mahārāja', 'B.Ā.Daṇḍī']
 )
 
 
@@ -136,7 +137,8 @@ _known_artists_ru = dict(
     brmadhusudan=['Бхакти Ран̃джан Мадхусӯдан', 'Ш́рӣла Бхакти Ран̃джан Мадхусӯдан Mаха̄ра̄дж', 'Б.Р.Мадхусӯдан'],
     hasyapriya=['Ха̄сьяприя Прабху', 'Ха̄сьяприя Прабху', 'Ха̄сьяприя Пр.'],
     taritkrishna=['Та̄рит Кр̣ш̣н̣а Прабху', 'Та̄рит Кр̣ш̣н̣а Прабху', 'Та̄рит Кр̣ш̣н̣а Пр.'],
-    unknown=['Автор неизвестен', 'Автор неизвестен', 'Автор неизвестен']
+    unknown=['Автор неизвестен', 'Автор неизвестен', 'Автор неизвестен'],
+    dandimj=['Бхакти А̄ш́райа Дан̣д̣ӣ', 'Ш́рӣпа̄д Бхакти А̄ш́райа Дан̣д̣ӣ Mаха̄ра̄джа', 'Б.А̄.Дан̣д̣ӣ']
 )
 
 
