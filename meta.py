@@ -317,7 +317,7 @@ def _get_youtube_description_en(filename):
     yt_descr += author_with_title + '\n'  # e.g. Srila Bhakti Rañjan Madhusudan Maharaj
     yt_descr += date + '\n'  # e.g. October 11, 2016
     yt_descr += 'Theistic Media Studios, Gupta Govardhan Āśram.\n'
-    yt_descr += 'Downloaded from TMS_TV livestream.com/accounts/2645002\n\n'
+    yt_descr += 'Downloaded from TMS_TV https://livestream.com/accounts/2645002\n\n'
     yt_descr += 'На русском: ' + _get_youtube_link(filename, 'rus_stereo', '(ссылка скоро будет)')
     return yt_descr + '\n\n' + _youtube_playlists_en()
 
@@ -337,7 +337,7 @@ def _get_youtube_description_ru(filename):
     yt_descr += author_with_title + '\n'  # e.g. Srila Bhakti Rañjan Madhusudan Maharaj
     yt_descr += date + '\n'  # e.g. October 11, 2016
     yt_descr += 'Студия «Теистик Медиа», А̄ш́рам на Гупта Говардхане.\n'
-    yt_descr += 'Загружено с TMS_TV livestream.com/accounts/2645002'
+    yt_descr += 'Загружено с TMS_TV https://livestream.com/accounts/2645002'
     return yt_descr + '\n\n' + _youtube_playlists_ru()
 
 
