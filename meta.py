@@ -287,7 +287,7 @@ def _get_author_with_title_en(filename):
 
 def get_youtube_description_orig(filename, lang):
     if lang == 'ru':
-        return _get_youtube_description_ru(filename)
+        return _get_youtube_description_ru(filename) + '\n' + _youtube_playlists_ru()
     else:
         return _get_youtube_description_en(filename)
 
@@ -337,8 +337,8 @@ def _get_youtube_description_ru(filename):
     yt_descr += author_with_title + '\n'  # e.g. Srila Bhakti Rañjan Madhusudan Maharaj
     yt_descr += date + '\n'  # e.g. October 11, 2016
     yt_descr += 'Студия «Теистик Медиа», А̄ш́рам на Гупта Говардхане.\n'
-    yt_descr += 'Загружено с TMS_TV https://livestream.com/accounts/2645002'
-    return yt_descr + '\n\n' + _youtube_playlists_ru()
+    yt_descr += 'Загружено с TMS_TV https://livestream.com/accounts/2645002\n'
+    return yt_descr
 
 
 def _get_youtube_link(filename, key, default='(link pending)'):
@@ -351,15 +351,17 @@ def _get_youtube_link(filename, key, default='(link pending)'):
 
 def get_youtube_description_ru_stereo(filename):
     yt_descr = _get_youtube_description_ru(filename)
-    yt_descr += 'English original: ' + _get_youtube_link(filename, 'orig') + '\n'
-    yt_descr += 'Моно перевод: ' + _get_youtube_link(filename, 'rus_mono')
+    yt_descr += '\nEnglish original: ' + _get_youtube_link(filename, 'orig') + '\n'
+    yt_descr += 'Моно перевод: ' + _get_youtube_link(filename, 'rus_mono') + '\n'
+    yt_descr += '\n' + _youtube_playlists_ru()
     return yt_descr
 
 
 def get_youtube_description_ru_mono(filename):
     yt_descr = _get_youtube_description_ru(filename)
-    yt_descr += 'English original: ' + _get_youtube_link(filename, 'orig') + '\n'
-    yt_descr += 'Стерео перевод: ' + _get_youtube_link(filename, 'rus_stereo')
+    yt_descr += '\nEnglish original: ' + _get_youtube_link(filename, 'orig') + '\n'
+    yt_descr += 'Стерео перевод: ' + _get_youtube_link(filename, 'rus_stereo') + '\n'
+    yt_descr += '\n' + _youtube_playlists_ru()
     return yt_descr
 
 
