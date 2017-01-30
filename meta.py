@@ -371,3 +371,19 @@ def update_yaml(orig_mp4_filename, key, value):
     global _yaml_data_cache
     if orig_mp4_filename in _yaml_data_cache:
         _yaml_data_cache[orig_mp4_filename][key] = value
+
+
+def get_hk_code(filename):
+    id_orig = get(filename, 'youtube_id_orig')
+    id_mono = get(filename, 'youtube_id_rus_mono')
+    id_stereo = get(filename, 'youtube_id_rus_stereo')
+    if (not id_orig) or (not id_mono) or (not id_stereo):
+        return 'upload pending'
+
+    template = """<h3>На русском</h3>
+<p>&dArr; Стерео перевод (обычный): &dArr;<br /> <iframe width="640" height="360" src="https://www.youtube.com/embed/{stereo}?rel=0" frameborder="0" allowfullscreen="allowfullscreen"></iframe></p>
+<p>&dArr; Моно перевод: &dArr;<br /> <iframe width="640" height="360" src="https://www.youtube.com/embed/{mono}?rel=0" frameborder="0" allowfullscreen="allowfullscreen"></iframe></p>
+<h3>In English</h3>
+<p><iframe width="640" height="360" src="https://www.youtube.com/embed/{orig}?rel=0" frameborder="0" allowfullscreen="allowfullscreen"></iframe></p>"""
+    code = template.format(stereo=id_stereo, mono=id_mono, orig=id_orig)
+    return code

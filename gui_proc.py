@@ -3,6 +3,7 @@ from tkinter import ttk
 import os
 
 import audition
+import meta
 
 
 class ProcessingFrame:
@@ -12,6 +13,7 @@ class ProcessingFrame:
     filename_var = None  # type: tk.StringVar
     rus_button = None  # type: ttk.Button
     timing_button = None  # type: ttk.Button
+    hk_button = None  # type: ttk.Button
 
     def __init__(self, parent_frame: ttk.Frame, filename_var: tk.StringVar):
         super().__init__()
@@ -31,6 +33,10 @@ class ProcessingFrame:
         self.timing_button = ttk.Button(self.frame, text='Get', command=self.timing_run)
         self.timing_button.grid(row=2, column=1)
 
+        ttk.Label(self.frame, text='Hk.ru:').grid(row=3, column=0)
+        self.hk_button = ttk.Button(self.frame, text='Get code', command=self.hk_run)
+        self.hk_button.grid(row=3, column=1)
+
     def orig_run(self):
         dir = os.path.dirname(__file__)
         path = os.path.join(dir, 'orig.cmd')
@@ -49,5 +55,10 @@ class ProcessingFrame:
 
     def timing_run(self):
         text = audition.timestamps(self.filename_var.get())
+        self.parent.clipboard_clear()
+        self.parent.clipboard_append(text)
+
+    def hk_run(self):
+        text = meta.get_hk_code(self.filename_var.get())
         self.parent.clipboard_clear()
         self.parent.clipboard_append(text)
