@@ -24,19 +24,21 @@ def orig(orig_mp4_filename):
     # first we cut m4a and mp4 version sequentially because these are
     # IO-bound tasks on the single drive, so running them in parallel
     # doesn't make much sense.
-    _cut_orig_m4a(orig_mp4_filename, lang, 0)
+    _cut_orig_m4a(orig_mp4_filename, lang, line=0)
     cut_video_filename = meta.get_work_filename(orig_mp4_filename, ' ' + lang + '.mkv')
-    _cut_orig_mp4(orig_mp4_filename, cut_video_filename, lang, 1)
+    _cut_orig_mp4(orig_mp4_filename, cut_video_filename, lang, line=1)
 
     # And now we run two long-running tasks (uploading to youtube
     # and encoding mp3) in parallel
 
     p_upload_orig_mp4 = multiprocessing.Process(
         target=_upload_orig_mp4,
-        args=(orig_mp4_filename, cut_video_filename, lang, 2))
+        kwargs={'orig_mp4_filename': orig_mp4_filename, 'cut_video_filename': cut_video_filename, 'lang': lang, 'line': 2})
     p_upload_orig_mp4.start()
 
-    p_encode_orig_mp3 = multiprocessing.Process(target=_encode_orig_mp3, args=(orig_mp4_filename, lang, 3))
+    p_encode_orig_mp3 = multiprocessing.Process(
+        target=_encode_orig_mp3,
+        kwargs={'orig_mp4_filename': orig_mp4_filename, 'lang': lang, 'line': 3})
     p_encode_orig_mp3.start()
 
     p_upload_orig_mp4.join()
