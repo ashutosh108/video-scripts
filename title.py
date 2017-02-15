@@ -1,15 +1,28 @@
 import os
 import subprocess
 import sys
+import json
 
 import meta
+import ffmpeg
+
+
+def get_video_size(filename):
+    try:
+        args = ['ffprobe', '-v', 'quiet', '-print_format', 'json', '-show_streams', filename]
+        res = subprocess.run(args, stdout=subprocess.PIPE)
+        json_str = res.stdout.decode('utf-8')
+        json_obj = json.loads(json_str)
+        return [int(json_obj['streams'][0]['width']), int(json_obj['streams'][0]['height'])]
+    except KeyError:
+        return [1280, 720]
 
 
 def make_png(orig_mp4_filename, lang):
     png_filename = meta.get_work_filename(orig_mp4_filename, ' ' + lang + '_title.png')
 
-    width = 1280
-    height = 720
+    [width, height] = get_video_size(orig_mp4_filename)
+    scale = float(height) / 720;
 
     authors = meta.get_artist(orig_mp4_filename, lang, 100)
     author_srt = meta.get_work_filename(orig_mp4_filename, ' ' + lang + '_author.srt')
@@ -20,9 +33,9 @@ def make_png(orig_mp4_filename, lang):
     f_author = ('subtitles=filename={srt}' +
                 ':force_style=\'FontName=Charis SIL,Fontsize={fontsize},' +
                 'Alignment=10,PlayResX={width},PlayResY={height},PrimaryColour=&Hffffff\''
-                ).format(srt=author_srt_escaped, fontsize=60, width=width, height=height)
+                ).format(srt=author_srt_escaped, fontsize=int(60*scale), width=width, height=height)
     f_shift_down = ('crop={width}:{height}-{shift}:0:0,pad={width}:{height}:0:{shift}:color=black@0.0'
-                    ).format(shift=200, width=width, height=height)
+                    ).format(shift=int(200*scale), width=width, height=height)
 
     title = meta.get_title(orig_mp4_filename, lang)
     title_srt = meta.get_work_filename(orig_mp4_filename, ' ' + lang + '_title.srt')
@@ -33,11 +46,11 @@ def make_png(orig_mp4_filename, lang):
     f_title = ('subtitles=filename={srt}' +
                ':force_style=\'FontName=Charis SIL,Fontsize={fontsize},' +
                'Alignment=10,PlayResX={width},PlayResY={height},PrimaryColour=&Hffffff\''
-               ).format(srt=title_srt_escaped, fontsize=108, width=width, height=height)
+               ).format(srt=title_srt_escaped, fontsize=int(108*scale), width=width, height=height)
     f_shift_up = ('crop={width}:{height}-{shift}:0:{shift},pad={width}:{height}:0:0:color=black@0.0'
-                  ).format(shift=80, width=width, height=height)
+                  ).format(shift=int(80*scale), width=width, height=height)
 
-    f_transparent = 'geq=r=r(X\,Y):a=if(r(X\,Y)\,alpha(X\,Y)\,122)'
+    f_transparent = 'geq=r=r(X\,Y):a=if(r(X\,Y)\,r(X\,Y)\,122)'
     filter_complex = ''
     filter_complex += ',' + f_author
     filter_complex += ',' + f_shift_down
@@ -58,36 +71,23 @@ def make_png(orig_mp4_filename, lang):
     return png_filename
 
 
-def old():
-    # MakeEnTitlePng()
+def make_title_mp4(orig_mp4_filename, lang):
+    png_filename = make_png(orig_mp4_filename, lang)
+    mp4_title_filename = meta.get_work_filename(orig_mp4_filename, ' {lang}_title.mp4'.format(lang=lang))
 
     filter_complex = ''
     filter_complex += ';[1:v]fade=out:st=9:d=1:alpha=1[title]'
     filter_complex += ';[0:v][title]overlay,format=yuv420p'
-    # filter_complex += ';[title]null[out]'
-    # filter_complex += ';[0:v]format=rgba,drawbox=0:0:1280:720:color=black@0.4:t=max,overlay'
-    # filter_complex += ';[v0]null[v0fade]'
-    # filter_complex += ';[2:v]null[v1fade]'
-    # filter_complex += ';[v0]format=pix_fmts=yuva420p,fade=out:st=1:d=2:alpha=1[v0fade]'
-    # filter_complex += ';[2:v]format=pix_fmts=yuva420p,fade=in:st=1:d=2:alpha=1[v1fade]'
-    # filter_complex += ';[3:v][v0fade]overlay[over]'
-    # filter_complex += ';[over][v1fade]overlay'
     filter_complex = filter_complex[1:]
-    args = ['ffmpeg',
-            '-ss', '1:15', '-i', '2017-01-25 goswamimj.mp4',
-            '-loop', '1', '-i', 'qwe.png',
+    args = ['ffmpeg', '-y']
+    args += ffmpeg.ss_args(orig_mp4_filename)
+    args += ['-i', orig_mp4_filename,
+            '-loop', '1', '-i', png_filename,
             '-filter_complex', filter_complex,
-            '-y',
-            # '-map', '[out]',
-            # '-frames:v', '1',
-            # '-v', 'debug',
             '-t', '10',
-            'qwe.mp4']
-
-    subprocess.call(args)
-    subprocess.call(['C:\\Program Files (x86)\\VideoLAN\\VLC\\vlc.exe', '--sub-track-id=99', 'qwe.mp4'])
-    # subprocess.run('start qwe.png', shell=True)
+             mp4_title_filename]
+    subprocess.run(args)
 
 if __name__ == '__main__':
     filename = sys.argv[1]
-    make_png(filename, meta.get_lang(filename))
+    make_title_mp4(filename, meta.get_lang(filename))
