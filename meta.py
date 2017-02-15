@@ -66,6 +66,14 @@ def get_lang(filename):
     return get(filename, 'lang', 'en')
 
 
+def get_title(filename, lang):
+    if lang == 'en':
+        return get_title_en(filename)
+    elif lang == 'ru':
+        return get_title_ru(filename)
+    else:
+        raise RuntimeError('Unknown language: "{}"'.format(lang))
+
 def get_title_en(filename):
     y = _yaml_data(filename)
     try:
@@ -169,6 +177,31 @@ def _get_artists_codes(filename):
     else:
         return ['unknown']
 
+
+def get_artist(filename, lang, max_len=30):
+    if lang == 'en':
+        artist = _get_author_with_title_en(filename)
+    elif lang == 'ru':
+        artist = _get_author_with_title_ru(filename)
+    else:
+        raise RuntimeError('Unknown language: "' + lang + '"')
+
+    if len(artist) > max_len:
+        if lang == 'en':
+            artist = get_artist_en(filename)
+        elif lang == 'ru':
+            artist = get_artist_ru(filename)
+        else:
+            raise RuntimeError('Unknown language: "' + lang + '"')
+
+    if len(artist) > max_len:
+        if lang == 'en':
+            artist = _get_artist_short_en(filename)
+        elif lang == 'ru':
+            artist = _get_artist_short_ru(filename)
+        else:
+            raise RuntimeError('Unknown language: "' + lang + '"')
+    return artist
 
 def get_artist_en(filename):
     codes = _get_artists_codes(filename)

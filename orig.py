@@ -8,6 +8,7 @@ import ffmpeg
 import meta
 import my_youtube
 import ffmpegrunner
+import title
 
 
 def usage_and_exit():
@@ -46,6 +47,7 @@ def orig(orig_mp4_filename):
 
 
 def _cut_orig_mp4(orig_mp4_filename, cut_mp4_filename, lang, line):
+    png_filename = title.make_png(orig_mp4_filename, lang)
     cmd = ['ffmpeg', '-y',
            '-i', orig_mp4_filename,
            '-c', 'copy']
