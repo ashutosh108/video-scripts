@@ -60,13 +60,13 @@ class test_meta(TestCase):
 - How Srila Govinda Maharaj appreciated Thai culture
 - The original purpose of the building of Chiangmai ashram: sanskrit school
 
-Śrīla Bhakti Rañjan Madhusūdan Mahārāj
+Śrīla Bhakti Rañjan Madhusūdan Mahārāja
 October 12, 2016
-Theistic Media Studios, Gupta Govardhan Ashram.
-Downloaded from TMS_TV livestream.com/accounts/2645002
+Theistic Media Studios, Gupta Govardhan Āśram.
+Downloaded from TMS_TV https://livestream.com/accounts/2645002
 
 На русском: (ссылка скоро будет)"""
-        self.assertEqual(expected, meta.get_youtube_description_orig(filename, 'en'))
+        self.assertIn(expected, meta.get_youtube_description_orig(filename, 'en'))
 
     def test_get_youtube_title_ru_stereo(self):
         filename = self.get_test_filename('2016-10-12 brmadhusudan.mp4')
@@ -102,12 +102,12 @@ Downloaded from TMS_TV livestream.com/accounts/2645002
 
 Ш́рӣла Бхакти Ран̃джан Мадхусӯдан Mаха̄ра̄дж
 12 октября 2016
-Студия "Теистик Медиа", Ашрам на Гупта Говардхане.
-Загружено с TMS_TV livestream.com/accounts/2645002
+Студия «Теистик Медиа», А̄ш́рам на Гупта Говардхане.
+Загружено с TMS_TV https://livestream.com/accounts/2645002
 
 English original: (link pending)
 Моно перевод: (link pending)"""
-        self.assertEqual(expected, meta.get_youtube_description_ru_stereo(filename))
+        self.assertIn(expected, meta.get_youtube_description_ru_stereo(filename))
 
     def test_get_youtube_descr_ru_mono(self):
         filename = self.get_test_filename('2016-10-12 brmadhusudan.mp4')
@@ -118,12 +118,12 @@ English original: (link pending)
 
 Ш́рӣла Бхакти Ран̃джан Мадхусӯдан Mаха̄ра̄дж
 12 октября 2016
-Студия "Теистик Медиа", Ашрам на Гупта Говардхане.
-Загружено с TMS_TV livestream.com/accounts/2645002
+Студия «Теистик Медиа», А̄ш́рам на Гупта Говардхане.
+Загружено с TMS_TV https://livestream.com/accounts/2645002
 
 English original: (link pending)
 Стерео перевод: (link pending)"""
-        self.assertEqual(expected, meta.get_youtube_description_ru_mono(filename))
+        self.assertIn(expected, meta.get_youtube_description_ru_mono(filename))
 
     @staticmethod
     def get_test_filename(base_filename):
@@ -147,34 +147,20 @@ English original: (link pending)
 
     def test_youtube_links_from_orig(self):
         filename = self.get_test_filename('2016-01-02 goswamimj.mp4')
-        expected = """
-Śrīla Bhakti Sudhīr Goswāmī Mahārāj
-January 2, 2016
-Theistic Media Studios, Gupta Govardhan Ashram.
-Downloaded from TMS_TV livestream.com/accounts/2645002\n
-На русском: https://youtu.be/sssssssssss"""
-        self.assertEqual(expected, meta.get_youtube_description_orig(filename, 'en'))
+        expected_regex = '(?m)^На русском: https://youtu.be/sssssssssss$'
+        self.assertRegex(meta.get_youtube_description_orig(filename, 'en'), expected_regex)
 
     def test_youtube_links_from_mono(self):
         filename = self.get_test_filename('2016-01-02 goswamimj.mp4')
-        expected = """
-Ш́рӣла Бхакти Судхӣр Госва̄мӣ Mаха̄ра̄дж
-02 января 2016
-Студия "Теистик Медиа", Ашрам на Гупта Говардхане.
-Загружено с TMS_TV livestream.com/accounts/2645002
-
-English original: https://youtu.be/ooooooooooo
-Стерео перевод: https://youtu.be/sssssssssss"""
-        self.assertEqual(expected, meta.get_youtube_description_ru_mono(filename))
+        expected_regex_orig = '(?m)^English original: https://youtu.be/ooooooooooo$'
+        expected_regex_stereo = '(?m)^Стерео перевод: https://youtu.be/sssssssssss$'
+        self.assertRegex(meta.get_youtube_description_ru_mono(filename), expected_regex_orig)
+        self.assertRegex(meta.get_youtube_description_ru_mono(filename), expected_regex_stereo)
 
     def test_youtube_links_from_stereo(self):
         filename = self.get_test_filename('2016-01-02 goswamimj.mp4')
-        expected = """
-Ш́рӣла Бхакти Судхӣр Госва̄мӣ Mаха̄ра̄дж
-02 января 2016
-Студия "Теистик Медиа", Ашрам на Гупта Говардхане.
-Загружено с TMS_TV livestream.com/accounts/2645002
-
-English original: https://youtu.be/ooooooooooo
-Моно перевод: https://youtu.be/mmmmmmmmmmm"""
-        self.assertEqual(expected, meta.get_youtube_description_ru_stereo(filename))
+        # (?m) for multi-line so that ^ will match newlines in the middle
+        expected_regex1 = '(?m)^English original: https://youtu.be/ooooooooooo$'
+        expected_regex2 = '(?m)^Моно перевод: https://youtu.be/mmmmmmmmmmm$'
+        self.assertRegex(meta.get_youtube_description_ru_stereo(filename), expected_regex1)
+        self.assertRegex(meta.get_youtube_description_ru_stereo(filename), expected_regex2)
