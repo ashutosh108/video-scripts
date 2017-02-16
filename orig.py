@@ -47,7 +47,7 @@ def orig(orig_mp4_filename):
 
 
 def _cut_orig_mp4(orig_mp4_filename, cut_mp4_filename, lang, line):
-    title.make_mp4_with_title(orig_mp4_filename, lang)
+    # title.make_mp4_with_title(orig_mp4_filename, lang)
     cmd = ['ffmpeg', '-y',
            '-i', orig_mp4_filename,
            '-c', 'copy']
