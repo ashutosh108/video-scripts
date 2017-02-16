@@ -2,6 +2,8 @@ import os
 import subprocess
 import sys
 import json
+import datetime
+import re
 
 import meta
 import ffmpeg
@@ -18,11 +20,22 @@ def get_video_size(filename):
         return [1280, 720]
 
 
+def get_h264_profile(filename):
+    try:
+        args = ['ffprobe', '-v', 'quiet', '-print_format', 'json', '-show_streams', filename]
+        res = subprocess.run(args, stdout=subprocess.PIPE)
+        json_str = res.stdout.decode('utf-8')
+        json_obj = json.loads(json_str)
+        return str.lower(json_obj['streams'][0]['profile'])
+    except KeyError:
+        return 'main'
+
+
 def make_png(orig_mp4_filename, lang):
     png_filename = meta.get_work_filename(orig_mp4_filename, ' ' + lang + '_title.png')
 
     [width, height] = get_video_size(orig_mp4_filename)
-    scale = float(height) / 720;
+    scale = float(height) / 720
 
     authors = meta.get_artist(orig_mp4_filename, lang, 100)
     author_srt = meta.get_work_filename(orig_mp4_filename, ' ' + lang + '_author.srt')
@@ -71,7 +84,7 @@ def make_png(orig_mp4_filename, lang):
     return png_filename
 
 
-def make_title_mp4(orig_mp4_filename, lang):
+def make_title_mp4(orig_mp4_filename, lang, seconds):
     png_filename = make_png(orig_mp4_filename, lang)
     mp4_title_filename = meta.get_work_filename(orig_mp4_filename, ' {lang}_title.mp4'.format(lang=lang))
 
@@ -79,15 +92,66 @@ def make_title_mp4(orig_mp4_filename, lang):
     filter_complex += ';[1:v]fade=out:st=9:d=1:alpha=1[title]'
     filter_complex += ';[0:v][title]overlay,format=yuv420p'
     filter_complex = filter_complex[1:]
+    h264_profile = get_h264_profile(orig_mp4_filename)
     args = ['ffmpeg', '-y']
     args += ffmpeg.ss_args(orig_mp4_filename)
     args += ['-i', orig_mp4_filename,
             '-loop', '1', '-i', png_filename,
             '-filter_complex', filter_complex,
-            '-t', '10',
+            '-t', str(seconds),
+             '-profile:v', h264_profile,
              mp4_title_filename]
     subprocess.run(args)
+    return mp4_title_filename
+
+
+def make_rest_mp4(orig_mp4_filename, lang, title_end_time):
+    mp4_rest_filename = meta.get_work_filename(orig_mp4_filename, ' {lang}_rest.mp4'.format(lang=lang))
+    cmd = ['ffmpeg', '-y',
+           '-i', orig_mp4_filename,
+           '-c', 'copy']
+    cmd += ['-ss', str(title_end_time)]
+    cmd += ffmpeg.to_args(orig_mp4_filename)
+    cmd += [mp4_rest_filename]
+    subprocess.run(cmd)
+    return mp4_rest_filename
+
+
+def get_next_keyframe_timestamp(filename, start_time: datetime.timedelta):
+    cmd = ['ffprobe', '-select_streams', 'v', '-show_frames',
+           '-show_entries', 'frame=pict_type,best_effort_timestamp_time',
+           '-of','csv',
+           '-read_intervals', str(start_time)+'%+#500',
+           filename]
+    res = subprocess.run(cmd, stdout=subprocess.PIPE)
+    res_arr = res.stdout.decode('utf-8').splitlines()
+    for line in res_arr:
+        m = re.match('^frame,(\d+\.\d+),I$', line)
+        if m:
+            timestamp = datetime.timedelta(seconds=float(m.group(1)))
+            if timestamp >= start_time:
+                return timestamp
+    raise RuntimeError('Could not find next keyframe after ' + start_time)
+
+
+def make_mp4_with_title(orig_mp4_filename, lang):
+    skip_time_str = meta.get_skip_time(orig_mp4_filename)
+    m = re.match('^((?P<h>\d+):)?(?P<m>\d+):(?P<s>\d+)$', skip_time_str)
+    if not m:
+        raise RuntimeError('Can\'t parse skip time as [hh:]mm:ss: "', skip_time_str, '"')
+    title_start_time = datetime.timedelta(hours=int(m.group('h')), minutes=int(m.group('m')), seconds=int(m.group('s')))
+    min_title_end_time = title_start_time + datetime.timedelta(seconds=10)
+    title_end_time = get_next_keyframe_timestamp(orig_mp4_filename, min_title_end_time)
+    title_len_seconds = (title_end_time - title_start_time).total_seconds()
+
+    mp4_title_filename = make_title_mp4(orig_mp4_filename, lang, title_len_seconds)
+    mp4_rest_filename = make_rest_mp4(orig_mp4_filename, lang, title_end_time)
+    # concatenate_videos(mp4_title_filename, mp4_rest_filename, cut_video_filename)
+
 
 if __name__ == '__main__':
     filename = sys.argv[1]
-    make_title_mp4(filename, meta.get_lang(filename))
+    # make_title_mp4(filename, meta.get_lang(filename))
+    # make_rest_mp4(filename, meta.get_lang(filename))
+    # get_keyframes_timestamps(filename)
+    make_mp4_with_title(filename, meta.get_lang(filename))
