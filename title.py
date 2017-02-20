@@ -20,6 +20,12 @@ def get_video_size(filename):
         return [1280, 720]
 
 
+# return array of ffmpeg options to match the video in the given file (same h.264 profile, same level)
+def get_ffmpeg_encoding_options_from_video_file(filename):
+    h264_profile = get_h264_profile(filename)
+    return ['-profile:v', h264_profile]
+
+
 def get_h264_profile(filename):
     try:
         args = ['ffprobe', '-v', 'quiet', '-print_format', 'json', '-show_streams', filename]
@@ -92,15 +98,14 @@ def make_title_mp4(orig_mp4_filename, lang, seconds):
     filter_complex += ';[1:v]fade=out:st=9:d=1:alpha=1[title]'
     filter_complex += ';[0:v][title]overlay,format=yuv420p'
     filter_complex = filter_complex[1:]
-    h264_profile = get_h264_profile(orig_mp4_filename)
     args = ['ffmpeg', '-y']
     args += ffmpeg.ss_args(orig_mp4_filename)
     args += ['-i', orig_mp4_filename,
             '-loop', '1', '-i', png_filename,
             '-filter_complex', filter_complex,
-            '-t', str(seconds),
-             '-profile:v', h264_profile,
-             mp4_title_filename]
+            '-t', str(seconds)]
+    args += get_ffmpeg_encoding_options_from_video_file(orig_mp4_filename)
+    args += [mp4_title_filename]
     subprocess.run(args)
     return mp4_title_filename
 
