@@ -325,7 +325,8 @@ def get_youtube_description_orig(filename, lang):
 def _youtube_playlists_en():
     return """More Goswāmī Mahārāja: 2016 — https://www.youtube.com/playlist?list=PL6tEPx3Dy5-UTBh4hYonpv3HIeoRI8Hii
 2017 — https://www.youtube.com/playlist?list=PL6tEPx3Dy5-WwqFLQIhM3Hu7cBh60Y2VZ
-More Madhusūdan Mahārāja: https://www.youtube.com/playlist?list=PL6tEPx3Dy5-X13nA4LgtKgujEvCI_77NY
+More Madhusūdan Mahārāja: 2016 — https://www.youtube.com/playlist?list=PL6tEPx3Dy5-X13nA4LgtKgujEvCI_77NY
+2017 — https://www.youtube.com/playlist?list=PL6tEPx3Dy5-V17hKkWYMFz-6aqH5WPsO9
 More Avadhūt Mahārāja: 2016 — https://www.youtube.com/playlist?list=PL6tEPx3Dy5-XnC79_zqlekdFl0nFNpvjJ
 2017 — https://www.youtube.com/playlist?list=PL6tEPx3Dy5-XZkgmpnWfenoggfZOVOaPS"""
 
@@ -333,7 +334,8 @@ More Avadhūt Mahārāja: 2016 — https://www.youtube.com/playlist?list=PL6tEPx
 def _youtube_playlists_ru():
     return """Ещё Госва̄мӣ Mаха̄ра̄джа: 2016 — https://www.youtube.com/playlist?list=PL6tEPx3Dy5-Ugkm4jTb3VGdVChoCm3J8X
 2017 — https://www.youtube.com/playlist?list=PL6tEPx3Dy5-X8O8R9jP-TDJPbmgN0kIOD
-Ещё Мадхусӯдана Mаха̄ра̄джа: https://www.youtube.com/playlist?list=PL6tEPx3Dy5-VzEoAeaEliOm-iQUGmY-lz
+Ещё Мадхусӯдана Mаха̄ра̄джа: 2016 — https://www.youtube.com/playlist?list=PL6tEPx3Dy5-VzEoAeaEliOm-iQUGmY-lz
+2017 — https://www.youtube.com/playlist?list=PL6tEPx3Dy5-VS9BdxjTexnyGDgfx69nEC
 Ещё Авадхӯта Mаха̄ра̄джа: 2016 — https://www.youtube.com/playlist?list=PL6tEPx3Dy5-X3u6WgQtMTjhfErxKk1tkK
 2017 — https://www.youtube.com/playlist?list=PL6tEPx3Dy5-VheQwXw_fFnDft_AX4JqYo"""
 
