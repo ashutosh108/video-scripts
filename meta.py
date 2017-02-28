@@ -108,7 +108,9 @@ _known_artists_en = dict(
     hasyapriya=['Hāsyapriya Prabhu', 'Hāsyapriya Prabhu', 'Hāsyapriya Pr.'],
     taritkrishna=['Tārit Kṛṣṇa Prabhu', 'Tārit Kṛṣṇa Prabhu', 'Tārit Kṛṣṇa Pr.'],
     dandimj=['Bhakti Āśraya Daṇḍī', 'Śrīpād Bhakti Āśraya Daṇḍī Mahārāja', 'B.Ā.Daṇḍī'],
-    keshavananda=['Keśavānanda Prabhu', 'Keśavānanda Prabhu', 'Keśavānanda Pr.']
+    keshavananda=['Keśavānanda Prabhu', 'Keśavānanda Prabhu', 'Keśavānanda Pr.'],
+    munindra=['Munīndra Mohan Prabhu', 'Munīndra Mohan Prabhu', 'Munīndra Mohan Pr.'],
+    krishnakanta=['Kṛṣṇa Kāntā Devī Dāsī', 'Kṛṣṇa Kāntā Devī Dāsī', 'Kṛṣṇa Kāntā D.D.']
 )
 
 
@@ -143,7 +145,9 @@ _known_artists_ru = dict(
     taritkrishna=['Та̄рит Кр̣ш̣н̣а Прабху', 'Та̄рит Кр̣ш̣н̣а Прабху', 'Та̄рит Кр̣ш̣н̣а Пр.'],
     unknown=['Автор неизвестен', 'Автор неизвестен', 'Автор неизвестен'],
     dandimj=['Бхакти А̄ш́райа Дан̣д̣ӣ', 'Ш́рӣпа̄д Бхакти А̄ш́райа Дан̣д̣ӣ Mаха̄ра̄джа', 'Б.А̄.Дан̣д̣ӣ'],
-    keshavananda=['Кеш́ава̄нанда Прабху', 'Кеш́ава̄нанда Прабху', 'Кеш́ава̄нанда Пр.']
+    keshavananda=['Кеш́ава̄нанда Прабху', 'Кеш́ава̄нанда Прабху', 'Кеш́ава̄нанда Пр.'],
+    munindra=['Мунӣндра Мохан Прабху', 'Мунӣндра Мохан Прабху', 'Мунӣндра Мохан Пр.'],
+    krishnakanta=['Кр̣ш̣н̣а Ка̄нта̄ Девӣ Да̄сӣ', 'Кр̣ш̣н̣а Ка̄нта̄ Девӣ Да̄сӣ', 'Кр̣ш̣н̣а Ка̄нта̄ Д.Д.']
 )
 
 
