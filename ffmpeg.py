@@ -28,19 +28,22 @@ def meta_args(filename, lang):
 def _meta_args_en(filename):
     artist = get_artist_en(filename)
     title = get_title_en(filename)
-    return _meta_args(filename, artist, title, album='Gupta Govardhan 2016')
+    [year, month, day] = get_year_month_day(filename)
+    return _meta_args(filename, artist, title, album='Gupta Govardhan ' + year)
 
 
 def meta_args_ru_mono(filename):
     artist = get_artist_ru(filename)
     title = get_title_ru(filename) + ' (моно)'
-    return _meta_args(filename, artist, title, 'Гупта Говардхан 2016')
+    [year, month, day] = get_year_month_day(filename)
+    return _meta_args(filename, artist, title, 'Гупта Говардхан ' + year)
 
 
 def meta_args_ru_stereo(filename):
     artist = get_artist_ru(filename)
     title = get_title_ru(filename)
-    return _meta_args(filename, artist, title, 'Гупта Говардхан 2016')
+    [year, month, day] = get_year_month_day(filename)
+    return _meta_args(filename, artist, title, 'Гупта Говардхан ' + year)
 
 
 def _meta_args(filename, artist, title, album):
