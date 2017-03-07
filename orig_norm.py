@@ -1,3 +1,5 @@
+# process end video/audio in original language, but NORMALIZE the audio by volume
+# using dynaudnorm filter in ffmpeg
 import sys
 import os
 import multiprocessing
@@ -18,7 +20,7 @@ usage: mux "yyyy-mm-dd goswamimj.mp4"
     exit()
 
 
-def orig(orig_mp4_filename):
+def orig_dynaudnorm(orig_mp4_filename):
     """Prepare all files in original language: m4a, mp4, mp3"""
     lang = meta.get_lang(orig_mp4_filename)
 
@@ -50,7 +52,8 @@ def _cut_orig_mp4(orig_mp4_filename, cut_mp4_filename, lang, line):
     # title.make_mp4_with_title(orig_mp4_filename, lang)
     cmd = ['ffmpeg', '-y',
            '-i', orig_mp4_filename,
-           '-c', 'copy']
+           '-c:v', 'copy',
+           '-c:a', 'aac', '-af', 'dynaudnorm=m=20']
     cmd += ffmpeg.meta_args(orig_mp4_filename, lang)
     cmd += ffmpeg.ss_args(orig_mp4_filename)
     cmd += ffmpeg.to_args(orig_mp4_filename)
@@ -99,7 +102,7 @@ def _cut_orig_m4a(orig_mp4_filename, lang, line):
     cmd += ffmpeg.meta_args(orig_mp4_filename, lang)
     cmd += ffmpeg.ss_args(orig_mp4_filename)
     cmd += ffmpeg.to_args(orig_mp4_filename)
-    cmd += ['-c:a', 'copy', '-vn',
+    cmd += ['-c:a', 'aac', '-af', 'dynaudnorm=m=20', '-vn',
             meta.get_work_filename(orig_mp4_filename, ' ' + lang + '.m4a')]
     _run_ffmpeg_at_line(cmd, line, 'm4a')
 
@@ -122,7 +125,8 @@ def _encode_orig_mp3(orig_mp4_filename, lang, line):
     cmd = ['ffmpeg', '-y',
            '-i', orig_mp4_filename,
            '-ac', '1',
-           '-codec:a', 'mp3', '-b:a', '96k']
+           '-codec:a', 'mp3', '-b:a', '96k',
+           '-af', 'dynaudnorm=m=20']
     cmd += ffmpeg.ss_args(orig_mp4_filename)
     cmd += ffmpeg.to_args(orig_mp4_filename)
     cmd += ffmpeg.meta_args(orig_mp4_filename, lang)
@@ -137,7 +141,7 @@ def main():
             print('file "%s" not found' % orig_mp4_filename)
             print('')
             usage_and_exit()
-        orig(orig_mp4_filename)
+        orig_dynaudnorm(orig_mp4_filename)
     except (IndexError, KeyboardInterrupt):
         usage_and_exit()
 
