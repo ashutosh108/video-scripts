@@ -1,6 +1,7 @@
 import lxml.etree as ET
 import re
 import pytimeparse
+import pprint
 
 import meta
 
@@ -86,7 +87,10 @@ def timestamps(mp4_filename: str) -> str:
     markers = _get_markers(sesx_filename)
     clips_recorded = _get_clips(sesx_filename, 'Track 1')
     clips_translation = _get_clips(sesx_filename, 'Translation')
-    skip_time = pytimeparse.parse(meta.get_skip_time(mp4_filename))
+    skip_time_str = meta.get_skip_time(mp4_filename)
+    if skip_time_str == '':
+        skip_time_str = '0:00'
+    skip_time = pytimeparse.parse(skip_time_str)
     adjusted_markers = _adjust_markers(markers, clips_recorded, clips_translation, skip_time)
 
     timestamps_str = ''
@@ -94,13 +98,14 @@ def timestamps(mp4_filename: str) -> str:
     for marker in adjusted_markers:
         marker_time_sec = marker[0]
         marker_name = marker[1]
-        marker_time = _seconds_to_time_stamp(marker_time_sec)
-        timestamps_str += marker_time + ' — ' + marker_name + '\n'
+        if marker_time_sec is not None:
+            marker_time = _seconds_to_time_stamp(marker_time_sec)
+            timestamps_str += marker_time + ' — ' + marker_name + '\n'
     return timestamps_str
 
 
 def _main():
-    filename = 'D:\\video\\GoswamiMj-videos\\2017-01-06 goswamimj ru.sesx'
+    filename = 'D:\\video\\GoswamiMj-videos\\2017-03-12 goswamimj-madhusudanmj ru.sesx'
     mp4_filename = re.sub(r' ru\.sesx$', '.mp4', filename)
     print(timestamps(mp4_filename))
 
