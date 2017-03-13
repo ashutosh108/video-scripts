@@ -1,0 +1,1 @@
+ffmpeg -i "D:\video\GoswamiMj-videos\2017-03-12 goswamimj-madhusudanmj-facebook.mp4" -c:v nvenc -r 30000/1001 -c:a copy -t 6:00 "2017-03-12 goswamimj-madhusudanmj-facebook-2997fps.mp4"
