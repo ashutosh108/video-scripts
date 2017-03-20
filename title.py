@@ -156,11 +156,7 @@ def concatenate_ts_to_mp4(filename_ts1, filename_ts2, filename_mp4):
 
 
 def make_mp4_with_title(orig_mp4_filename, lang):
-    skip_time_str = meta.get_skip_time(orig_mp4_filename)
-    m = re.match('^((?P<h>\d+):)?(?P<m>\d+):(?P<s>\d+)$', skip_time_str)
-    if not m:
-        raise RuntimeError('Can\'t parse skip time as [hh:]mm:ss: "', skip_time_str, '"')
-    title_start_time = datetime.timedelta(hours=int(m.group('h')), minutes=int(m.group('m')), seconds=int(m.group('s')))
+    title_start_time = meta.get_skip_time_timedelta(orig_mp4_filename)
     min_title_end_time = title_start_time + datetime.timedelta(seconds=10)
     title_end_time = get_next_keyframe_timestamp(orig_mp4_filename, min_title_end_time)
     title_len_seconds = (title_end_time - title_start_time).total_seconds()
