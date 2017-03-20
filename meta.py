@@ -38,6 +38,24 @@ def get_skip_time(filename: str) -> str:
     return _yaml_get_time_length(filename, 'skip')
 
 
+def get_skip_time_timedelta(filename: str) -> datetime.timedelta:
+    """
+    get timedelta of time to be skipped at the start of the source video file (from meta data)
+    :param filename:
+    :return: datetime.timedelta
+    """
+    skip_time_str = get_skip_time(filename)
+    if not skip_time_str:
+        return datetime.timedelta()
+    m = re.match(r'^(((?P<hours>\d+):)?(?P<minutes>\d{1,2}):)?(?P<seconds>\d{1,2})$', skip_time_str)
+    if not m:
+        return datetime.timedelta()
+    params = {}
+    for (key, val) in m.groupdict().items():
+        if val is not None:
+            params[key] = int(val)
+    return datetime.timedelta(**params)
+
 def _yaml_get_time_length(filename: str, key: str) -> Optional[str]:
     """
     get proper argument for -tt min:sec part of the ffmpeg command line

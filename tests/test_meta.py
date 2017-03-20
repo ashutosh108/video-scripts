@@ -1,4 +1,5 @@
 from unittest import TestCase
+import datetime
 
 import meta
 
@@ -18,6 +19,25 @@ class test_meta(TestCase):
     def test_get_skip_time_for_zero_minutes(self):
         filename = self.get_test_filename('2016-10-17 avadhutmj.mp4')
         self.assertEqual(meta.get_skip_time(filename), '0:07')
+
+    def test_get_skip_time_timedelta_nonexisting(self):
+        self.assertEqual(datetime.timedelta(), meta.get_skip_time_timedelta('qwe'))
+
+    def test_get_skip_time_timedelta_invalid(self):
+        filename = self.get_test_filename('invalid_time.mp4')
+        self.assertEqual(datetime.timedelta(), meta.get_skip_time_timedelta(filename))
+
+    def test_get_skip_time_timedelta_seconds_only(self):
+        filename = self.get_test_filename('skip_seconds_only.mp4')
+        self.assertEqual(datetime.timedelta(seconds=17), meta.get_skip_time_timedelta(filename))
+
+    def test_get_skip_time_timedelta_minutes_and_seconds(self):
+        filename = self.get_test_filename('2016-10-07 goswamimj.mp4')
+        self.assertEqual(datetime.timedelta(minutes=1, seconds=15), meta.get_skip_time_timedelta(filename))
+
+    def test_get_skip_time_timedelta_hours_minutes_and_seconds(self):
+        filename = self.get_test_filename('skip_hms.mp4')
+        self.assertEqual(datetime.timedelta(hours=1, minutes=2, seconds=19), meta.get_skip_time_timedelta(filename))
 
     def test_get_artist_en(self):
         filename = self.get_test_filename('2016-10-07 goswamimj.mp4')
