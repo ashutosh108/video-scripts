@@ -34,25 +34,24 @@ def create_and_upload_ru_files(orig_mp4_filename):
 
 
 def _create_and_upload_ru_stereo_video(orig_mp4_filename, ts_title_filename, ts_rest_filename):
-    ru_stereo_video_filename = meta.get_work_filename(orig_mp4_filename, ' ru_stereo.mkv')
+    concat_str = _get_concat_args(ts_title_filename, ts_rest_filename)
+    ru_stereo_titled_mp4_filename = meta.get_work_filename(orig_mp4_filename, ' ru_stereo titled.mp4')
     cmd = ['D:\\video\\GoswamiMj-videos\\ffmpeg-hi8-heaac.exe', '-y',
-           '-i', orig_mp4_filename,
-           '-i', meta.get_work_filename(orig_mp4_filename, ' ru_mixdown.wav'),
-           '-map', '0:v',
-           '-c:v', 'copy',
-           '-map', '1:a',
-           '-c:a:0', 'libfdk_aac',
-           '-b:a', '192k',
-           '-metadata:s:a:0', 'language=rus']
-    cmd += ffmpeg.meta_args_ru_stereo(orig_mp4_filename)
+           '-i', concat_str]
     cmd += ffmpeg.ss_args(orig_mp4_filename)
+    cmd += ['-i', meta.get_work_filename(orig_mp4_filename, ' ru_mixdown.wav')]
+    cmd += ['-c:v', 'copy']
+    cmd += ['-c:a', 'libfdk_aac']
+    # cmd += ['-ac', '1']  # mono
     cmd += ffmpeg.to_args(orig_mp4_filename)
-    cmd += [ru_stereo_video_filename]
+    cmd += [ru_stereo_titled_mp4_filename]
+    os.chdir('D:\\video\GoswamiMj-videos')
     subprocess.run(cmd, check=True)
+    os.chdir('C:\\Users\\ashutosh\\Dropbox\\Reference\S\scripts')
 
     title = meta.get_youtube_title_ru_stereo(orig_mp4_filename)
     description = meta.get_youtube_description_ru_stereo(orig_mp4_filename)
-    youtube_id = my_youtube.upload(ru_stereo_video_filename, title=title, description=description, lang='ru')
+    youtube_id = my_youtube.upload(ru_stereo_titled_mp4_filename, title=title, description=description, lang='ru')
     meta.update_yaml(orig_mp4_filename, 'youtube_id_rus_stereo', youtube_id)
 
 
@@ -76,6 +75,7 @@ def _create_and_upload_ru_mono_video(orig_mp4_filename, ts_title_filename, ts_re
     cmd += [ru_mono_titled_mp4_filename]
     os.chdir('D:\\video\GoswamiMj-videos')
     subprocess.run(cmd, check=True)
+    os.chdir('C:\\Users\\ashutosh\\Dropbox\\Reference\S\scripts')
 
     title = meta.get_youtube_title_ru_mono(orig_mp4_filename)
     description = meta.get_youtube_description_ru_mono(orig_mp4_filename)
