@@ -155,23 +155,28 @@ def concatenate_ts_to_mp4(filename_ts1, filename_ts2, filename_mp4):
     subprocess.run(cmd)
 
 
-def make_mp4_with_title(orig_mp4_filename, lang):
+def make_mp4_with_title(orig_mp4_filename, lang, cut_video_filename):
     title_start_time = meta.get_skip_time_timedelta(orig_mp4_filename)
     min_title_end_time = title_start_time + datetime.timedelta(seconds=10)
     title_end_time = get_next_keyframe_timestamp(orig_mp4_filename, min_title_end_time)
     title_len_seconds = (title_end_time - title_start_time).total_seconds()
-
-    cut_video_filename = meta.get_work_filename(orig_mp4_filename, ' {} combined.mp4'.format(lang))
 
     ts_title_filename = make_title_ts(orig_mp4_filename, lang, title_len_seconds)
     ts_rest_filename = make_rest_ts(orig_mp4_filename, lang, title_end_time)
     concatenate_ts_to_mp4(ts_title_filename, ts_rest_filename, cut_video_filename)
 
 
-if __name__ == '__main__':
+def main():
     filename = sys.argv[1]
     # make_title_mp4(filename, meta.get_lang(filename))
     # make_rest_mp4(filename, meta.get_lang(filename))
     # get_keyframes_timestamps(filename)
-    make_mp4_with_title(filename, meta.get_lang(filename))
-    make_mp4_with_title(filename, 'ru')
+    lang = meta.get_lang(filename)
+    cut_video_filename = meta.get_work_filename(filename, ' {} titled.mp4'.format(lang))
+    make_mp4_with_title(filename, lang, cut_video_filename)
+    cut_video_filename_ru = meta.get_work_filename(filename, ' {} titled.mp4'.format('ru'))
+    make_mp4_with_title(filename, 'ru', cut_video_filename_ru)
+
+
+if __name__ == '__main__':
+    main()

@@ -18,7 +18,7 @@ usage: mux "yyyy-mm-dd goswamimj.mp4"
     exit()
 
 
-def orig(orig_mp4_filename):
+def orig_titled(orig_mp4_filename):
     """Prepare all files in original language: m4a, mp4, mp3"""
     lang = meta.get_lang(orig_mp4_filename)
 
@@ -26,8 +26,8 @@ def orig(orig_mp4_filename):
     # IO-bound tasks on the single drive, so running them in parallel
     # doesn't make much sense.
     _cut_orig_m4a(orig_mp4_filename, lang, line=0)
-    cut_video_filename = meta.get_work_filename(orig_mp4_filename, ' ' + lang + '.mkv')
-    _cut_orig_mp4(orig_mp4_filename, cut_video_filename, lang, line=1)
+    cut_video_filename = meta.get_work_filename(orig_mp4_filename, ' ' + lang + ' titled.mp4')
+    _cut_orig_mp4_titled(orig_mp4_filename, cut_video_filename, lang, line=1)
 
     # And now we run two long-running tasks (uploading to youtube
     # and encoding mp3) in parallel
@@ -46,16 +46,8 @@ def orig(orig_mp4_filename):
     p_encode_orig_mp3.join()
 
 
-def _cut_orig_mp4(orig_mp4_filename, cut_mp4_filename, lang, line):
-    # title.make_mp4_with_title(orig_mp4_filename, lang)
-    cmd = ['ffmpeg', '-y',
-           '-i', orig_mp4_filename,
-           '-c', 'copy']
-    cmd += ffmpeg.meta_args(orig_mp4_filename, lang)
-    cmd += ffmpeg.ss_args(orig_mp4_filename)
-    cmd += ffmpeg.to_args(orig_mp4_filename)
-    cmd += [cut_mp4_filename]
-    _run_ffmpeg_at_line(cmd, line, 'mkv')
+def _cut_orig_mp4_titled(orig_mp4_filename, cut_mp4_filename, lang, line):
+    title.make_mp4_with_title(orig_mp4_filename, lang, cut_mp4_filename)
 
 
 def _upload_orig_mp4(orig_mp4_filename, cut_video_filename, lang, line):
@@ -137,7 +129,7 @@ def main():
             print('file "%s" not found' % orig_mp4_filename)
             print('')
             usage_and_exit()
-        orig(orig_mp4_filename)
+        orig_titled(orig_mp4_filename)
     except (IndexError, KeyboardInterrupt):
         usage_and_exit()
 

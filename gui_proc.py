@@ -15,6 +15,7 @@ class ProcessingFrame:
     timing_button = None  # type: ttk.Button
     hk_button = None  # type: ttk.Button
     orig_norm_button = None  # type: ttk.Button
+    orig_titled_button = None  # type: ttk.Button
 
     def __init__(self, parent_frame: ttk.Frame, filename_var: tk.StringVar):
         super().__init__()
@@ -42,6 +43,10 @@ class ProcessingFrame:
         self.orig_norm_button = ttk.Button(self.frame, text='Run', command=self.orig_norm_run)
         self.orig_norm_button.grid(row=4, column=1)
 
+        ttk.Label(self.frame, text='Orig (titled):').grid(row=5, column=0)
+        self.orig_titled_button = ttk.Button(self.frame, text='Run', command=self.orig_titled_run)
+        self.orig_titled_button.grid(row=5, column=1)
+
     def orig_run(self):
         dir = os.path.dirname(__file__)
         path = os.path.join(dir, 'orig.cmd')
@@ -53,6 +58,14 @@ class ProcessingFrame:
     def orig_norm_run(self):
         dir = os.path.dirname(__file__)
         path = os.path.join(dir, 'orig_norm.cmd')
+        filename = self.filename_var.get()
+        cmd_str = 'start cmd /c ' + path + ' ' + '"' + filename + '"'
+        print(cmd_str)
+        os.system(cmd_str)
+
+    def orig_titled_run(self):
+        dir = os.path.dirname(__file__)
+        path = os.path.join(dir, 'orig_titled.cmd')
         filename = self.filename_var.get()
         cmd_str = 'start cmd /c ' + path + ' ' + '"' + filename + '"'
         print(cmd_str)
