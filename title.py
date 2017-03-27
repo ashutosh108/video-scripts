@@ -156,14 +156,18 @@ def concatenate_ts_to_mp4(filename_ts1, filename_ts2, filename_mp4):
 
 
 def make_mp4_with_title(orig_mp4_filename, lang, cut_video_filename):
+    ts_title_filename, ts_rest_filename = make_ts_files_with_title_and_rest(orig_mp4_filename, lang)
+    concatenate_ts_to_mp4(ts_title_filename, ts_rest_filename, cut_video_filename)
+
+
+def make_ts_files_with_title_and_rest(orig_mp4_filename, lang):
     title_start_time = meta.get_skip_time_timedelta(orig_mp4_filename)
     min_title_end_time = title_start_time + datetime.timedelta(seconds=10)
     title_end_time = get_next_keyframe_timestamp(orig_mp4_filename, min_title_end_time)
     title_len_seconds = (title_end_time - title_start_time).total_seconds()
-
     ts_title_filename = make_title_ts(orig_mp4_filename, lang, title_len_seconds)
     ts_rest_filename = make_rest_ts(orig_mp4_filename, lang, title_end_time)
-    concatenate_ts_to_mp4(ts_title_filename, ts_rest_filename, cut_video_filename)
+    return ts_title_filename, ts_rest_filename
 
 
 def main():
