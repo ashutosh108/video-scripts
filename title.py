@@ -72,7 +72,7 @@ def make_png(orig_mp4_filename, lang):
     f_shift_up = ('crop={width}:{height}-{shift}:0:{shift},pad={width}:{height}:0:0:color=black@0.0'
                   ).format(shift=int(80*scale), width=width, height=height)
 
-    f_transparent = 'geq=r=r(X\,Y):a=if(r(X\,Y)\,r(X\,Y)\,122)'
+    f_transparent = 'geq=r=r(X\,Y):a=if(r(X\,Y)\,r(X\,Y)\,16)'
     filter_complex = ''
     filter_complex += ',' + f_author
     filter_complex += ',' + f_shift_down
