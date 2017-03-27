@@ -9,7 +9,7 @@ def run(cmd, callback=None):
     for line in p.stderr:
         m = re.search(r'Duration: (\d+([:.]\d+)+)', line)
         if m:
-            total = time_to_secs(m.group(1))
+            total = 1 + time_to_secs(m.group(1))
             if callback is not None:
                 callback(curr, total)
 
