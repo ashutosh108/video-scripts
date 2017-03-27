@@ -12,6 +12,7 @@ class ProcessingFrame:
     parent = None  # type: ttk.Frame
     filename_var = None  # type: tk.StringVar
     rus_button = None  # type: ttk.Button
+    rus_titled_button = None  # type: ttk.Button
     timing_button = None  # type: ttk.Button
     hk_button = None  # type: ttk.Button
     orig_norm_button = None  # type: ttk.Button
@@ -47,6 +48,11 @@ class ProcessingFrame:
         self.orig_titled_button = ttk.Button(self.frame, text='Run', command=self.orig_titled_run)
         self.orig_titled_button.grid(row=5, column=1)
 
+        ttk.Label(self.frame, text='Rus (titled):').grid(row=6, column=0)
+        self.rus_titled_button = ttk.Button(self.frame, text='Rus (titled)', command=self.rus_titled_run)
+        self.rus_titled_button.grid(row=6, column=1)
+
+
     def orig_run(self):
         dir = os.path.dirname(__file__)
         path = os.path.join(dir, 'orig.cmd')
@@ -74,6 +80,14 @@ class ProcessingFrame:
     def rus_run(self):
         dir = os.path.dirname(__file__)
         path = os.path.join(dir, 'rus.cmd')
+        filename = self.filename_var.get()
+        cmd_str = 'start cmd /c ' + path + ' ' + '"' + filename + '"'
+        print(cmd_str)
+        os.system(cmd_str)
+
+    def rus_titled_run(self):
+        dir = os.path.dirname(__file__)
+        path = os.path.join(dir, 'rus_titled.cmd')
         filename = self.filename_var.get()
         cmd_str = 'start cmd /c ' + path + ' ' + '"' + filename + '"'
         print(cmd_str)
