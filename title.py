@@ -174,3 +174,4 @@ if __name__ == '__main__':
     # make_rest_mp4(filename, meta.get_lang(filename))
     # get_keyframes_timestamps(filename)
     make_mp4_with_title(filename, meta.get_lang(filename))
+    make_mp4_with_title(filename, 'ru')
