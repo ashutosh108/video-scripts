@@ -44,6 +44,7 @@ def _create_and_upload_ru_stereo_video(orig_mp4_filename, ts_title_filename, ts_
     cmd += ['-c:a', 'libfdk_aac']
     # cmd += ['-ac', '1']  # mono
     cmd += ffmpeg.to_args(orig_mp4_filename)
+    cmd += ['-shortest']
     cmd += [ru_stereo_titled_mp4_filename]
     os.chdir('D:\\video\GoswamiMj-videos')
     subprocess.run(cmd, check=True)
@@ -72,6 +73,7 @@ def _create_and_upload_ru_mono_video(orig_mp4_filename, ts_title_filename, ts_re
     cmd += ['-c:a', 'libfdk_aac']
     cmd += ['-ac', '1']  # mono
     cmd += ffmpeg.to_args(orig_mp4_filename)
+    cmd += ['-shortest']
     cmd += [ru_mono_titled_mp4_filename]
     os.chdir('D:\\video\GoswamiMj-videos')
     subprocess.run(cmd, check=True)
