@@ -35,7 +35,7 @@ def create_and_upload_ru_files(orig_mp4_filename):
 
 def _create_and_upload_ru_stereo_video(orig_mp4_filename, ts_title_filename, ts_rest_filename):
     concat_str = _get_concat_args(ts_title_filename, ts_rest_filename)
-    ru_stereo_titled_mp4_filename = meta.get_work_filename(orig_mp4_filename, ' ru_stereo titled.mp4')
+    ru_stereo_titled_mp4_filename = meta.get_work_filename(orig_mp4_filename, ' ru_stereo titled.mkv')
     cmd = ['D:\\video\\GoswamiMj-videos\\ffmpeg-hi8-heaac.exe', '-y',
            '-i', concat_str]
     cmd += ffmpeg.ss_args(orig_mp4_filename)
@@ -64,7 +64,7 @@ def _get_concat_args(filename1, filename2):
 
 def _create_and_upload_ru_mono_video(orig_mp4_filename, ts_title_filename, ts_rest_filename):
     concat_str = _get_concat_args(ts_title_filename, ts_rest_filename)
-    ru_mono_titled_mp4_filename = meta.get_work_filename(orig_mp4_filename, ' ru_mono titled.mp4')
+    ru_mono_titled_mp4_filename = meta.get_work_filename(orig_mp4_filename, ' ru_mono titled.mkv')
     cmd = ['D:\\video\\GoswamiMj-videos\\ffmpeg-hi8-heaac.exe', '-y',
            '-i', concat_str]
     cmd += ffmpeg.ss_args(orig_mp4_filename)

@@ -26,7 +26,7 @@ def orig_titled(orig_mp4_filename):
     # IO-bound tasks on the single drive, so running them in parallel
     # doesn't make much sense.
     _cut_orig_m4a(orig_mp4_filename, lang, line=0)
-    cut_video_filename = meta.get_work_filename(orig_mp4_filename, ' ' + lang + ' titled.mp4')
+    cut_video_filename = meta.get_work_filename(orig_mp4_filename, ' ' + lang + ' titled.mkv')
     _cut_orig_mp4_titled(orig_mp4_filename, cut_video_filename, lang, line=1)
 
     # And now we run two long-running tasks (uploading to youtube
