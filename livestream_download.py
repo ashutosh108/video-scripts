@@ -51,8 +51,7 @@ def wait_and_start_downloader_for_next_event(account_url):
     while True:
         t = datetime.datetime.now(pytz.utc)
         print(t)
-        # if t >= start_time:
-        if True:
+        if t >= start_time:
             start_downloader(event_url)
             break
         time.sleep(15)
