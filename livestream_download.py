@@ -74,7 +74,7 @@ def start_downloader(event_url):
                 m3u_url = json_obj['event']['stream_info']['secure_m3u8_url']
                 short_name = json_obj['event']['short_name']
                 if short_name is None:
-                    short_name = datetime.datetime.now().strftime('%Y-%m-%d %H:%i')
+                    short_name = datetime.datetime.now().strftime('%Y-%m-%d %H-%i')
                 print("m3u url:", m3u_url)
                 start_download_m3u(m3u_url, short_name)
                 return
