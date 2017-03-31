@@ -47,13 +47,14 @@ def wait_and_start_downloader_for_next_event(account_url):
     event_url, start_time = get_next_event_url_and_time(account_url)
     print("Event url:", event_url)
     print("Start time:", start_time)
-    quarter_before = start_time + datetime.timedelta(minutes=-15)
+    tz = pytz.timezone('Europe/Kiev')
+    quarter_before = (start_time + datetime.timedelta(minutes=-15)).astimezone(tz)
     while True:
-        t = datetime.datetime.now(pytz.utc)
+        t = datetime.datetime.now(tz)
         if t >= quarter_before:
             start_downloader(event_url)
             break
-        print("Waiting for", quarter_before, ": ", t)
+        print("Waiting for {}: {}".format(quarter_before, t))
         time.sleep(15)
         pass
 
