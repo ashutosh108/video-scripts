@@ -47,13 +47,13 @@ def wait_and_start_downloader_for_next_event(account_url):
     event_url, start_time = get_next_event_url_and_time(account_url)
     print("Event url:", event_url)
     print("Start time:", start_time)
-    start_time = dateutil.parser.parse('2017-03-30T12:45:00.000Z') + datetime.timedelta(minutes=-15)
+    quarter_before = start_time + datetime.timedelta(minutes=-15)
     while True:
         t = datetime.datetime.now(pytz.utc)
-        print(t)
-        if t >= start_time:
+        if t >= quarter_before:
             start_downloader(event_url)
             break
+        print("Waiting for", quarter_before, ": ", t)
         time.sleep(15)
         pass
 
@@ -68,20 +68,22 @@ def start_downloader(event_url):
             if script.text is None:
                 continue
             m = re.match(r'^\s*window\.config\s*=\s*(.*);\s*$', script.text)
-            if m:
-                json_str = m.group(1)
-                json_obj = json.loads(json_str)
+            if not m:
+                continue
+            json_str = m.group(1)
+            json_obj = json.loads(json_str)
+            try:
                 m3u_url = json_obj['event']['stream_info']['secure_m3u8_url']
                 short_name = json_obj['event']['short_name']
                 if short_name is None:
                     short_name = datetime.datetime.now().strftime('%Y-%m-%d %H-%i')
-                print("m3u url:", m3u_url)
+                print("m3u8 url:", m3u_url)
                 start_download_m3u(m3u_url, short_name)
                 return
-            else:
-                print("No match")
+            except TypeError:
+                pass
         t = datetime.datetime.now()
-        print(t)
+        print("Waiting for m3u8 url to appear:", t)
         time.sleep(15)
 
 
