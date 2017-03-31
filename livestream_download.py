@@ -52,9 +52,10 @@ def wait_and_start_downloader_for_next_event(account_url):
     while True:
         t = datetime.datetime.now(tz)
         if t >= quarter_before:
+            print()  # newline
             start_downloader(event_url)
             break
-        print("Waiting for {}: {}".format(quarter_before, t))
+        print("\rWaiting for {}: {}".format(quarter_before, t), end='')
         time.sleep(15)
         pass
 
