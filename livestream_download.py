@@ -90,7 +90,7 @@ def start_downloader(event_url):
 
 
 def start_download_m3u(m3u_url, short_name):
-    cmd_line = 'cd /c/Users/ashutosh/Downloads; livestreamer "hlsvariant://{}" best -o "{}.ts"'.format(m3u_url, short_name)
+    cmd_line = 'cd /c/Users/ashutosh/Downloads; livestreamer "hlsvariant://{}" best -o "{}.ts"; echo "Press enter to close..."; read'.format(m3u_url, short_name)
     cmd = [r"C:\Program Files\Git\git-bash.exe", '--cd-to-home', '-c', cmd_line]
     subprocess.run(cmd)
 
