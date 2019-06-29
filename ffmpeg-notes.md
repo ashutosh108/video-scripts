@@ -54,3 +54,9 @@ How to do "Ducking" to turn down original's volume when the translator is speaki
 On the original track you add a Dynamics processor and enable stereo side-chain.
 On the translation track you send the audio to the side-chain on the compressor.
 https://www.youtube.com/watch?v=kMk0XUCUkDY
+
+How to convert stereo to mono while making left channel louder
+==============================================================
+$ ffmpeg.exe -i 2019-06-29\ gI-bhA\ 2.65-66.mp3 -b:a 96k -af "pan=1c|c0=10*c0+c1" qwe.mp3
+1c: single channel output
+c0=10*c0+c1 usual stereo to mono mix, but make left channel 10x louder.
