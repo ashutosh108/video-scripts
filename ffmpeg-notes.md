@@ -60,3 +60,7 @@ How to convert stereo to mono while making left channel louder
 $ ffmpeg.exe -i 2019-06-29\ gI-bhA\ 2.65-66.mp3 -b:a 96k -af "pan=1c|c0=10*c0+c1" qwe.mp3
 1c: single channel output
 c0=10*c0+c1 usual stereo to mono mix, but make left channel 10x louder.
+
+Extract audio while removing video
+===============================
+$ ffmpeg.exe -i 2019_10_27\ skype\ video.mp4 -vn -c:a copy qwe.m4a -y
