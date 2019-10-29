@@ -64,3 +64,19 @@ c0=10*c0+c1 usual stereo to mono mix, but make left channel 10x louder.
 Extract audio while removing video
 ===============================
 $ ffmpeg.exe -i 2019_10_27\ skype\ video.mp4 -vn -c:a copy qwe.m4a -y
+
+Cut audio
+=========
+-ss means skip that amount of time in input file
+
+quick (approximate) seek -- -ss before -i:
+$ ffmpeg.exe -ss 00:00:30.3 -i input.mp3 output.mp3
+
+slow(exact) seek -- -ss after -i:
+$ ffmpeg.exe -i input.mp3 -ss 00:00:30.3 output.mp3
+
+quick and exact combined seek:
+$ ffmpeg.exe -ss 00:00:20 -i input.mp3 -ss 00:00:10.3 output.mp3
+
+-t means "only decode for that amount of input time":
+ffmpeg -i input.mp3 -t 00:00:30 output.mp3
